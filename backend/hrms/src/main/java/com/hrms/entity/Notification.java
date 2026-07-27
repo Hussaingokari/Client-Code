@@ -7,7 +7,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "notifications")
-@Data @NoArgsConstructor @AllArgsConstructor @Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Notification {
 
     @Id
@@ -52,6 +55,10 @@ public class Notification {
         TRAINING_COMPLETED,
         ONBOARDING_INITIATED,
         JOB_APPLICATION,
+        DOCUMENT_UPLOADED,
+        DOCUMENT_APPROVED,
+        DOCUMENT_REJECTED,
+        CHECKLIST_COMPLETED,
         GENERAL
     }
 }

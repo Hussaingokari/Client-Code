@@ -38,3 +38,20 @@ export const getMyPerformance = () =>
 
 export const getMyTrainings = () =>
   api.get('/api/trainings/my');
+// Onboarding
+export const getMyOnboarding = () =>
+  api.get('/api/onboarding/my');
+
+export const getMyDocuments = (onboardingId) =>
+  api.get(`/api/onboarding/documents/${onboardingId}`);
+
+export const uploadFile = (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  return api.post('/api/files/upload', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+};
+
+export const uploadOnboardingDocument = (onboardingId, documentKey, { fileUrl, fileName }) =>
+  api.post(`/api/onboarding/documents/${onboardingId}/${documentKey}/upload`, { fileUrl, fileName });

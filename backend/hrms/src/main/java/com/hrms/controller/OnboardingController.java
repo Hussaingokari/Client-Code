@@ -1,82 +1,197 @@
 package com.hrms.controller;
 
 import com.hrms.dto.ApiResponse;
+import com.hrms.dto.DocumentUploadRequest;
 import com.hrms.dto.OnboardingDTOs;
+import com.hrms.dto.OnboardingDocumentAdminResponse;
+import com.hrms.dto.OnboardingDocumentResponse;
+import com.hrms.dto.RejectDocumentRequest;
 import com.hrms.entity.Employee;
+import com.hrms.entity.OnboardingDocument;
+import com.hrms.enums.DocumentStatus;
+import com.hrms.repository.EmployeeRepository;
+import com.hrms.repository.OnboardingDocumentRepository;
+import com.hrms.service.OnboardingDocumentService;
 import com.hrms.service.OnboardingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import com.hrms.dto.OnboardingDashboardResponse;
+import java.util.List;
+import java.util.Map;
+import com.hrms.dto.OnboardingReportsResponse;
 
 @RestController
 @RequestMapping("/api/onboarding")
 @RequiredArgsConstructor
-@Tag(name = "Recruitment & Onboarding")
+@Tag(name = "Onboarding Management")
 public class OnboardingController {
+        private final com.hrms.service.OnboardingDashboardService dashboardService;
+        private final OnboardingService onboardingService;
+        private final EmployeeRepository employeeRepository;
+        private final OnboardingDocumentService documentService;
+        private final OnboardingDocumentRepository documentRepository;
 
-    private final OnboardingService onboardingService;
+        @GetMapping("/dashboard-summary")
+        @PreAuthorize("hasAnyRole('ADMIN','HR')")
+        @Operation(summary = "Get onboarding module dashboard summary")
+        public ResponseEntity<ApiResponse<OnboardingDashboardResponse>> getDashboardSummary() {
+                return ResponseEntity.ok(ApiResponse.success("Dashboard fetched", dashboardService.getDashboard()));
+        }
 
-    @PostMapping("/init/{employeeId}")
-    @PreAuthorize("hasAnyRole('ADMIN','HR')")
-    @Operation(summary = "Initialize onboarding for a new employee")
-    public ResponseEntity<ApiResponse<OnboardingDTOs.Response>> init(
-            @PathVariable Long employeeId,
-            @AuthenticationPrincipal Employee hr) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success("Onboarding initialized",
-                        onboardingService.initOnboarding(employeeId, hr.getId())));
-    }
+        @GetMapping("/{onboardingId}")
+        @PreAuthorize("hasAnyRole('ADMIN','HR')")
+        @Operation(summary = "Get a single onboarding record by its ID")
+        public ResponseEntity<ApiResponse<OnboardingDTOs.Response>> getOnboardingById(
+                        @PathVariable Long onboardingId) {
+                return ResponseEntity.ok(
+                                ApiResponse.success("Onboarding found",
+                                                onboardingService.getById(onboardingId)));
+        }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','HR')")
-    @Operation(summary = "Update onboarding checklist")
-    public ResponseEntity<ApiResponse<OnboardingDTOs.Response>> update(
-            @PathVariable Long id,
-            @RequestBody OnboardingDTOs.UpdateRequest req) {
-        return ResponseEntity.ok(ApiResponse.success("Onboarding updated",
-                onboardingService.updateOnboarding(id, req)));
-    }
+        @PostMapping("/init/{employeeId}")
+        @PreAuthorize("hasAnyRole('ADMIN','HR')")
+        @Operation(summary = "Initialize onboarding for an employee")
+        public ResponseEntity<ApiResponse<OnboardingDTOs.Response>> init(
+                        @PathVariable Long employeeId,
+                        Authentication authentication) {
 
-    @GetMapping("/employee/{employeeId}")
-    @Operation(summary = "Get onboarding status for an employee")
-    public ResponseEntity<ApiResponse<OnboardingDTOs.Response>> getByEmployee(
-            @PathVariable Long employeeId) {
-        return ResponseEntity.ok(ApiResponse.success("Onboarding status",
-                onboardingService.getByEmployeeId(employeeId)));
-    }
+                Employee hr = employeeRepository.findByEmail(authentication.getName())
+                                .orElseThrow(() -> new RuntimeException(
+                                                "Logged-in HR user not found: " + authentication.getName()));
 
-    @GetMapping("/my")
-    @Operation(summary = "Get my own onboarding status")
-    public ResponseEntity<ApiResponse<OnboardingDTOs.Response>> my(
-            @AuthenticationPrincipal Employee emp) {
-        return ResponseEntity.ok(ApiResponse.success("My onboarding",
-                onboardingService.getByEmployeeId(emp.getId())));
-    }
+                return ResponseEntity.ok(
+                                ApiResponse.success("Onboarding initialized",
+                                                onboardingService.initOnboarding(employeeId, hr.getId())));
+        }
 
-    @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN','HR')")
-    @Operation(summary = "Get all onboarding records")
-    public ResponseEntity<ApiResponse<Page<OnboardingDTOs.Response>>> all(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(ApiResponse.success("All onboarding",
-                onboardingService.getAll(PageRequest.of(page, size))));
-    }
+        @GetMapping("/reports")
+        @PreAuthorize("hasAnyRole('ADMIN','HR')")
+        @Operation(summary = "Get onboarding reports and analytics")
+        public ResponseEntity<ApiResponse<OnboardingReportsResponse>> getReports() {
+                return ResponseEntity.ok(ApiResponse.success("Reports fetched", dashboardService.getReports()));
+        }
 
-    @GetMapping("/pending")
-    @PreAuthorize("hasAnyRole('ADMIN','HR')")
-    @Operation(summary = "Get pending onboarding records")
-    public ResponseEntity<ApiResponse<Page<OnboardingDTOs.Response>>> pending(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(ApiResponse.success("Pending onboarding",
-                onboardingService.getPending(PageRequest.of(page, size))));
-    }
+        @GetMapping
+        @PreAuthorize("hasAnyRole('ADMIN','HR')")
+        @Operation(summary = "Get all onboarding records (paged)")
+        public ResponseEntity<ApiResponse<Page<OnboardingDTOs.Response>>> getAll(
+                        @RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "100") int size) {
+                return ResponseEntity.ok(
+                                ApiResponse.success("Onboarding records fetched",
+                                                onboardingService.getAll(PageRequest.of(page, size))));
+        }
+
+        @GetMapping("/my")
+        @Operation(summary = "Get the logged-in employee's own onboarding record")
+        public ResponseEntity<ApiResponse<OnboardingDTOs.Response>> getMyOnboarding(
+                        Authentication authentication) {
+
+                Employee employee = employeeRepository.findByEmail(authentication.getName())
+                                .orElseThrow(() -> new RuntimeException(
+                                                "Logged-in employee not found: " + authentication.getName()));
+
+                return ResponseEntity.ok(
+                                ApiResponse.success("Onboarding found",
+                                                onboardingService.getByEmployeeId(employee.getId())));
+        }
+
+        @GetMapping("/employee/{employeeId}")
+        @Operation(summary = "Get onboarding by employee ID")
+        public ResponseEntity<ApiResponse<OnboardingDTOs.Response>> getByEmployeeId(
+                        @PathVariable Long employeeId) {
+                return ResponseEntity.ok(
+                                ApiResponse.success("Onboarding found",
+                                                onboardingService.getByEmployeeId(employeeId)));
+        }
+
+        @PutMapping("/{onboardingId}")
+        @PreAuthorize("hasAnyRole('ADMIN','HR')")
+        @Operation(summary = "Update onboarding checklist")
+        public ResponseEntity<ApiResponse<OnboardingDTOs.Response>> update(
+                        @PathVariable Long onboardingId,
+                        @RequestBody OnboardingDTOs.UpdateRequest req) {
+                return ResponseEntity.ok(
+                                ApiResponse.success("Onboarding updated",
+                                                onboardingService.updateOnboarding(onboardingId, req)));
+        }
+
+        @GetMapping("/documents/{onboardingId}")
+        @Operation(summary = "Get all documents for an onboarding record")
+        public ResponseEntity<ApiResponse<List<OnboardingDocumentResponse>>> getDocuments(
+                        @PathVariable Long onboardingId) {
+                List<OnboardingDocumentResponse> docs = documentRepository.findByOnboardingId(onboardingId)
+                                .stream()
+                                .map(OnboardingDocumentResponse::from)
+                                .toList();
+                return ResponseEntity.ok(ApiResponse.success("Documents fetched", docs));
+        }
+
+        @PostMapping("/documents/{onboardingId}/{documentKey}/upload")
+        @Operation(summary = "Register an uploaded document against the onboarding checklist")
+        public ResponseEntity<ApiResponse<OnboardingDocumentResponse>> uploadDocument(
+                        @PathVariable Long onboardingId,
+                        @PathVariable String documentKey,
+                        @RequestBody DocumentUploadRequest req) {
+
+                req.setOnboardingId(onboardingId);
+                req.setDocumentKey(documentKey);
+
+                OnboardingDocument saved = documentService.registerDocument(req);
+                return ResponseEntity.ok(
+                                ApiResponse.success("Document uploaded", OnboardingDocumentResponse.from(saved)));
+        }
+
+        @GetMapping("/documents")
+        @PreAuthorize("hasAnyRole('ADMIN','HR')")
+        @Operation(summary = "Get all documents filtered by status (PENDING, APPROVED, REJECTED)")
+        public ResponseEntity<ApiResponse<List<OnboardingDocumentAdminResponse>>> getDocumentsByStatus(
+                        @RequestParam String status) {
+
+                DocumentStatus dbStatus = "PENDING".equalsIgnoreCase(status)
+                                ? DocumentStatus.UNDER_REVIEW
+                                : DocumentStatus.valueOf(status.toUpperCase());
+
+                List<OnboardingDocumentAdminResponse> docs = documentService.getByStatus(dbStatus);
+
+                return ResponseEntity.ok(ApiResponse.success("Documents fetched", docs));
+        }
+
+        @GetMapping("/documents/counts")
+        @PreAuthorize("hasAnyRole('ADMIN','HR')")
+        @Operation(summary = "Get document counts by status for dashboard")
+        public ResponseEntity<ApiResponse<Map<String, Long>>> getDocumentCounts() {
+                return ResponseEntity.ok(ApiResponse.success("Counts fetched", documentService.getStatusCounts()));
+        }
+
+        @PutMapping("/documents/{documentId}/approve")
+        @PreAuthorize("hasAnyRole('ADMIN','HR')")
+        @Operation(summary = "Approve a document")
+        public ResponseEntity<ApiResponse<OnboardingDocumentResponse>> approveDocument(
+                        @PathVariable Long documentId,
+                        Authentication authentication) {
+                OnboardingDocument doc = documentService.approveDocument(documentId, authentication.getName());
+                return ResponseEntity
+                                .ok(ApiResponse.success("Document approved", OnboardingDocumentResponse.from(doc)));
+        }
+
+        @PutMapping("/documents/{documentId}/reject")
+        @PreAuthorize("hasAnyRole('ADMIN','HR')")
+        @Operation(summary = "Reject a document")
+        public ResponseEntity<ApiResponse<OnboardingDocumentResponse>> rejectDocument(
+                        @PathVariable Long documentId,
+                        @RequestBody RejectDocumentRequest req,
+                        Authentication authentication) {
+                OnboardingDocument doc = documentService.rejectDocument(documentId, authentication.getName(),
+                                req.getRemarks());
+                return ResponseEntity
+                                .ok(ApiResponse.success("Document rejected", OnboardingDocumentResponse.from(doc)));
+        }
 }

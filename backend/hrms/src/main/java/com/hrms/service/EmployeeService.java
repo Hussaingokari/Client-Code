@@ -163,20 +163,6 @@ public class EmployeeService {
             userCacheService.evict(emp.getEmail());
         }
     }
-
-    /**
-     * NOTE: this method manually nulls/deletes rows across every entity that
-     * references
-     * Employee via a foreign key. If a new entity with an
-     * employee/manager/reviewer/etc.
-     * FK is added to the schema, it must be added here too, or deleteEmployee()
-     * will fail
-     * with a foreign-key constraint violation (or silently leave orphaned rows, if
-     * the
-     * constraint isn't enforced). Consider replacing this with DB-level ON DELETE
-     * CASCADE / SET NULL mappings so this list doesn't need to be kept in sync by
-     * hand.
-     */
     @Transactional
     @CacheEvict(value = "dashboardData", allEntries = true)
     public void deleteEmployee(Long id) {
@@ -198,6 +184,12 @@ public class EmployeeService {
             entityManager.createQuery("UPDATE PerformanceReview p SET p.reviewer = null WHERE p.reviewer.id = :id")
                     .setParameter("id", id).executeUpdate();
 
+            // Null out OnboardingDocument's reviewer reference before touching
+            // onboarding/employee rows
+            entityManager
+                    .createQuery("UPDATE OnboardingDocument d SET d.reviewedByHr = null WHERE d.reviewedByHr.id = :id")
+                    .setParameter("id", id).executeUpdate();
+
             entityManager.createQuery("DELETE FROM Attendance a WHERE a.employee.id = :id").setParameter("id", id)
                     .executeUpdate();
             entityManager.createQuery("DELETE FROM LeaveRequest l WHERE l.employee.id = :id").setParameter("id", id)
@@ -212,6 +204,12 @@ public class EmployeeService {
                     .setParameter("id", id).executeUpdate();
             entityManager.createQuery("DELETE FROM Notification n WHERE n.recipient.id = :id").setParameter("id", id)
                     .executeUpdate();
+
+            // Delete OnboardingDocument rows BEFORE deleting the Onboarding row they
+            // reference
+            entityManager.createQuery("DELETE FROM OnboardingDocument d WHERE d.onboarding.employee.id = :id")
+                    .setParameter("id", id).executeUpdate();
+
             entityManager.createQuery("DELETE FROM Onboarding o WHERE o.employee.id = :id").setParameter("id", id)
                     .executeUpdate();
             entityManager.createQuery("DELETE FROM TrainingEnrollment t WHERE t.employee.id = :id")

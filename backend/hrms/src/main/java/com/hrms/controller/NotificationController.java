@@ -29,7 +29,8 @@ public class NotificationController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         return ResponseEntity.ok(ApiResponse.success("Notifications",
-                notificationService.getMyNotifications(emp, PageRequest.of(page, size, Sort.by("createdAt").descending()))));
+                notificationService.getMyNotifications(emp,
+                        PageRequest.of(page, size, Sort.by("createdAt").descending()))));
     }
 
     @GetMapping("/unread")
@@ -53,5 +54,12 @@ public class NotificationController {
     public ResponseEntity<ApiResponse<Void>> markRead(@PathVariable Long id) {
         notificationService.markAsRead(id);
         return ResponseEntity.ok(ApiResponse.success("Marked as read"));
+    }
+
+    @PutMapping("/mark-all-read")
+    @Operation(summary = "Mark all my notifications as read")
+    public ResponseEntity<ApiResponse<Void>> markAllRead(@AuthenticationPrincipal Employee emp) {
+        notificationService.markAllAsRead(emp);
+        return ResponseEntity.ok(ApiResponse.success("All marked as read"));
     }
 }

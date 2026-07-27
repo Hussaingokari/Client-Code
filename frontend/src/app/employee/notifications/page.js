@@ -1,12 +1,31 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
-import {
-  getMyNotifications,
-  getUnreadCount,
-  markNotificationRead,
-} from '@/lib/employeeApi';
+import { getMyNotifications, getUnreadCount, markNotificationRead } from '@/lib/employeeApi';
 import api from '@/lib/axios';
 import toast from 'react-hot-toast';
+
+const TYPE_META = {
+  LEAVE_APPLIED: { icon: '🌴', bg: '#f0fdf4', color: '#16a34a' },
+  LEAVE_APPROVED: { icon: '🌴', bg: '#dcfce7', color: '#16a34a' },
+  LEAVE_REJECTED: { icon: '🌴', bg: '#fee2e2', color: '#dc2626' },
+  LEAVE_CANCELLED: { icon: '🌴', bg: '#f1f5f9', color: '#64748b' },
+  ATTENDANCE_REMINDER: { icon: '📅', bg: '#eff6ff', color: '#3b82f6' },
+  PAYROLL_GENERATED: { icon: '💰', bg: '#fef9c3', color: '#ca8a04' },
+  PERFORMANCE_REVIEWED: { icon: '⭐', bg: '#eef2ff', color: '#4f46e5' },
+  TRAINING_ENROLLED: { icon: '📚', bg: '#eff6ff', color: '#3b82f6' },
+  TRAINING_COMPLETED: { icon: '📚', bg: '#dcfce7', color: '#16a34a' },
+  ONBOARDING_INITIATED: { icon: '👋', bg: '#eef2ff', color: '#4f46e5' },
+  DOCUMENT_UPLOADED: { icon: '📄', bg: '#eff6ff', color: '#3b82f6' },
+  DOCUMENT_APPROVED: { icon: '✅', bg: '#dcfce7', color: '#16a34a' },
+  DOCUMENT_REJECTED: { icon: '⚠️', bg: '#fee2e2', color: '#dc2626' },
+  CHECKLIST_COMPLETED: { icon: '🎉', bg: '#dcfce7', color: '#16a34a' },
+  JOB_APPLICATION: { icon: '💼', bg: '#eef2ff', color: '#4f46e5' },
+  GENERAL: { icon: '🔔', bg: '#f1f5f9', color: '#64748b' },
+};
+
+function getMeta(n) {
+  return TYPE_META[n.type] || TYPE_META.GENERAL;
+}
 
 function formatTimeAgo(dateStr, now) {
   if (!dateStr) return '';
@@ -14,8 +33,8 @@ function formatTimeAgo(dateStr, now) {
   const mins = Math.floor(diff / 60000);
   const hours = Math.floor(diff / 3600000);
   const days = Math.floor(diff / 86400000);
-  if (mins < 1)   return 'Just now';
-  if (mins < 60)  return `${mins}m ago`;
+  if (mins < 1) return 'Just now';
+  if (mins < 60) return `${mins}m ago`;
   if (hours < 24) return `${hours}h ago`;
   return `${days}d ago`;
 }
@@ -28,7 +47,6 @@ export default function NotificationsPage() {
   const [markingAll, setMarkingAll] = useState(false);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-
   const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
@@ -56,7 +74,6 @@ export default function NotificationsPage() {
       }
     } catch (err) {
       toast.error('Failed to load notifications');
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -68,69 +85,50 @@ export default function NotificationsPage() {
   }, [fetchNotifications]);
 
   const handleMarkRead = async (id) => {
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+    setUnreadCount(prev => Math.max(0, prev - 1));
     try {
       await markNotificationRead(id);
-      setNotifications(prev =>
-        prev.map(n => n.id === id ? { ...n, isRead: true } : n)
-      );
-      setUnreadCount(prev => Math.max(0, prev - 1));
     } catch (err) {
       toast.error('Failed to mark as read');
-      console.error(err);
+      fetchNotifications();
     }
   };
 
   const handleMarkAllRead = async () => {
     setMarkingAll(true);
     try {
-      const unread = notifications.filter(n => !n.isRead);
-      await Promise.all(unread.map(n => markNotificationRead(n.id)));
-      setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+      await api.put('/api/notifications/mark-all-read');
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
       setUnreadCount(0);
-      toast.success('All notifications marked as read!');
+      toast.success('All caught up!');
     } catch (err) {
       toast.error('Failed to mark all as read');
-      console.error(err);
     } finally {
       setMarkingAll(false);
     }
   };
 
-  const getNotifIcon = (title) => {
-    if (!title) return '📢';
-    const t = title.toLowerCase();
-    if (t.includes('leave'))       return '🌴';
-    if (t.includes('payroll') || t.includes('salary')) return '💰';
-    if (t.includes('performance')) return '⭐';
-    if (t.includes('training'))    return '📚';
-    if (t.includes('attendance'))  return '📅';
-    if (t.includes('onboarding'))  return '📋';
-    if (t.includes('approved'))    return '✅';
-    if (t.includes('rejected'))    return '❌';
-    if (t.includes('cancelled'))   return '🚫';
-    return '🔔';
-  };
-
-
   return (
     <div>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
         <div>
-          <h1 style={{ fontSize: '22px', fontWeight: '800', color: '#1e293b', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            Notifications
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
+            <h1 style={{ fontSize: '24px', fontWeight: '800', color: '#1e293b', margin: 0 }}>
+              Notifications
+            </h1>
             {unreadCount > 0 && (
               <span style={{
-                background: '#ef4444', color: 'white',
-                borderRadius: '20px', padding: '2px 10px',
-                fontSize: '13px', fontWeight: '700',
+                background: '#4f46e5', color: 'white',
+                borderRadius: '20px', padding: '3px 12px',
+                fontSize: '12px', fontWeight: '700',
               }}>
                 {unreadCount} unread
               </span>
             )}
-          </h1>
-          <p style={{ fontSize: '13px', color: '#94a3b8' }}>
-            Stay updated with your latest alerts and activities
+          </div>
+          <p style={{ fontSize: '14px', color: '#94a3b8' }}>
+            Stay updated with your latest alerts and activities.
           </p>
         </div>
 
@@ -139,163 +137,141 @@ export default function NotificationsPage() {
             onClick={handleMarkAllRead}
             disabled={markingAll}
             style={{
-              padding: '10px 18px',
-              background: '#eff6ff', color: '#3b82f6',
-              border: '1px solid #bfdbfe',
+              padding: '11px 20px',
+              background: 'white', color: '#374151',
+              border: '1.5px solid #e2e8f0',
               borderRadius: '10px', fontSize: '13px',
-              fontWeight: '700', cursor: 'pointer',
+              fontWeight: '700', cursor: markingAll ? 'not-allowed' : 'pointer',
+              whiteSpace: 'nowrap',
             }}
           >
-            {markingAll ? '⏳ Marking...' : '✓ Mark all as read'}
+            {markingAll ? 'Marking...' : '✓ Mark all as read'}
           </button>
         )}
       </div>
 
-      {/* Filter Tabs */}
       <div style={{
-        display: 'flex', gap: '4px',
-        background: '#f1f5f9', borderRadius: '10px',
-        padding: '4px', width: 'fit-content',
-        marginBottom: '20px',
+        display: 'flex', gap: '6px', marginBottom: '20px',
+        background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0',
+        padding: '6px', width: 'fit-content', boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
       }}>
         {['ALL', 'UNREAD'].map(f => (
           <button
             key={f}
             onClick={() => { setFilter(f); setPage(0); }}
             style={{
-              padding: '8px 20px',
-              background: filter === f ? 'white' : 'transparent',
-              color: filter === f ? '#1e293b' : '#64748b',
-              border: 'none', borderRadius: '8px',
-              fontSize: '13px', fontWeight: filter === f ? '700' : '400',
-              cursor: 'pointer',
-              boxShadow: filter === f ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
+              padding: '9px 20px', borderRadius: '8px', border: 'none', cursor: 'pointer',
+              fontSize: '13px', fontWeight: '700',
+              background: filter === f ? '#4f46e5' : 'transparent',
+              color: filter === f ? 'white' : '#64748b',
               transition: 'all 0.15s',
             }}
           >
-            {f === 'ALL' ? 'All Notifications' : `Unread (${unreadCount})`}
+            {f === 'ALL' ? 'All Notifications' : `Unread${unreadCount ? ` (${unreadCount})` : ''}`}
           </button>
         ))}
       </div>
 
-      {/* Notifications List */}
-      <div style={{
-        background: 'white', borderRadius: '12px',
-        border: '1px solid #e2e8f0',
-        boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
-        overflow: 'hidden',
-      }}>
+      <div style={{ background: 'white', borderRadius: '14px', border: '1px solid #e2e8f0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
         {loading ? (
-          <div style={{ padding: '60px', textAlign: 'center', color: '#94a3b8' }}>
+          <div style={{ padding: '70px', textAlign: 'center', color: '#94a3b8', fontSize: '14px' }}>
             Loading notifications...
           </div>
         ) : notifications.length === 0 ? (
-          <div style={{ padding: '80px', textAlign: 'center' }}>
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔔</div>
-            <div style={{ fontSize: '16px', fontWeight: '600', color: '#1e293b', marginBottom: '8px' }}>
-              {filter === 'UNREAD' ? 'All caught up!' : 'No notifications yet'}
+          <div style={{ padding: '80px 20px', textAlign: 'center' }}>
+            <div style={{ fontSize: '44px', marginBottom: '14px' }}>🔔</div>
+            <div style={{ fontSize: '16px', fontWeight: '700', color: '#1e293b', marginBottom: '6px' }}>
+              {filter === 'UNREAD' ? "You're all caught up!" : 'No notifications yet'}
             </div>
             <div style={{ fontSize: '13px', color: '#94a3b8' }}>
               {filter === 'UNREAD'
-                ? 'You have no unread notifications'
-                : 'Notifications will appear here as you use the system'}
+                ? 'No unread notifications right now.'
+                : 'Updates and alerts will appear here.'}
             </div>
             {filter === 'UNREAD' && (
               <button
                 onClick={() => setFilter('ALL')}
-                style={{ marginTop: '16px', padding: '8px 20px', background: '#1e3a5f', color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}
+                style={{ marginTop: '18px', padding: '10px 22px', background: '#1e3a5f', color: 'white', border: 'none', borderRadius: '10px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}
               >
-                View All
+                View all notifications
               </button>
             )}
           </div>
         ) : (
           <>
-            {notifications.map((n, i) => (
-              <div
-                key={n.id}
-                style={{
-                  display: 'flex', gap: '14px', alignItems: 'flex-start',
-                  padding: '16px 20px',
-                  borderBottom: i < notifications.length - 1 ? '1px solid #f1f5f9' : 'none',
-                  background: n.isRead ? 'white' : '#f8fbff',
-                  transition: 'background 0.2s',
-                }}>
-                {/* Unread dot */}
-                <div style={{ paddingTop: '6px', flexShrink: 0 }}>
+            {notifications.map((n, i) => {
+              const meta = getMeta(n);
+              return (
+                <div
+                  key={n.id}
+                  onClick={() => { if (!n.read) handleMarkRead(n.id); }}
+                  style={{
+                    display: 'flex', gap: '16px', alignItems: 'flex-start',
+                    padding: '18px 22px', cursor: n.read ? 'default' : 'pointer',
+                    borderTop: i === 0 ? 'none' : '1px solid #f1f5f9',
+                    background: n.read ? 'white' : '#f8faff',
+                    transition: 'background 0.15s',
+                  }}
+                  onMouseEnter={e => { if (!n.read) e.currentTarget.style.background = '#f0f4ff'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = n.read ? 'white' : '#f8faff'; }}
+                >
                   <div style={{
-                    width: '8px', height: '8px', borderRadius: '50%',
-                    background: n.isRead ? '#e2e8f0' : '#3b82f6',
-                  }}/>
-                </div>
-
-                {/* Icon */}
-                <div style={{
-                  width: '40px', height: '40px', flexShrink: 0,
-                  background: '#f1f5f9', borderRadius: '10px',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '20px',
-                }}>
-                  {getNotifIcon(n.title)}
-                </div>
-
-                {/* Content */}
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{
-                    fontSize: '14px', fontWeight: n.isRead ? '500' : '700',
-                    color: '#1e293b', marginBottom: '4px',
+                    width: '44px', height: '44px', flexShrink: 0, borderRadius: '12px',
+                    background: meta.bg, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '20px',
                   }}>
-                    {n.title}
+                    {meta.icon}
                   </div>
-                  <div style={{
-                    fontSize: '13px', color: '#64748b',
-                    lineHeight: '1.5', marginBottom: '6px',
-                  }}>
-                    {n.message}
+
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                      <span style={{ fontSize: '15px', fontWeight: n.read ? '600' : '800', color: '#1e293b' }}>
+                        {n.title}
+                      </span>
+                      {!n.read && (
+                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#4f46e5', flexShrink: 0 }} />
+                      )}
+                    </div>
+                    <div style={{ fontSize: '13px', color: '#64748b', lineHeight: '1.5', marginBottom: '6px' }}>
+                      {n.message}
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+                      {formatTimeAgo(n.createdAt, now)}
+                    </div>
                   </div>
-                  <div style={{ fontSize: '11px', color: '#94a3b8' }}>
-                    {formatTimeAgo(n.createdAt, now)}
-                  </div>
+
+                  {!n.read && (
+                    <button
+                      onClick={e => { e.stopPropagation(); handleMarkRead(n.id); }}
+                      style={{
+                        flexShrink: 0, padding: '7px 16px',
+                        background: 'white', color: '#4f46e5',
+                        border: '1.5px solid #e0e7ff',
+                        borderRadius: '8px', fontSize: '12px',
+                        fontWeight: '700', cursor: 'pointer', whiteSpace: 'nowrap',
+                      }}
+                    >
+                      Mark read
+                    </button>
+                  )}
                 </div>
+              );
+            })}
 
-                {/* Mark read button */}
-                {!n.isRead && (
-                  <button
-                    onClick={() => handleMarkRead(n.id)}
-                    style={{
-                      flexShrink: 0, padding: '6px 14px',
-                      background: '#eff6ff', color: '#3b82f6',
-                      border: '1px solid #bfdbfe',
-                      borderRadius: '6px', fontSize: '11px',
-                      fontWeight: '700', cursor: 'pointer',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    Mark read
-                  </button>
-                )}
-              </div>
-            ))}
-
-            {/* Pagination */}
             {totalPages > 1 && (
-              <div style={{
-                padding: '14px 20px', display: 'flex',
-                justifyContent: 'center', gap: '8px',
-                borderTop: '1px solid #e2e8f0',
-              }}>
+              <div style={{ padding: '16px 20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', borderTop: '1px solid #e2e8f0' }}>
                 <button
                   onClick={() => setPage(p => Math.max(0, p - 1))}
                   disabled={page === 0}
-                  style={{ padding: '6px 14px', border: '1px solid #e2e8f0', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: page === 0 ? '#cbd5e1' : '#374151', background: 'white', cursor: page === 0 ? 'not-allowed' : 'pointer' }}
+                  style={{ padding: '7px 16px', border: '1.5px solid #e2e8f0', borderRadius: '8px', fontSize: '12px', fontWeight: '700', color: page === 0 ? '#cbd5e1' : '#374151', background: 'white', cursor: page === 0 ? 'not-allowed' : 'pointer' }}
                 >← Prev</button>
-                <span style={{ padding: '6px 14px', fontSize: '12px', color: '#64748b' }}>
-                  {page + 1} / {totalPages}
+                <span style={{ fontSize: '12px', color: '#64748b', fontWeight: '600' }}>
+                  Page {page + 1} of {totalPages}
                 </span>
                 <button
                   onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                   disabled={page >= totalPages - 1}
-                  style={{ padding: '6px 14px', border: '1px solid #e2e8f0', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: page >= totalPages - 1 ? '#cbd5e1' : '#374151', background: 'white', cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer' }}
+                  style={{ padding: '7px 16px', border: '1.5px solid #e2e8f0', borderRadius: '8px', fontSize: '12px', fontWeight: '700', color: page >= totalPages - 1 ? '#cbd5e1' : '#374151', background: 'white', cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer' }}
                 >Next →</button>
               </div>
             )}

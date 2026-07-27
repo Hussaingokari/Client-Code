@@ -12,13 +12,8 @@ public class OnboardingDTOs {
     public static class UpdateRequest {
         private Boolean offerLetterSigned;
         private Boolean idProofSubmitted;
-        private Boolean addressProofSubmitted;
         private Boolean educationDocsSubmitted;
         private Boolean bankDetailsSubmitted;
-        private Boolean pfFormSubmitted;
-        private Boolean esiFormSubmitted;
-        private Boolean ndaSigned;
-        private Boolean laptopIssued;
         private Boolean emailCreated;
         private Boolean systemAccessGiven;
         private String remarks;
@@ -35,16 +30,16 @@ public class OnboardingDTOs {
         private LocalDate joiningDate;
         private OnboardingStatus status;
         private int completionPercent;
+        private String employeeEmail;
+        private String employeePhone;
+        private String employeeDesignation;
+        private java.time.LocalDate employeeDateOfBirth;
         // Checklist
         private Boolean offerLetterSigned;
         private Boolean idProofSubmitted;
-        private Boolean addressProofSubmitted;
         private Boolean educationDocsSubmitted;
         private Boolean bankDetailsSubmitted;
-        private Boolean pfFormSubmitted;
-        private Boolean esiFormSubmitted;
-        private Boolean ndaSigned;
-        private Boolean laptopIssued;
+
         private Boolean emailCreated;
         private Boolean systemAccessGiven;
         private String remarks;

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,7 +24,7 @@ import java.util.UUID;
 @RequestMapping("/api/files")
 @Tag(name = "File Upload", description = "Attachments for leave requests, documents, etc.")
 @Slf4j
-public class FileUploadController {  // here file will be uploaded for the leave attachments
+public class FileUploadController { // here file will be uploaded for the leave attachments
 
     // Local disk storage — swap this with Azure Blob Storage SDK calls when ready
     private static final String UPLOAD_DIR = "uploads/";
@@ -66,7 +65,7 @@ public class FileUploadController {  // here file will be uploaded for the leave
     }
 
     @GetMapping("/download/{storedName}")
-    @Operation(summary = "Download an uploaded file")
+    @Operation(summary = "View/download an uploaded file")
     public ResponseEntity<Resource> download(@PathVariable String storedName) {
         try {
             Path filePath = Paths.get(UPLOAD_DIR).resolve(storedName);
@@ -76,11 +75,17 @@ public class FileUploadController {  // here file will be uploaded for the leave
                 return ResponseEntity.notFound().build();
             }
 
+            String contentType = Files.probeContentType(filePath);
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + storedName + "\"")
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + storedName + "\"")
                     .body(resource);
 
-        } catch (MalformedURLException e) {
+        } catch (IOException e) {
             return ResponseEntity.badRequest().build();
         }
     }

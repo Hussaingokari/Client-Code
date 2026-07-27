@@ -139,7 +139,7 @@ export default function EmployeeLogin() {
           {/* Email */}
           <div style={{ marginBottom: '16px' }}>
             <label htmlFor="emp-email" style={{ fontSize: '13px', fontWeight: '600', color: '#374151', display: 'block', marginBottom: '6px' }}>
-              Employee ID / Email
+              Email
             </label>
             <div style={{ position: 'relative' }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="#94a3b8"
@@ -150,7 +150,7 @@ export default function EmployeeLogin() {
                 id="emp-email"
                 name="email" type="email" value={form.email}
                 onChange={handleChange}
-                placeholder="Enter your employee ID or email"
+                placeholder="Enter your email"
                 required
                 style={{
                   width: '100%', padding: '12px 14px 12px 38px',
