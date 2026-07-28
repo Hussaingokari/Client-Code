@@ -177,7 +177,7 @@ export default function SendDocumentRequestForm() {
                             <strong>Submission Guidelines:</strong>
                         </p>
                         <ul className="list-disc ml-5">
-                            <li>Kindly send scanned copies of all documents in PDF format to hr@saitejainfotech.com.</li>
+                            <li>Kindly send scanned copies of all documents in PDF format to hr@saitejainfotechprivatelimited.com.</li>
                             <li>Ensure that all documents are clear and legible.</li>
                             <li>
                                 Please submit the documents by{" "}
