@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import { useSelector } from "react-redux";
-
-const API_URL =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+import api from "@/lib/axios";
 
 function formatDisplayDate(yyyyMmDd) {
     if (!yyyyMmDd) return "[Date]";
@@ -39,34 +37,21 @@ export default function SendDocumentRequestForm() {
         setSubmitting(true);
 
         try {
-            const response = await fetch(`${API_URL}/api/document-request/send`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    candidateName,
-                    email,
-                    jobTitle,
-                    interviewDate: interviewDate || null,
-                    submissionDeadline: submissionDeadline || null,
-                    adminId: user?.id,
-                    adminName: user?.name,
-                }),
+            const response = await api.post("/api/document-request/send", {
+                candidateName,
+                email,
+                jobTitle,
+                interviewDate: interviewDate || null,
+                submissionDeadline: submissionDeadline || null,
+                adminId: user?.id,
+                adminName: user?.name,
             });
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                setBanner({ type: "error", message: data.message || "Something went wrong." });
-                return;
-            }
-
-            setBanner({ type: "success", message: data.message || "Document request email sent successfully." });
+            setBanner({ type: "success", message: response.data.message || "Document request email sent successfully." });
             resetForm();
         } catch (err) {
-            setBanner({ type: "error", message: "Could not reach the server. Please try again." });
+            const errorMessage = err.response?.data?.message || "Could not reach the server. Please try again.";
+            setBanner({ type: "error", message: errorMessage });
         } finally {
             setSubmitting(false);
         }
