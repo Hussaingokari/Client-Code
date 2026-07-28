@@ -19,6 +19,7 @@ public class DataSeeder implements CommandLineRunner {
 
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
+    private final org.springframework.jdbc.core.JdbcTemplate jdbcTemplate;
 
     @Value("${seed.admin.email:admin@hrms.com}")
     private String adminEmail;
@@ -40,6 +41,14 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        
+        // Auto-fix the notifications table schema to prevent Data Truncation errors on ENUMs
+        try {
+            jdbcTemplate.execute("ALTER TABLE notifications MODIFY type VARCHAR(50)");
+            log.info("✅ Notifications table schema auto-fixed: type column modified to VARCHAR(50)");
+        } catch (Exception e) {
+            log.warn("⚠️ Could not auto-fix notifications table schema (it may already be fixed or not exist yet): {}", e.getMessage());
+        }
 
         // Seed default Admin
         if (!employeeRepository.existsByEmail(adminEmail)) {

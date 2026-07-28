@@ -27,6 +27,7 @@ public class Notification {
     private String message;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(50)")
     private NotificationType type;
 
     private String referenceType;
