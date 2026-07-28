@@ -31,7 +31,14 @@ export default function SendGreetingForm() {
         const fetchTemplates = async () => {
             try {
                 const { default: api } = await import('@/lib/axios');
-                const response = await api.get('/api/greeting/templates');
+                const response = await api.get('/api/greeting/templates', {
+                    params: { _t: Date.now() },
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache',
+                        'Expires': '0',
+                    }
+                });
                 const data = response.data;
                 setTemplates(data);
                 if (data.length > 0) {
