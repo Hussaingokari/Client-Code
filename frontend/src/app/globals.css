@@ -4,7 +4,8 @@
    RESPONSIVE GLOBAL LAYOUT & MOBILE BREAKPOINTS (< 768px)
    ========================================================= */
 
-html, body {
+html,
+body {
   overflow-x: hidden !important;
   margin: 0;
   padding: 0;
@@ -104,6 +105,7 @@ html, body {
    MOBILE SCREENS (< 768px / Phones & Tablets including iPhone 12)
    ========================================================= */
 @media (max-width: 768px) {
+
   /* Hide sidebar off-screen by default on mobile */
   .app-sidebar {
     transform: translateX(-100%) !important;
@@ -159,9 +161,11 @@ html, body {
     max-width: 130px !important;
     width: 100% !important;
   }
+
   .nav-role-badge {
     display: none !important;
   }
+
   .nav-right-side {
     gap: 10px !important;
   }
@@ -221,12 +225,15 @@ html, body {
   .nav-search-box {
     max-width: 110px !important;
   }
+
   .nav-user-info {
     display: none !important;
   }
+
   .nav-divider {
     display: none !important;
   }
+
   .login-card {
     padding: 24px 16px !important;
     margin: 8px !important;
@@ -257,22 +264,26 @@ html, body {
 
 /* Specific optimization for OnePlus 11R (~412px width) and similar large phones */
 @media (max-width: 430px) {
+
   /* Ensure form containers have optimal spacing */
-  .max-w-2xl, .max-w-7xl, .login-card {
+  .max-w-2xl,
+  .max-w-7xl,
+  .login-card {
     padding-left: 16px !important;
     padding-right: 16px !important;
   }
-  
+
   /* Make inline styled padding responsive */
-  div[style*="padding: 32px 24px"], 
+  div[style*="padding: 32px 24px"],
   div[style*="padding: '32px 24px'"] {
     padding: 20px 16px !important;
   }
-  
+
   /* Reduce gap on grids to fit content better */
   div[style*="gap: 16px"] {
     gap: 12px !important;
   }
+
   div[style*="gap: 20px"] {
     gap: 16px !important;
   }
@@ -282,14 +293,20 @@ html, body {
   .mobile-hamburger {
     display: none !important;
   }
+
   .mobile-overlay {
     display: none !important;
   }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 /* =========================================================
@@ -325,11 +342,11 @@ div[style*="grid-template-columns: 1.5fr 1fr"] {
 }
 
 /* Ensure columns inside data table rows never wrap or smash together */
-div[style*="0.5fr 2fr"] > div,
-div[style*="0.6fr 2fr"] > div,
-div[style*="2fr 1.2fr"] > div,
-div[style*="2fr 1fr 1fr"] > div,
-div[style*="1.5fr 1fr"] > div {
+div[style*="0.5fr 2fr"]>div,
+div[style*="0.6fr 2fr"]>div,
+div[style*="2fr 1.2fr"]>div,
+div[style*="2fr 1fr 1fr"]>div,
+div[style*="1.5fr 1fr"]>div {
   white-space: nowrap !important;
 }
 
@@ -342,6 +359,7 @@ div[style*="1.5fr 1fr"] > div {
 }
 
 @media (max-width: 640px) {
+
   /* Make login cards adjust gracefully on all small phone screens */
   .login-card {
     padding: 24px 20px !important;
@@ -352,7 +370,11 @@ div[style*="1.5fr 1fr"] > div {
   }
 
   /* Responsive font adjustments */
-  h1 { font-size: 1.35rem !important; }
-  h2 { font-size: 1.15rem !important; }
-}. n o - s c r o l l b a r : : - w e b k i t - s c r o l l b a r   {   d i s p l a y :   n o n e ;   }   . n o - s c r o l l b a r   {   - m s - o v e r f l o w - s t y l e :   n o n e ;   s c r o l l b a r - w i d t h :   n o n e ;   }  
- 
+  h1 {
+    font-size: 1.35rem !important;
+  }
+
+  h2 {
+    font-size: 1.15rem !important;
+  }
+}
