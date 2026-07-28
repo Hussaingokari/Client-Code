@@ -29,22 +29,13 @@ export default function SendGreetingForm() {
 
     useEffect(() => {
         const fetchTemplates = async () => {
-            const token = localStorage.getItem('accessToken');
-            if (!token) return;
-
             try {
-                const response = await fetch('http://localhost:8080/api/greeting/templates', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    setTemplates(data);
-                    if (data.length > 0) {
-                        setTemplateId(data[0].id);
-                    }
+                const { default: api } = await import('@/lib/axios');
+                const response = await api.get('/api/greeting/templates');
+                const data = response.data;
+                setTemplates(data);
+                if (data.length > 0) {
+                    setTemplateId(data[0].id);
                 }
             } catch (err) {
                 console.error('Failed to fetch templates:', err);
