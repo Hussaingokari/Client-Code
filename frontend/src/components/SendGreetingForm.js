@@ -133,13 +133,46 @@ export default function SendGreetingForm() {
             <form onSubmit={handleSendGreeting} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
                 <div>
-                    <label htmlFor="candidateName" style={{
+                    <label htmlFor="templateId" style={{
                         display: 'block',
                         fontSize: '13px',
                         fontWeight: '600',
                         color: '#1e293b',
                         marginBottom: '8px',
                     }}>
+                        Select Greeting Template
+                    </label>
+                    <select
+                        id="templateId"
+                        value={templateId}
+                        onChange={(e) => setTemplateId(Number(e.target.value))}
+                        disabled={loading || templates.length === 0}
+                        style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            border: '1.5px solid #e2e8f0',
+                            borderRadius: '8px',
+                            fontSize: '13px',
+                            outline: 'none',
+                            boxSizing: 'border-box',
+                            background: '#f8fafc',
+                            color: '#1e293b',
+                            marginBottom: '20px',
+                            transition: 'all 0.2s',
+                            opacity: (loading || templates.length === 0) ? 0.6 : 1,
+                        }}
+                    >
+                        {templates.length === 0 && <option value={1}>No templates available</option>}
+                        {templates.map((t) => (
+                            <option key={t.id} value={t.id}>
+                                {t.templateName || `Template ${t.id}`}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div>
+                    <label htmlFor="candidateName" style={{
                         Candidate Name
                     </label>
                     <input

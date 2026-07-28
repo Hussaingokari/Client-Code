@@ -112,7 +112,7 @@ public class GreetingService {
      * Get all email templates
      */
     public List<EmailTemplate> getAllTemplates() {
-        return emailTemplateRepository.findByIsActiveTrue();
+        return emailTemplateRepository.findAll();
     }
 
     /**
