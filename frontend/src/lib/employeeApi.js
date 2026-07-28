@@ -40,10 +40,10 @@ export const getMyTrainings = () =>
   api.get('/api/trainings/my');
 // Onboarding
 export const getMyOnboarding = () =>
-  api.get('/api/onboarding/my');
+  api.get(`/api/onboarding/my?_t=${Date.now()}`);
 
 export const getMyDocuments = (onboardingId) =>
-  api.get(`/api/onboarding/documents/${onboardingId}`);
+  api.get(`/api/onboarding/documents/${onboardingId}?_t=${Date.now()}`);
 
 export const uploadFile = (file) => {
   const formData = new FormData();
