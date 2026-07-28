@@ -40,9 +40,14 @@ public class GreetingService {
                 return new SendGreetingResponse(false, "Email address is required");
             }
 
-            Integer templateId = request.getTemplateId() != null ? request.getTemplateId() : 1;
-            EmailTemplate template = emailTemplateRepository.findById(templateId)
-                    .orElseThrow(() -> new RuntimeException("Template not found"));
+            EmailTemplate template;
+            if (request.getTemplateId() != null) {
+                template = emailTemplateRepository.findById(request.getTemplateId())
+                        .orElseThrow(() -> new RuntimeException("Template not found"));
+            } else {
+                template = emailTemplateRepository.findByTemplateName("Admission Greeting")
+                        .orElseThrow(() -> new RuntimeException("Admission Greeting template not found"));
+            }
 
             boolean emailSent = false;
             String errorMessage = null;
@@ -112,7 +117,7 @@ public class GreetingService {
      * Get all email templates
      */
     public List<EmailTemplate> getAllTemplates() {
-        return emailTemplateRepository.findAll();
+        return emailTemplateRepository.findByIsActiveTrue();
     }
 
     /**

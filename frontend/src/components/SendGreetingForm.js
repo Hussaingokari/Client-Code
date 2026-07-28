@@ -29,13 +29,26 @@ export default function SendGreetingForm() {
 
     useEffect(() => {
         const fetchTemplates = async () => {
+            const token = localStorage.getItem('accessToken');
+            if (!token) return;
+
             try {
-                const { default: api } = await import('@/lib/axios');
-                const response = await api.get('/api/greeting/templates');
-                const data = response.data;
-                setTemplates(data);
-                if (data.length > 0) {
-                    setTemplateId(data[0].id);
+                const response = await fetch('http://localhost:8080/api/greeting/templates', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setTemplates(data);
+                    if (data.length > 0) {
+                        // FIX: pick the "Admission Greeting" template specifically instead of
+                        // blindly using whichever template happens to come back first.
+                        const greetingTemplate =
+                            data.find(t => t.templateName === 'Admission Greeting') || data[0];
+                        setTemplateId(greetingTemplate.id);
+                    }
                 }
             } catch (err) {
                 console.error('Failed to fetch templates:', err);
@@ -133,46 +146,13 @@ export default function SendGreetingForm() {
             <form onSubmit={handleSendGreeting} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
                 <div>
-                    <label htmlFor="templateId" style={{
+                    <label htmlFor="candidateName" style={{
                         display: 'block',
                         fontSize: '13px',
                         fontWeight: '600',
                         color: '#1e293b',
                         marginBottom: '8px',
                     }}>
-                        Select Greeting Template
-                    </label>
-                    <select
-                        id="templateId"
-                        value={templateId}
-                        onChange={(e) => setTemplateId(Number(e.target.value))}
-                        disabled={loading || templates.length === 0}
-                        style={{
-                            width: '100%',
-                            padding: '10px 12px',
-                            border: '1.5px solid #e2e8f0',
-                            borderRadius: '8px',
-                            fontSize: '13px',
-                            outline: 'none',
-                            boxSizing: 'border-box',
-                            background: '#f8fafc',
-                            color: '#1e293b',
-                            marginBottom: '20px',
-                            transition: 'all 0.2s',
-                            opacity: (loading || templates.length === 0) ? 0.6 : 1,
-                        }}
-                    >
-                        {templates.length === 0 && <option value={1}>No templates available</option>}
-                        {templates.map((t) => (
-                            <option key={t.id} value={t.id}>
-                                {t.templateName || `Template ${t.id}`}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                <div>
-                    <label htmlFor="candidateName" style={{
                         Candidate Name
                     </label>
                     <input
@@ -257,22 +237,29 @@ export default function SendGreetingForm() {
                     }}>
                         Greeting Preview
                     </label>
-                    <div style={{
-                        width: '100%',
-                        padding: '12px 12px',
-                        border: '1.5px solid #e2e8f0',
-                        borderRadius: '8px',
-                        background: '#f8fafc',
-                        color: '#475569',
-                        fontSize: '12px',
-                        lineHeight: '1.6',
-                        whiteSpace: 'pre-wrap',
-                        maxHeight: '300px',
-                        overflowY: 'auto',
-                        boxSizing: 'border-box',
-                    }}>
-                        {greetingPreview || 'Enter candidate name to see preview...'}
-                    </div>
+                    {/* FIX: use dangerouslySetInnerHTML so <strong> tags in the template
+                        body render as real bold text instead of literal markup. This is
+                        safe here because the content comes from our own trusted DB
+                        templates, not from arbitrary user input. */}
+                    <div
+                        style={{
+                            width: '100%',
+                            padding: '12px 12px',
+                            border: '1.5px solid #e2e8f0',
+                            borderRadius: '8px',
+                            background: '#f8fafc',
+                            color: '#475569',
+                            fontSize: '12px',
+                            lineHeight: '1.6',
+                            whiteSpace: 'pre-wrap',
+                            maxHeight: '300px',
+                            overflowY: 'auto',
+                            boxSizing: 'border-box',
+                        }}
+                        dangerouslySetInnerHTML={{
+                            __html: greetingPreview || 'Enter candidate name to see preview...',
+                        }}
+                    />
                 </div>
 
                 <div style={{

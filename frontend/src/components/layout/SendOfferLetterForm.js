@@ -52,20 +52,18 @@ export default function SendOfferLetterForm() {
     setLoading(true);
     try {
       const response = await sendOfferLetter(offerData);
-      if (response?.success) {
-        setSuccess(response.message);
-        setShowSuccess(true);
-        setOfferData({
-          candidateName: '',
-          recipientEmail: '',
-          jobTitle: '',
-          salary: '',
-          joiningDate: '',
-          reportingTo: '',
-          acceptanceDeadline: '',
-        });
-        setTimeout(() => setShowSuccess(false), 5000);
-      }
+      setSuccess(response?.message || 'Offer letter sent successfully');
+      setShowSuccess(true);
+      setOfferData({
+        candidateName: '',
+        recipientEmail: '',
+        jobTitle: '',
+        salary: '',
+        joiningDate: '',
+        reportingTo: '',
+        acceptanceDeadline: '',
+      });
+      setTimeout(() => setShowSuccess(false), 5000);
     } catch (err) {
       setError(err.message || 'Failed to send offer letter');
     } finally {
