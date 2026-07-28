@@ -23,39 +23,28 @@ export default function EmployeeOnboardingLayout({ children }) {
     const pathname = usePathname();
 
     return (
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-            <div style={{
-                width: '260px', flexShrink: 0, background: 'white',
-                borderRadius: '12px', border: '1px solid #e2e8f0',
-                boxShadow: '0 1px 4px rgba(0,0,0,0.04)', padding: '16px',
-                position: 'sticky', top: '20px',
-            }}>
+        <div className="flex flex-col md:flex-row gap-5 items-start">
+            <div className="w-full md:w-[260px] shrink-0 bg-white rounded-xl border border-slate-200 shadow-sm p-3 md:p-4 md:sticky md:top-5 flex flex-row md:flex-col overflow-x-auto md:overflow-visible gap-2 md:gap-1 no-scrollbar">
                 {SUB_NAV.map(item => {
                     const active = pathname === item.key;
                     return (
                         <div
                             key={item.key}
                             onClick={() => router.push(item.key)}
-                            style={{
-                                display: 'flex', alignItems: 'center', gap: '14px',
-                                padding: '14px 16px', borderRadius: '10px', cursor: 'pointer',
-                                marginBottom: '6px',
-                                background: active ? '#eef2ff' : 'transparent',
-                                color: active ? '#1e293b' : '#64748b',
-                                fontSize: '15px', fontWeight: active ? '700' : '400',
-                                transition: 'all 0.15s',
-                            }}
-                            onMouseEnter={e => { if (!active) e.currentTarget.style.background = '#f8fafc'; }}
-                            onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}
+                            className={`flex items-center gap-2 md:gap-3 px-3 py-2 md:px-4 md:py-3 rounded-lg cursor-pointer transition-all duration-150 whitespace-nowrap ${
+                                active 
+                                    ? 'bg-indigo-50 text-slate-900 font-bold' 
+                                    : 'bg-transparent text-slate-500 hover:bg-slate-50 font-normal'
+                            }`}
                         >
                             <NavIcon path={item.icon} />
-                            {item.label}
+                            <span className="text-sm md:text-[15px]">{item.label}</span>
                         </div>
                     );
                 })}
             </div>
 
-            <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="flex-1 min-w-0 w-full">
                 {children}
             </div>
         </div>
