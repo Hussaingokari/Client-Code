@@ -130,7 +130,7 @@ export default function SendInterviewForm() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* ONLINE INTERVIEW */}
-      <div className="bg-white border border-gray-300 rounded-lg p-6">
+      <div className="bg-white border border-gray-300 rounded-lg p-4 sm:p-6">
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-2">
             <Mail size={24} className="text-blue-500" />
@@ -266,7 +266,7 @@ export default function SendInterviewForm() {
       </div>
 
       {/* OFFLINE INTERVIEW */}
-      <div className="bg-white border border-gray-300 rounded-lg p-6">
+      <div className="bg-white border border-gray-300 rounded-lg p-4 sm:p-6">
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-2">
             <Mail size={24} className="text-blue-500" />

@@ -38,10 +38,10 @@ export default function OfferLetterPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 p-8">
+        <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
             <div className="max-w-7xl mx-auto">
                 {/* Breadcrumb */}
-                <div className="mb-8">
+                <div className="mb-4 sm:mb-8">
                     <nav className="text-sm text-gray-600">
                         <a href="/admin/dashboard" className="text-blue-500 hover:underline">Dashboard</a>
                         <span className="mx-2">/</span>
@@ -51,8 +51,8 @@ export default function OfferLetterPage() {
                     </nav>
                 </div>
                 {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Send Offer Letter</h1>
+                <div className="mb-6 sm:mb-8">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Send Offer Letter</h1>
                     <p className="text-gray-600">Send offer letters to selected candidates</p>
                 </div>
                 {/* Form */}
