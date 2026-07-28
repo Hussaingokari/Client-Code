@@ -19,6 +19,7 @@ public class DataSeeder implements CommandLineRunner {
 
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
+    private final com.hrms.repository.EmailTemplateRepository emailTemplateRepository;
 
     @Value("${seed.admin.email:admin@hrms.com}")
     private String adminEmail;
@@ -93,6 +94,50 @@ public class DataSeeder implements CommandLineRunner {
                     .build();
             employeeRepository.save(emp);
             log.info("✅ EMPLOYEE account seeded for email: {}  →  loginType: EMPLOYEE", empEmail);
+        }
+
+        seedEmailTemplates();
+    }
+
+    private void seedEmailTemplates() {
+        if (emailTemplateRepository.count() == 0) {
+            log.info("Seeding initial email templates...");
+
+            com.hrms.entity.EmailTemplate welcomeGreeting = new com.hrms.entity.EmailTemplate();
+            welcomeGreeting.setTemplateName("Welcome Greeting");
+            welcomeGreeting.setTemplateSubject("Welcome to SAITEJA INFOTECH!");
+            welcomeGreeting.setTemplateBody("Dear {CANDIDATE_NAME},\n\nWelcome to SAITEJA INFOTECH! We are excited to connect with you.\n\nBest regards,\nHR Team");
+            welcomeGreeting.setIsActive(true);
+            welcomeGreeting.setCreatedAt(java.time.LocalDateTime.now());
+            welcomeGreeting.setUpdatedAt(java.time.LocalDateTime.now());
+
+            com.hrms.entity.EmailTemplate offerLetter = new com.hrms.entity.EmailTemplate();
+            offerLetter.setTemplateName("Offer Letter");
+            offerLetter.setTemplateSubject("Offer of Employment from SAITEJA INFOTECH");
+            offerLetter.setTemplateBody("Dear {CANDIDATE_NAME},\n\nWe are pleased to offer you the position of {JOB_TITLE} at SAITEJA INFOTECH. Your starting salary will be {SALARY}, and your expected joining date is {JOINING_DATE}. You will be reporting to {REPORTING_TO}.\n\nPlease review and let us know your decision by {ACCEPTANCE_DEADLINE}.\n\nCongratulations and we look forward to working with you!\n\nBest regards,\nHR Team");
+            offerLetter.setIsActive(true);
+            offerLetter.setCreatedAt(java.time.LocalDateTime.now());
+            offerLetter.setUpdatedAt(java.time.LocalDateTime.now());
+
+            com.hrms.entity.EmailTemplate onlineInterview = new com.hrms.entity.EmailTemplate();
+            onlineInterview.setTemplateName("Online Interview Invitation");
+            onlineInterview.setTemplateSubject("Invitation for Online Interview - SAITEJA INFOTECH");
+            onlineInterview.setTemplateBody("Dear {CANDIDATE_NAME},\n\nThank you for applying to SAITEJA INFOTECH. We would like to invite you for an online interview for the {JOB_TITLE} position.\n\nDate: {INTERVIEW_DATE}\nTime: {INTERVIEW_TIME}\nPlatform: {PLATFORM}\nMeeting Link: {MEETING_LINK}\nMeeting ID: {MEETING_ID}\nPasscode: {PASSCODE}\n\nWe look forward to speaking with you.\n\nBest regards,\nHR Team");
+            onlineInterview.setIsActive(true);
+            onlineInterview.setCreatedAt(java.time.LocalDateTime.now());
+            onlineInterview.setUpdatedAt(java.time.LocalDateTime.now());
+
+            com.hrms.entity.EmailTemplate offlineInterview = new com.hrms.entity.EmailTemplate();
+            offlineInterview.setTemplateName("Offline Interview Invitation");
+            offlineInterview.setTemplateSubject("Invitation for In-Person Interview - SAITEJA INFOTECH");
+            offlineInterview.setTemplateBody("Dear {CANDIDATE_NAME},\n\nThank you for applying to SAITEJA INFOTECH. We would like to invite you for an in-person interview for the {JOB_TITLE} position.\n\nDate: {INTERVIEW_DATE}\nTime: {INTERVIEW_TIME}\nVenue: {VENUE_ADDRESS}\n\nWe look forward to meeting you.\n\nBest regards,\nHR Team");
+            offlineInterview.setIsActive(true);
+            offlineInterview.setCreatedAt(java.time.LocalDateTime.now());
+            offlineInterview.setUpdatedAt(java.time.LocalDateTime.now());
+
+            java.util.List<com.hrms.entity.EmailTemplate> templates = java.util.Arrays.asList(welcomeGreeting, offerLetter, onlineInterview, offlineInterview);
+            emailTemplateRepository.saveAll(templates);
+            log.info("✅ Email templates seeded successfully.");
         }
     }
 }
