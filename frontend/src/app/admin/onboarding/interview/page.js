@@ -9,27 +9,20 @@ export default function InterviewPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const checkAuth = async () => {
-            const token = localStorage.getItem('accessToken');
-            const userStr = localStorage.getItem('user');
-            const user = userStr ? JSON.parse(userStr) : null;
-            const userRole = user?.role;
-
-            if (!token) {
-                router.push('/login');
-                return;
-            }
-
-            if (userRole?.toLowerCase() !== 'admin' && userRole?.toLowerCase() !== 'hr') {
-                router.push('/admin/dashboard');
-                return;
-            }
-
-            setIsAuthenticated(true);
-            setLoading(false);
-        };
-        
-        checkAuth();
+        const token = localStorage.getItem('accessToken');
+        const userStr = localStorage.getItem('user');
+        const user = userStr ? JSON.parse(userStr) : null;
+        const userRole = user?.role;
+        if (!token) {
+            router.push('/login');
+            return;
+        }
+        if (userRole?.toLowerCase() !== 'admin' && userRole?.toLowerCase() !== 'hr') {
+            router.push('/admin/dashboard');
+            return;
+        }
+        setIsAuthenticated(true);
+        setLoading(false);
     }, [router]);
 
     if (loading) {
@@ -57,13 +50,11 @@ export default function InterviewPage() {
                         <span className="text-gray-900 font-medium">Send Interview</span>
                     </nav>
                 </div>
-
                 {/* Header */}
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Send Interview Invitation</h1>
                     <p className="text-gray-600">Send online or offline interview invitations to candidates</p>
                 </div>
-
                 {/* Forms */}
                 <SendInterviewForm />
             </div>

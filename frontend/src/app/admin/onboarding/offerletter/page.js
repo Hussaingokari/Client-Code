@@ -9,27 +9,20 @@ export default function OfferLetterPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const checkAuth = async () => {
-            const token = localStorage.getItem('accessToken');
-            const userStr = localStorage.getItem('user');
-            const user = userStr ? JSON.parse(userStr) : null;
-            const userRole = user?.role;
-
-            if (!token) {
-                router.push('/login');
-                return;
-            }
-
-            if (userRole?.toLowerCase() !== 'admin' && userRole?.toLowerCase() !== 'hr') {
-                router.push('/admin/dashboard');
-                return;
-            }
-
-            setIsAuthenticated(true);
-            setLoading(false);
-        };
-        
-        checkAuth();
+        const token = localStorage.getItem('accessToken');
+        const userStr = localStorage.getItem('user');
+        const user = userStr ? JSON.parse(userStr) : null;
+        const userRole = user?.role;
+        if (!token) {
+            router.push('/login');
+            return;
+        }
+        if (userRole?.toLowerCase() !== 'admin' && userRole?.toLowerCase() !== 'hr') {
+            router.push('/admin/dashboard');
+            return;
+        }
+        setIsAuthenticated(true);
+        setLoading(false);
     }, [router]);
 
     if (loading) {
@@ -57,13 +50,11 @@ export default function OfferLetterPage() {
                         <span className="text-gray-900 font-medium">Send Offer Letter</span>
                     </nav>
                 </div>
-
                 {/* Header */}
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Send Offer Letter</h1>
                     <p className="text-gray-600">Send offer letters to selected candidates</p>
                 </div>
-
                 {/* Form */}
                 <SendOfferLetterForm />
             </div>

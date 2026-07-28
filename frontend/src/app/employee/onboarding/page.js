@@ -1,0 +1,192 @@
+'use client';
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { getMyOnboarding, getMyDocuments } from '@/lib/employeeApi';
+import toast from 'react-hot-toast';
+
+const CHECKLIST_ITEMS = [
+    { key: 'offerLetterSigned', label: 'Offer Letter Signed' },
+    { key: 'idProofSubmitted', label: 'ID Proof Submitted' },
+    { key: 'educationDocsSubmitted', label: 'Education Docs Submitted' },
+    { key: 'bankDetailsSubmitted', label: 'Bank Details Submitted' },
+    { key: 'emailCreated', label: 'Email Created' },
+    { key: 'systemAccessGiven', label: 'System Access Given' },
+];
+
+const DOC_KEY_LABELS = {
+    OFFER_LETTER: 'Offer Letter',
+    AADHAR_CARD: 'Aadhar Card',
+    PAN_CARD: 'PAN Card',
+    SSC_CERTIFICATE: 'SSC Certificate',
+    INTER_DIPLOMA_CERTIFICATE: 'Inter / Diploma Certificate',
+    DEGREE_CERTIFICATE: 'Degree Certificate',
+    BANK_PASSBOOK: 'Bank Passbook',
+};
+
+function StatusPill({ status }) {
+    const map = {
+        UNDER_REVIEW: { bg: '#f1f5f9', color: '#64748b', label: 'Pending' },
+        APPROVED: { bg: '#dcfce7', color: '#16a34a', label: 'Approved' },
+        REJECTED: { bg: '#fee2e2', color: '#dc2626', label: 'Rejected' },
+    };
+    const s = map[status] || { bg: '#f1f5f9', color: '#64748b', label: 'Pending' };
+    return (
+        <span style={{ background: s.bg, color: s.color, padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '700', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: s.color }} />
+            {s.label}
+        </span>
+    );
+}
+
+export default function EmployeeOnboardingDashboardPage() {
+    const router = useRouter();
+    const [onboarding, setOnboarding] = useState(null);
+    const [documents, setDocuments] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        try {
+            const res = await getMyOnboarding();
+            const onb = res.data?.data;
+            setOnboarding(onb);
+            if (onb?.id) {
+                const docRes = await getMyDocuments(onb.id);
+                setDocuments(docRes.data?.data || []);
+            }
+        } catch (err) {
+            toast.error('Failed to load dashboard');
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => { fetchData(); }, [fetchData]);
+
+    if (loading) {
+        return <div style={{ padding: '60px', textAlign: 'center', color: '#94a3b8' }}>Loading...</div>;
+    }
+
+    if (!onboarding) {
+        return (
+            <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '60px', textAlign: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+                <div style={{ fontSize: '40px', marginBottom: '12px' }}>📋</div>
+                <div style={{ fontSize: '14px', fontWeight: '600', color: '#1e293b', marginBottom: '4px' }}>No onboarding checklist yet</div>
+                <div style={{ fontSize: '12px', color: '#94a3b8' }}>Your HR team hasn't set this up for you yet.</div>
+            </div>
+        );
+    }
+
+    const docsByKey = documents.reduce((acc, d) => { acc[d.documentKey] = d; return acc; }, {});
+    const pendingTasksCount = CHECKLIST_ITEMS.filter(item => !onboarding[item.key]).length;
+    const approvedDocsCount = documents.filter(d => d.status === 'APPROVED').length;
+    const firstName = onboarding.employeeName?.split(' ')[0] || 'there';
+
+    const STATS = [
+        { label: 'Pending Tasks', value: pendingTasksCount, sub: 'To be completed', bg: '#fef9c3', icon: '⏰' },
+        { label: 'Documents Uploaded', value: documents.length, sub: 'Total uploaded', bg: '#eff6ff', icon: '📄' },
+        { label: 'Approved Docs', value: approvedDocsCount, sub: 'Verified by HR', bg: '#dcfce7', icon: '✅' },
+    ];
+
+    return (
+        <div>
+            {/* Welcome banner */}
+            <div style={{ background: 'linear-gradient(135deg, #7c3aed, #4f46e5)', borderRadius: '16px', padding: '24px 28px', marginBottom: '20px', color: 'white' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div>
+                        <div style={{ fontSize: '22px', fontWeight: '800', marginBottom: '4px' }}>
+                            Welcome, {firstName}! 👋
+                        </div>
+                        <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.8)' }}>
+                            {onboarding.employeeDesignation || '—'} · {onboarding.department || '—'}
+                        </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '28px' }}>
+                        <div style={{ textAlign: 'right' }}>
+                            <div style={{ fontSize: '26px', fontWeight: '900' }}>{onboarding.completionPercent}%</div>
+                            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.75)' }}>Onboarding</div>
+                        </div>
+                        <div style={{ textAlign: 'right', borderLeft: '1px solid rgba(255,255,255,0.3)', paddingLeft: '28px' }}>
+                            <div style={{ fontSize: '26px', fontWeight: '900' }}>{approvedDocsCount}</div>
+                            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.75)' }}>Docs Approved</div>
+                        </div>
+                    </div>
+                </div>
+                <div style={{ marginTop: '16px', height: '8px', background: 'rgba(255,255,255,0.25)', borderRadius: '4px', overflow: 'hidden' }}>
+                    <div style={{ height: '100%', background: 'white', width: `${onboarding.completionPercent}%`, borderRadius: '4px', transition: 'width 0.5s' }} />
+                </div>
+            </div>
+
+            {/* Stat cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px', marginBottom: '20px' }}>
+                {STATS.map((s, i) => (
+                    <div key={i} style={{ background: 'white', borderRadius: '12px', padding: '18px', border: '1px solid #e2e8f0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                            <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>{s.label}</span>
+                            <div style={{ width: '30px', height: '30px', background: s.bg, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>{s.icon}</div>
+                        </div>
+                        <div style={{ fontSize: '28px', fontWeight: '800', color: '#1e293b', marginBottom: '4px' }}>{s.value}</div>
+                        <div style={{ fontSize: '12px', color: '#94a3b8' }}>{s.sub}</div>
+                    </div>
+                ))}
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                {/* Onboarding Checklist preview */}
+                <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '20px', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                        <div style={{ fontSize: '15px', fontWeight: '700', color: '#1e293b' }}>Onboarding Checklist</div>
+                        <button
+                            onClick={() => router.push('/employee/onboarding/checklist')}
+                            style={{ background: 'none', border: 'none', color: '#4f46e5', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
+                            View all
+                        </button>
+                    </div>
+                    {CHECKLIST_ITEMS.map(item => (
+                        <div key={item.key} style={{
+                            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                            padding: '13px 14px', marginBottom: '8px', borderRadius: '10px',
+                            background: '#f8fafc', border: '1px solid #e2e8f0',
+                        }}>
+                            <span style={{ fontSize: '13px', fontWeight: '600', color: '#1e293b' }}>{item.label}</span>
+                            <StatusPill status={onboarding[item.key] ? 'APPROVED' : 'UNDER_REVIEW'} />
+                        </div>
+                    ))}
+                </div>
+
+                {/* Recent Documents preview */}
+                <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '20px', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                        <div style={{ fontSize: '15px', fontWeight: '700', color: '#1e293b' }}>Recent Documents</div>
+                        <button
+                            onClick={() => router.push('/employee/onboarding/documents')}
+                            style={{ background: 'none', border: 'none', color: '#4f46e5', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
+                            View all
+                        </button>
+                    </div>
+                    {documents.length === 0 ? (
+                        <div style={{ padding: '30px', textAlign: 'center', color: '#94a3b8', fontSize: '13px' }}>
+                            No documents uploaded yet.
+                        </div>
+                    ) : (
+                        documents.slice(0, 5).map(doc => (
+                            <div key={doc.id} style={{
+                                display: 'flex', alignItems: 'center', gap: '12px',
+                                padding: '13px 14px', marginBottom: '8px', borderRadius: '10px',
+                                background: '#f8fafc', border: '1px solid #e2e8f0',
+                            }}>
+                                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#eef2ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px', flexShrink: 0 }}>
+                                    📄
+                                </div>
+                                <span style={{ flex: 1, fontSize: '13px', fontWeight: '600', color: '#1e293b' }}>
+                                    {DOC_KEY_LABELS[doc.documentKey] || doc.documentKey}
+                                </span>
+                                <StatusPill status={doc.status} />
+                            </div>
+                        ))
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}
