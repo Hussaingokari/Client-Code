@@ -209,6 +209,11 @@ export default function OnboardingEmployeesPage() {
         <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                 <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: '600', color: '#64748b', marginBottom: '8px' }}>
+                        <span>Onboarding</span>
+                        <span style={{ color: '#cbd5e1' }}>/</span>
+                        <span style={{ color: '#3b82f6' }}>Employees</span>
+                    </div>
                     <h1 style={{ fontSize: '22px', fontWeight: '800', color: '#1e293b', marginBottom: '4px' }}>
                         Employee Management
                     </h1>
