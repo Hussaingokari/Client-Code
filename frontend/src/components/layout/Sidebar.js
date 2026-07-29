@@ -65,12 +65,18 @@ export default function Sidebar({ role }) {
 
   const isItemActive = (key) => {
     if (pathname === key) return true;
-    if (key === '/admin/onboarding' && pathname.startsWith('/admin/onboarding')) {
-        const exactMatch = menu.some(m => m.key !== '/admin/onboarding' && m.key === pathname);
-        if (!exactMatch) return true;
-    }
-    if (key === '/employee/onboarding' && pathname.startsWith('/employee/onboarding')) return true;
-    return false;
+    
+    const allKeys = [...menu.map(m => m.key), settingsRoute];
+    const bestMatch = allKeys.reduce((best, k) => {
+      if (pathname === k || pathname.startsWith(k + '/')) {
+        if (!best || k.length > best.length) {
+          return k;
+        }
+      }
+      return best;
+    }, null);
+
+    return key === bestMatch;
   };
 
   const navItemStyle = (key) => {

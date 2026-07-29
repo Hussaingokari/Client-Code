@@ -33,7 +33,17 @@ export default function OnboardingLayout({ children }) {
                 position: 'sticky', top: '20px',
             }}>
                 {SUB_NAV.map(item => {
-                    const active = pathname === item.key;
+                    const bestMatch = SUB_NAV.reduce((best, nav) => {
+                        if (pathname === nav.key || pathname.startsWith(nav.key + '/')) {
+                            if (!best || nav.key.length > best.length) {
+                                return nav.key;
+                            }
+                        }
+                        return best;
+                    }, null);
+                    
+                    const active = item.key === bestMatch;
+                    
                     return (
                         <div
                             key={item.key}
