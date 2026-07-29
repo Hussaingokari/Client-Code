@@ -63,15 +63,28 @@ export default function Sidebar({ role }) {
     router.push('/');
   };
 
-  const navItemStyle = (key) => ({
-    display: 'flex', alignItems: 'center', gap: '10px',
-    padding: '10px 12px', borderRadius: '8px',
-    cursor: 'pointer', marginBottom: '2px',
-    background: pathname === key ? '#3b82f6' : 'transparent',
-    color: pathname === key ? 'white' : '#93c5fd',
-    fontSize: '13px', fontWeight: pathname === key ? '600' : '400',
-    transition: 'all 0.15s',
-  });
+  const isItemActive = (key) => {
+    if (pathname === key) return true;
+    if (key === '/admin/onboarding' && pathname.startsWith('/admin/onboarding')) {
+        const exactMatch = menu.some(m => m.key !== '/admin/onboarding' && m.key === pathname);
+        if (!exactMatch) return true;
+    }
+    if (key === '/employee/onboarding' && pathname.startsWith('/employee/onboarding')) return true;
+    return false;
+  };
+
+  const navItemStyle = (key) => {
+    const active = isItemActive(key);
+    return {
+      display: 'flex', alignItems: 'center', gap: '10px',
+      padding: '10px 12px', borderRadius: '8px',
+      cursor: 'pointer', marginBottom: '2px',
+      background: active ? '#3b82f6' : 'transparent',
+      color: active ? 'white' : '#93c5fd',
+      fontSize: '13px', fontWeight: active ? '600' : '400',
+      transition: 'all 0.15s',
+    };
+  };
 
   return (
     <>

@@ -44,6 +44,7 @@ export default function OnboardingLayout({ children }) {
                                 marginBottom: '2px',
                                 background: active ? '#eef2ff' : 'transparent',
                                 color: active ? '#1e293b' : '#64748b',
+                                borderLeft: active ? '3px solid #3b82f6' : '3px solid transparent',
                                 fontSize: '13px', fontWeight: active ? '700' : '400',
                                 transition: 'all 0.15s',
                             }}
