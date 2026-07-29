@@ -215,10 +215,10 @@ export default function OnboardingEmployeesPage() {
                         <span style={{ color: '#3b82f6' }}>Employees</span>
                     </div>
                     <h1 style={{ fontSize: '22px', fontWeight: '800', color: '#1e293b', marginBottom: '4px' }}>
-                        Employee Management
+                        Onboarding Employees
                     </h1>
                     <p style={{ fontSize: '13px', color: '#94a3b8' }}>
-                        View, add, edit, and manage all employees.
+                        View, add, edit, and manage employees in the onboarding process.
                     </p>
                 </div>
                 <button onClick={openAddForm}
