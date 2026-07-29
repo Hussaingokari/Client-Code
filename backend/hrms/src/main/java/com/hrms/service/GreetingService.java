@@ -210,7 +210,7 @@ public class GreetingService {
                     .replace("{JOB_TITLE}", request.getJobTitle())
                     .replace("{SALARY}", request.getSalary())
                     .replace("{JOINING_DATE}", request.getJoiningDate())
-                    .replace("{REPORTING_TO}", request.getReportingTo())
+                    .replace("{REPORTING_PERSON}", request.getReportingTo())
                     .replace("{ACCEPTANCE_DEADLINE}", request.getAcceptanceDeadline());
  
             String styledHtmlBody = wrapWithHtmlStyling(request.getCandidateName(), emailBody);
@@ -231,7 +231,8 @@ public class GreetingService {
                 +
                 "<div style=\"background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;\">"
                 +
-                "<h1 style=\"color: white; margin: 0; font-size: 28px; font-weight: bold;\">🏢 SAITEJA INFOTECH PRIVATE LIMITED</h1>" +
+                "<h1 style=\"color: white; margin: 0; font-size: 28px; font-weight: bold;\">🏢 SAITEJA INFOTECH PRIVATE LIMITED</h1>"
+                +
                 "<p style=\"color: #e0e0e0; margin: 8px 0 0 0; font-size: 14px;\">HR Management System</p>" +
                 "</div>" +
                 "<div style=\"background-color: white; padding: 40px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);\">"
