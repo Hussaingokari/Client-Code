@@ -22,6 +22,8 @@ export default function SendOfferLetterForm() {
   const [success, setSuccess] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
 
+  const today = new Date().toISOString().split('T')[0];
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setOfferData(prev => ({ ...prev, [name]: value }));
@@ -155,6 +157,7 @@ export default function SendOfferLetterForm() {
             <input
               type="date"
               name="joiningDate"
+              min={today}
               value={offerData.joiningDate}
               onChange={handleChange}
               disabled={loading}
@@ -180,6 +183,7 @@ export default function SendOfferLetterForm() {
             <input
               type="date"
               name="acceptanceDeadline"
+              min={today}
               value={offerData.acceptanceDeadline}
               onChange={handleChange}
               disabled={loading}

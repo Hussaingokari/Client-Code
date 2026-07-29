@@ -39,6 +39,8 @@ export default function SendInterviewForm() {
   const [offlineSuccess, setOfflineSuccess] = useState(null);
   const [showOfflineSuccess, setShowOfflineSuccess] = useState(false);
 
+  const today = new Date().toISOString().split('T')[0];
+
   const handleOnlineChange = (e) => {
     const { name, value } = e.target;
     setOnlineData(prev => ({ ...prev, [name]: value }));
@@ -184,6 +186,7 @@ export default function SendInterviewForm() {
             <input
               type="date"
               name="interviewDate"
+              min={today}
               value={onlineData.interviewDate}
               onChange={handleOnlineChange}
               disabled={onlineLoading}
@@ -320,6 +323,7 @@ export default function SendInterviewForm() {
             <input
               type="date"
               name="interviewDate"
+              min={today}
               value={offlineData.interviewDate}
               onChange={handleOfflineChange}
               disabled={offlineLoading}
