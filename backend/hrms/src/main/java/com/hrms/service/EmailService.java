@@ -1,5 +1,5 @@
 package com.hrms.service;
-
+ 
 import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -9,15 +9,15 @@ import org.springframework.stereotype.Service;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+ 
 @Service
 @RequiredArgsConstructor
 public class EmailService {
-
+ 
     private final JavaMailSender mailSender;
     private static final Logger log = LoggerFactory.getLogger(EmailService.class);
     private static final DateTimeFormatter DEADLINE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
+ 
     /**
      * Send OTP email
      */
@@ -25,20 +25,20 @@ public class EmailService {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
+ 
             helper.setTo(toEmail);
             helper.setSubject("HRMS — Password Reset OTP");
             helper.setText(buildOtpEmailHtml(employeeName, otp), true);
-
+ 
             mailSender.send(message);
             log.info("OTP email sent to: {}", toEmail);
-
+ 
         } catch (Exception e) {
             log.error("Failed to send OTP email to {}: {}", toEmail, e.getMessage());
             throw new RuntimeException("Failed to send email: " + e.getMessage());
         }
     }
-
+ 
     /**
      * Send greeting email with template
      */
@@ -46,23 +46,23 @@ public class EmailService {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
+ 
             String emailBody = templateBody.replace("{CANDIDATE_NAME}", candidateName);
             String styledHtmlBody = wrapWithHtmlStyling(candidateName, emailBody);
-
+ 
             helper.setTo(toEmail);
             helper.setSubject(templateSubject);
             helper.setText(styledHtmlBody, true);
-
+ 
             mailSender.send(message);
             log.info("Greeting email sent to: {} for candidate: {}", toEmail, candidateName);
-
+ 
         } catch (Exception e) {
             log.error("Failed to send greeting email to {}: {}", toEmail, e.getMessage());
             throw new RuntimeException("Failed to send email: " + e.getMessage());
         }
     }
-
+ 
     /**
      * Send document request email
      */
@@ -73,32 +73,33 @@ public class EmailService {
             LocalDate interviewDate,
             LocalDate deadline,
             String hrEmail) {
-
+ 
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
+ 
             helper.setTo(toEmail);
             helper.setSubject("Submission of Required Documents – SAITEJA INFOTECH PVT LTD");
-
+ 
             String formattedInterviewDate = interviewDate != null ? interviewDate.format(DEADLINE_FORMAT) : "N/A";
             String formattedDeadline = deadline != null ? deadline.format(DEADLINE_FORMAT) : "N/A";
-
+ 
             String styledHtml = wrapWithHtmlStyling(
                     candidateName,
-                    buildDocumentRequestBody(candidateName, jobTitle, formattedInterviewDate, formattedDeadline, hrEmail));
-
+                    buildDocumentRequestBody(candidateName, jobTitle, formattedInterviewDate, formattedDeadline,
+                            hrEmail));
+ 
             helper.setText(styledHtml, true);
             mailSender.send(message);
-
+ 
             log.info("Document request email sent to {}", toEmail);
-
+ 
         } catch (Exception e) {
             log.error("Failed to send document request email : {}", e.getMessage());
             throw new RuntimeException("Failed to send document request email", e);
         }
     }
-
+ 
     /**
      * Generic send email method
      */
@@ -106,20 +107,20 @@ public class EmailService {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
+ 
             helper.setTo(toEmail);
             helper.setSubject(subject);
             helper.setText(emailBody, true);
-
+ 
             mailSender.send(message);
             log.info("Email sent to: {}", toEmail);
-
+ 
         } catch (Exception e) {
             log.error("Failed to send email to {}: {}", toEmail, e.getMessage());
             throw new RuntimeException("Failed to send email: " + e.getMessage());
         }
     }
-
+ 
     /**
      * Build HTML for OTP email
      */
@@ -173,7 +174,7 @@ public class EmailService {
                 """
                 .formatted(name, otp);
     }
-
+ 
     /**
      * Build document request email body (plain text)
      */
@@ -183,7 +184,7 @@ public class EmailService {
             String interviewDate,
             String deadline,
             String hrEmail) {
-
+ 
         return "Dear " + candidateName + ",\n\n" +
                 "Greetings from SAITEJA INFOTECH PVT LTD.\n\n" +
                 "We would like to thank you for attending the interview held on " + interviewDate + " " +
@@ -209,22 +210,28 @@ public class EmailService {
                 "Human Resources Department\n" +
                 "SAITEJA INFOTECH PVT LTD";
     }
-
+ 
     /**
      * Wrap email body with HTML styling
      */
     private String wrapWithHtmlStyling(String candidateName, String emailBody) {
-        return "<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f5f5f5; padding: 20px;\">" +
-                "<div style=\"background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;\">" +
-                "<h1 style=\"color: white; margin: 0; font-size: 28px; font-weight: bold;\">🏢 SAITEJA INFOTECH</h1>" +
+        return "<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f5f5f5; padding: 20px;\">"
+                +
+                "<div style=\"background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;\">"
+                +
+                "<h1 style=\"color: white; margin: 0; font-size: 28px; font-weight: bold;\">🏢 SAITEJA INFOTECH PRIVATE LIMITED </h1>"
+                +
+ 
                 "<p style=\"color: #e0e0e0; margin: 8px 0 0 0; font-size: 14px;\">HR Management System</p>" +
                 "</div>" +
-                "<div style=\"background-color: white; padding: 40px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);\">" +
+                "<div style=\"background-color: white; padding: 40px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);\">"
+                +
                 "<div style=\"white-space: pre-wrap; color: #555; font-size: 14px; line-height: 1.8;\">" +
                 emailBody +
                 "</div>" +
                 "<div style=\"margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0;\">" +
-                "<p style=\"color: #2a5298; font-size: 13px; margin: 5px 0 0 0;\">© 2025 SAITEJA INFOTECH PVT LTD. All rights reserved.</p>" +
+                "<p style=\"color: #2a5298; font-size: 13px; margin: 5px 0 0 0;\">© 2025 SAITEJA INFOTECH PVT LTD. All rights reserved.</p>"
+                +
                 "</div>" +
                 "</div>" +
                 "</div>";
