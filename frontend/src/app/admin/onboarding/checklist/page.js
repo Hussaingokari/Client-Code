@@ -163,7 +163,7 @@ export default function AdminChecklistPage() {
                     </div>
                 ) : (
                     filtered.map((onb) => (
-                        <div key={onb.id} onClick={() => router.push(`/admin/onboarding/checklist/${onb.id}`)}
+                        <div key={onb.id} onClick={() => router.push(`/admin/onboarding/checklist/view?id=${onb.id}`)}
                             style={{
                                 padding: '14px 20px', borderBottom: '1px solid #f1f5f9', cursor: 'pointer',
                                 transition: 'all 0.15s',

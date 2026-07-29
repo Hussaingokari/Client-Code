@@ -66,7 +66,7 @@ export default function NotificationsPage() {
             }
         }
         if (n.referenceType === 'Onboarding' && n.referenceId) {
-            router.push(`/admin/onboarding/checklist/${n.referenceId}`);
+            router.push(`/admin/onboarding/checklist/view?id=${n.referenceId}`);
         } else if (n.referenceType === 'OnboardingDocument') {
             router.push('/admin/onboarding/document-requests');
         }
