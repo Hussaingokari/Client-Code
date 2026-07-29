@@ -118,7 +118,7 @@ public class EmployeeService {
 
     @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public Page<EmployeeDTOs.Response> getByDepartment(String department, Pageable pageable) {
-        return employeeRepository.findByDepartment(department, pageable).map(this::toResponse);
+        return employeeRepository.findByDepartmentIgnoreCase(department, pageable).map(this::toResponse);
     }
 
     @org.springframework.transaction.annotation.Transactional(readOnly = true)

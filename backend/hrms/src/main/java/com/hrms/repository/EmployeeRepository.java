@@ -23,6 +23,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     Page<Employee> findByDepartment(String department, Pageable pageable);
 
+    @Query("SELECT e FROM Employee e WHERE LOWER(e.department) = LOWER(:department)")
+    Page<Employee> findByDepartmentIgnoreCase(String department, Pageable pageable);
+
     Page<Employee> findByRole(Role role, Pageable pageable);
 
     Page<Employee> findByActive(boolean active, Pageable pageable);
