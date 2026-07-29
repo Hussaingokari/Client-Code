@@ -23,6 +23,8 @@ export default function SendDocumentRequestForm() {
     const [submitting, setSubmitting] = useState(false);
     const [banner, setBanner] = useState(null);
 
+    const today = new Date().toISOString().split('T')[0];
+
     const resetForm = () => {
         setCandidateName("");
         setEmail("");
@@ -126,6 +128,7 @@ export default function SendDocumentRequestForm() {
                     <input
                         type="date"
                         required
+                        max={today}
                         value={interviewDate}
                         onChange={(e) => setInterviewDate(e.target.value)}
                         className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -139,6 +142,7 @@ export default function SendDocumentRequestForm() {
                     <input
                         type="date"
                         required
+                        min={today}
                         value={submissionDeadline}
                         onChange={(e) => setSubmissionDeadline(e.target.value)}
                         className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
