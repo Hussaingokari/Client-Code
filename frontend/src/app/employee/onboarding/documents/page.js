@@ -58,7 +58,7 @@ function DocumentRow({ documentKey, doc, onUpload, isUploading }) {
                     {doc?.fileName && (
                         <div style={{ fontSize: '12px', color: '#3b82f6', marginTop: '2px' }}>
                             {doc.fileUrl ? (
-                                <a href={doc.fileUrl} target="_blank" rel="noreferrer" style={{ color: '#3b82f6' }}>{doc.fileName}</a>
+                                <a href={doc.fileUrl?.startsWith('/') ? `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'}${doc.fileUrl}` : doc.fileUrl} target="_blank" rel="noreferrer" style={{ color: '#3b82f6' }}>{doc.fileName}</a>
                             ) : doc.fileName}
                         </div>
                     )}

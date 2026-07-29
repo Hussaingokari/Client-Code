@@ -267,7 +267,7 @@ export default function OnboardingProfilePage() {
                                     <div style={{ flex: 1 }}>
                                         <div style={{ fontSize: '13px', fontWeight: '600', color: '#1e293b' }}>{DOC_KEY_LABELS[key]}</div>
                                         {doc?.fileUrl && (
-                                            <a href={doc.fileUrl} target="_blank" rel="noreferrer" style={{ fontSize: '11px', color: '#3b82f6' }}>
+                                            <a href={doc.fileUrl?.startsWith('/') ? `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'}${doc.fileUrl}` : doc.fileUrl} target="_blank" rel="noreferrer" style={{ fontSize: '11px', color: '#3b82f6' }}>
                                                 View file
                                             </a>
                                         )}

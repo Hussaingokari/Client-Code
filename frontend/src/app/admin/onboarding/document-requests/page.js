@@ -102,7 +102,7 @@ function DocumentCard({ doc, tab, onApprove, onReject, actingId }) {
                     <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px' }}>
                         Uploaded {timeAgo(doc.uploadedAt)}
                         {doc.fileUrl && (
-                            <> · <a href={doc.fileUrl} target="_blank" rel="noreferrer" style={{ color: '#3b82f6' }}>View file</a></>
+                            <> · <a href={doc.fileUrl?.startsWith('/') ? `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'}${doc.fileUrl}` : doc.fileUrl} target="_blank" rel="noreferrer" style={{ color: '#3b82f6' }}>View file</a></>
                         )}
                     </div>
                 </div>
