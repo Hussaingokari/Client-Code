@@ -37,8 +37,8 @@ RUN mkdir -p /app/uploads
 # Change ownership of the app directory to the non-root user
 RUN chown -R hrmsuser:hrmsgroup /app
 
-# Switch to the non-root user
-USER hrmsuser
+# Add su-exec to run java as non-root after fixing permissions
+RUN apk add --no-cache su-exec
 
 # Expose the port configured in application.properties (default: 8080)
 EXPOSE 8080
@@ -57,6 +57,6 @@ ENV PORT=${PORT} \
     SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME} \
     JAVA_OPTS=${JAVA_OPTS}
 
-# Run the Spring Boot application
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+# Run the Spring Boot application using su-exec to drop privileges after fixing volume permissions
+ENTRYPOINT ["sh", "-c", "chown -R hrmsuser:hrmsgroup /app/uploads && su-exec hrmsuser java $JAVA_OPTS -jar app.jar"]
 
