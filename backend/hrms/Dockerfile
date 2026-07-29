@@ -31,6 +31,9 @@ RUN addgroup -S hrmsgroup && adduser -S hrmsuser -G hrmsgroup
 # Copy the built JAR file from the build stage
 COPY --from=build /app/target/hrms-backend-*.jar app.jar
 
+# Explicitly create the uploads directory so it gets the correct ownership
+RUN mkdir -p /app/uploads
+
 # Change ownership of the app directory to the non-root user
 RUN chown -R hrmsuser:hrmsgroup /app
 
