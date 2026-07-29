@@ -127,8 +127,24 @@ public class OnboardingController {
         @Operation(summary = "Get all documents for an onboarding record")
         public ResponseEntity<ApiResponse<List<OnboardingDocumentResponse>>> getDocuments(
                         @PathVariable Long onboardingId) {
-                List<OnboardingDocumentResponse> docs = documentRepository.findByOnboardingId(onboardingId)
-                                .stream()
+                java.util.Map<String, OnboardingDocument> latestDocs = new java.util.HashMap<>();
+                for (OnboardingDocument doc : documentRepository.findByOnboardingId(onboardingId)) {
+                        String key = doc.getDocumentKey();
+                        if (!latestDocs.containsKey(key)) {
+                                latestDocs.put(key, doc);
+                        } else {
+                                OnboardingDocument existing = latestDocs.get(key);
+                                if (doc.getUploadedAt() != null && existing.getUploadedAt() != null) {
+                                        if (doc.getUploadedAt().isAfter(existing.getUploadedAt())) {
+                                                latestDocs.put(key, doc);
+                                        }
+                                } else if (doc.getId() > existing.getId()) {
+                                        latestDocs.put(key, doc);
+                                }
+                        }
+                }
+
+                List<OnboardingDocumentResponse> docs = latestDocs.values().stream()
                                 .map(OnboardingDocumentResponse::from)
                                 .toList();
                 return ResponseEntity.ok(ApiResponse.success("Documents fetched", docs));
