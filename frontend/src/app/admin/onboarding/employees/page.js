@@ -91,7 +91,7 @@ export default function OnboardingEmployeesPage() {
     const fetchEmployees = useCallback(async () => {
         setLoading(true);
         try {
-            const res = await getAllEmployees(page, 10);
+            const res = await getAllEmployees(page, 10, deptFilter);
             const data = res.data?.data;
             setEmployees(data?.content || []);
             setTotalPages(data?.totalPages || 0);
@@ -101,7 +101,7 @@ export default function OnboardingEmployeesPage() {
         } finally {
             setLoading(false);
         }
-    }, [page]);
+    }, [page, deptFilter]);
 
     const handleSearch = useCallback(async () => {
         if (!search.trim()) return;
@@ -130,7 +130,12 @@ export default function OnboardingEmployeesPage() {
             }
         }, search.trim() ? 400 : 0);
         return () => clearTimeout(timer);
-    }, [search, page, handleSearch, fetchEmployees]);
+    }, [search, page, handleSearch, fetchEmployees, deptFilter]);
+
+    const handleDeptFilterChange = (e) => {
+        setDeptFilter(e.target.value);
+        setPage(0);
+    };
 
     const openAddForm = () => {
         setEditMode(false);
@@ -198,9 +203,7 @@ export default function OnboardingEmployeesPage() {
 
     const handleFieldChange = (name, val) => setForm(prev => ({ ...prev, [name]: val }));
 
-    const displayedEmployees = deptFilter === 'All Departments'
-        ? employees
-        : employees.filter(e => e.department === deptFilter);
+    const displayedEmployees = employees;
 
     return (
         <div>
@@ -232,7 +235,7 @@ export default function OnboardingEmployeesPage() {
                         style={{ width: '100%', paddingLeft: '38px', paddingRight: '16px', height: '40px', border: '1.5px solid #e2e8f0', borderRadius: '10px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
                     />
                 </div>
-                <select value={deptFilter} onChange={e => setDeptFilter(e.target.value)}
+                <select value={deptFilter} onChange={handleDeptFilterChange}
                     style={{ padding: '0 14px', height: '40px', border: '1.5px solid #e2e8f0', borderRadius: '10px', fontSize: '13px', outline: 'none', background: 'white' }}>
                     {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
                 </select>
@@ -310,7 +313,13 @@ export default function OnboardingEmployeesPage() {
                                     </span>
                                 </div>
                                 <InputField label="Phone" name="phone" placeholder="9876543210" value={form.phone} onChange={handleFieldChange} />
-                                <InputField label="Department" name="department" placeholder="Engineering" value={form.department} onChange={handleFieldChange} />
+                                <div>
+                                    <label style={{ fontSize: '12px', fontWeight: '600', color: '#374151', display: 'block', marginBottom: '5px' }}>Department</label>
+                                    <select value={form.department} onChange={e => handleFieldChange('department', e.target.value)} style={{ width: '100%', padding: '9px 12px', border: '1.5px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', outline: 'none', background: 'white' }}>
+                                        <option value="">Select Department</option>
+                                        {DEPARTMENTS.filter(d => d !== 'All Departments').map(d => <option key={d} value={d}>{d}</option>)}
+                                    </select>
+                                </div>
                                 <InputField label="Designation" name="designation" placeholder="Software Engineer" value={form.designation} onChange={handleFieldChange} />
                                 <InputField label="Basic Salary" name="basicSalary" type="number" placeholder="50000" value={form.basicSalary} onChange={handleFieldChange} />
                                 <InputField label="Date of Joining" name="dateOfJoining" type="date" value={form.dateOfJoining} onChange={handleFieldChange} />

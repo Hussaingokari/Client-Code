@@ -36,9 +36,14 @@ public class EmployeeController {
     @PreAuthorize("hasAnyRole('ADMIN','HR')")
     @Operation(summary = "Get all employees (paged)")
     public ResponseEntity<ApiResponse<Page<EmployeeDTOs.Response>>> getAll(
+            @RequestParam(required = false) String department,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sort) {
+        if (department != null && !department.trim().isEmpty() && !department.equalsIgnoreCase("All Departments")) {
+            return ResponseEntity.ok(ApiResponse.success("Employees fetched",
+                    employeeService.getByDepartment(department, PageRequest.of(page, size, Sort.by(sort)))));
+        }
         return ResponseEntity.ok(ApiResponse.success("Employees fetched",
                 employeeService.getAllEmployees(PageRequest.of(page, size, Sort.by(sort)))));
 

@@ -1,7 +1,12 @@
 import api from './axios';
 
-export const getAllEmployees = (page = 0, size = 10) =>
-  api.get(`/api/employees?page=${page}&size=${size}`);
+export const getAllEmployees = (page = 0, size = 10, department = 'All Departments') => {
+  let url = `/api/employees?page=${page}&size=${size}`;
+  if (department && department !== 'All Departments') {
+    url += `&department=${encodeURIComponent(department)}`;
+  }
+  return api.get(url);
+};
 
 export const getEmployeeById = (id) =>
   api.get(`/api/employees/${id}`);
