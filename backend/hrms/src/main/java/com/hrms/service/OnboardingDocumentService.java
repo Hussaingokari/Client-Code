@@ -34,7 +34,7 @@ public class OnboardingDocumentService {
                                                 "Onboarding not found: " + request.getOnboardingId()));
 
                 OnboardingDocument document = documentRepository
-                                .findByOnboardingIdAndDocumentKey(request.getOnboardingId(), request.getDocumentKey())
+                                .findFirstByOnboardingIdAndDocumentKey(request.getOnboardingId(), request.getDocumentKey())
                                 .orElse(OnboardingDocument.builder()
                                                 .onboarding(onboarding)
                                                 .documentKey(request.getDocumentKey())

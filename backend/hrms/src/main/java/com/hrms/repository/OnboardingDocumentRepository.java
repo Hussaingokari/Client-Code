@@ -11,7 +11,7 @@ public interface OnboardingDocumentRepository extends JpaRepository<OnboardingDo
 
     List<OnboardingDocument> findByOnboardingId(Long onboardingId);
 
-    Optional<OnboardingDocument> findByOnboardingIdAndDocumentKey(Long onboardingId, String documentKey);
+    Optional<OnboardingDocument> findFirstByOnboardingIdAndDocumentKey(Long onboardingId, String documentKey);
 
     List<OnboardingDocument> findByStatusOrderByUploadedAtDesc(DocumentStatus status);
 
