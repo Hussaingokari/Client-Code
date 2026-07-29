@@ -1,5 +1,5 @@
 package com.hrms.service;
-
+ 
 import com.hrms.dto.*;
 import com.hrms.entity.EmailHistory;
 import com.hrms.entity.EmailTemplate;
@@ -11,22 +11,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+ 
 import java.util.List;
-
+ 
 @Service
 @Slf4j
 public class GreetingService {
-
+ 
     @Autowired
     private EmailService emailService;
-
+ 
     @Autowired
     private EmailTemplateRepository emailTemplateRepository;
-
+ 
     @Autowired
     private EmailHistoryRepository emailHistoryRepository;
-
+ 
     /**
      * Send greeting to candidate
      */
@@ -35,11 +35,11 @@ public class GreetingService {
             if (request.getCandidateName() == null || request.getCandidateName().trim().isEmpty()) {
                 return new SendGreetingResponse(false, "Candidate name is required");
             }
-
+ 
             if (request.getRecipientEmail() == null || request.getRecipientEmail().trim().isEmpty()) {
                 return new SendGreetingResponse(false, "Email address is required");
             }
-
+ 
             EmailTemplate template;
             if (request.getTemplateId() != null) {
                 template = emailTemplateRepository.findById(request.getTemplateId())
@@ -48,30 +48,30 @@ public class GreetingService {
                 template = emailTemplateRepository.findByTemplateName("Admission Greeting")
                         .orElseThrow(() -> new RuntimeException("Admission Greeting template not found"));
             }
-
+ 
             boolean emailSent = false;
             String errorMessage = null;
-
+ 
             try {
                 String emailBody = template.getTemplateBody()
                         .replace("{CANDIDATE_NAME}", request.getCandidateName());
                 String styledHtmlBody = wrapWithHtmlStyling(request.getCandidateName(), emailBody);
-
+ 
                 emailService.sendEmail(
                         request.getRecipientEmail(),
                         template.getTemplateSubject(),
                         styledHtmlBody);
                 emailSent = true;
                 log.info("Greeting email sent successfully to: {}", request.getRecipientEmail());
-
+ 
             } catch (Exception e) {
                 emailSent = false;
                 errorMessage = e.getMessage();
                 log.error("Email sending failed: {}", e.getMessage());
             }
-
+ 
             saveEmailHistory(request, template, emailSent, errorMessage);
-
+ 
             if (emailSent) {
                 return new SendGreetingResponse(
                         true,
@@ -81,13 +81,13 @@ public class GreetingService {
                         false,
                         "Failed to send email: " + errorMessage);
             }
-
+ 
         } catch (Exception e) {
             log.error("Error in sendGreeting: {}", e.getMessage());
             return new SendGreetingResponse(false, "Error: " + e.getMessage());
         }
     }
-
+ 
     /**
      * Save email history - separate transaction for safety
      */
@@ -104,22 +104,22 @@ public class GreetingService {
             history.setStatus(emailSent ? EmailStatus.SENT : EmailStatus.FAILED);
             history.setErrorMessage(errorMessage);
             history.setIsRead(false);
-
+ 
             emailHistoryRepository.save(history);
             log.info("Email history saved - Status: {}", emailSent ? "SENT" : "FAILED");
-
+ 
         } catch (Exception e) {
             log.error("Error saving email history: {}", e.getMessage());
         }
     }
-
+ 
     /**
      * Get all email templates
      */
     public List<EmailTemplate> getAllTemplates() {
         return emailTemplateRepository.findByIsActiveTrue();
     }
-
+ 
     /**
      * Get email history for admin
      */
@@ -129,21 +129,21 @@ public class GreetingService {
         }
         return emailHistoryRepository.findAll();
     }
-
+ 
     /**
      * Get email history by status
      */
     public List<EmailHistory> getEmailHistoryByStatus(String status) {
         return emailHistoryRepository.findByStatus(status);
     }
-
+ 
     /**
      * Get recent emails (last 10)
      */
     public List<EmailHistory> getRecentEmails() {
         return emailHistoryRepository.findRecentEmails(10);
     }
-
+ 
     /**
      * Send online interview email
      */
@@ -151,7 +151,7 @@ public class GreetingService {
         try {
             EmailTemplate template = emailTemplateRepository.findByTemplateName("Online Interview Invitation")
                     .orElseThrow(() -> new RuntimeException("Online Interview template not found"));
-
+ 
             String emailBody = template.getTemplateBody()
                     .replace("{CANDIDATE_NAME}", request.getCandidateName())
                     .replace("{JOB_TITLE}", request.getJobTitle())
@@ -161,17 +161,17 @@ public class GreetingService {
                     .replace("{MEETING_LINK}", request.getMeetingLink())
                     .replace("{MEETING_ID}", request.getMeetingId())
                     .replace("{PASSCODE}", request.getPasscode());
-
+ 
             String styledHtmlBody = wrapWithHtmlStyling(request.getCandidateName(), emailBody);
-
+ 
             emailService.sendEmail(request.getRecipientEmail(), template.getTemplateSubject(), styledHtmlBody);
-
+ 
             return new InterviewEmailResponse(true, "Online interview email sent successfully");
         } catch (Exception e) {
             return new InterviewEmailResponse(false, "Error: " + e.getMessage());
         }
     }
-
+ 
     /**
      * Send offline interview email
      */
@@ -179,24 +179,24 @@ public class GreetingService {
         try {
             EmailTemplate template = emailTemplateRepository.findByTemplateName("Offline Interview Invitation")
                     .orElseThrow(() -> new RuntimeException("Offline Interview template not found"));
-
+ 
             String emailBody = template.getTemplateBody()
                     .replace("{CANDIDATE_NAME}", request.getCandidateName())
                     .replace("{JOB_TITLE}", request.getJobTitle())
                     .replace("{INTERVIEW_DATE}", request.getInterviewDate())
                     .replace("{INTERVIEW_TIME}", request.getInterviewTime())
                     .replace("{VENUE_ADDRESS}", request.getVenueAddress());
-
+ 
             String styledHtmlBody = wrapWithHtmlStyling(request.getCandidateName(), emailBody);
-
+ 
             emailService.sendEmail(request.getRecipientEmail(), template.getTemplateSubject(), styledHtmlBody);
-
+ 
             return new InterviewEmailResponse(true, "Offline interview email sent successfully");
         } catch (Exception e) {
             return new InterviewEmailResponse(false, "Error: " + e.getMessage());
         }
     }
-
+ 
     /**
      * Send offer letter email
      */
@@ -204,7 +204,7 @@ public class GreetingService {
         try {
             EmailTemplate template = emailTemplateRepository.findByTemplateName("Offer Letter")
                     .orElseThrow(() -> new RuntimeException("Offer Letter template not found"));
-
+ 
             String emailBody = template.getTemplateBody()
                     .replace("{CANDIDATE_NAME}", request.getCandidateName())
                     .replace("{JOB_TITLE}", request.getJobTitle())
@@ -212,17 +212,17 @@ public class GreetingService {
                     .replace("{JOINING_DATE}", request.getJoiningDate())
                     .replace("{REPORTING_TO}", request.getReportingTo())
                     .replace("{ACCEPTANCE_DEADLINE}", request.getAcceptanceDeadline());
-
+ 
             String styledHtmlBody = wrapWithHtmlStyling(request.getCandidateName(), emailBody);
-
+ 
             emailService.sendEmail(request.getRecipientEmail(), template.getTemplateSubject(), styledHtmlBody);
-
+ 
             return new OfferLetterResponse(true, "Offer letter sent successfully");
         } catch (Exception e) {
             return new OfferLetterResponse(false, "Error: " + e.getMessage());
         }
     }
-
+ 
     /**
      * Wrap email body with HTML styling
      */
@@ -231,7 +231,7 @@ public class GreetingService {
                 +
                 "<div style=\"background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;\">"
                 +
-                "<h1 style=\"color: white; margin: 0; font-size: 28px; font-weight: bold;\">🏢 SAITEJA INFOTECH</h1>" +
+                "<h1 style=\"color: white; margin: 0; font-size: 28px; font-weight: bold;\">🏢 SAITEJA INFOTECH PRIVATE LIMITED</h1>" +
                 "<p style=\"color: #e0e0e0; margin: 8px 0 0 0; font-size: 14px;\">HR Management System</p>" +
                 "</div>" +
                 "<div style=\"background-color: white; padding: 40px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);\">"
@@ -246,5 +246,6 @@ public class GreetingService {
                 "</div>" +
                 "</div>";
     }
-
+ 
 }
+ 
