@@ -219,10 +219,15 @@ export default function AdminLogin() {
         </div>
 
         {/* Footer */}
-        <div className="absolute bottom-6 text-[10px] text-slate-400 dark:text-slate-500 flex gap-4 w-full justify-center xl:justify-end xl:pr-12">
-          <span>© 2025 Saiteja Infotech Private Limited. All rights reserved.</span>
-          <Link href="/terms" className="hover:text-slate-600 dark:hover:text-slate-300 font-bold">Terms & Conditions</Link>
-          <Link href="/privacy" className="hover:text-slate-600 dark:hover:text-slate-300 font-bold">Privacy Policy</Link>
+        <div className="absolute bottom-6 text-[10px] text-slate-400 dark:text-slate-500 flex flex-col md:flex-row items-center gap-4 w-full justify-center xl:justify-end xl:pr-12">
+          <div className="flex flex-col text-center md:text-right">
+            <span className="font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">© 2026 Saiteja Infotech Private Limited.</span>
+            <span className="text-[9px] text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">All rights reserved.</span>
+          </div>
+          <div className="flex gap-4 items-center">
+            <Link href="/terms" className="hover:text-slate-600 dark:hover:text-slate-300 font-bold">Terms & Conditions</Link>
+            <Link href="/privacy" className="hover:text-slate-600 dark:hover:text-slate-300 font-bold">Privacy Policy</Link>
+          </div>
         </div>
 
         {/* Theme Toggle */}

@@ -79,7 +79,14 @@ export default function Home() {
           </div>
         </Link>
 
-        <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">© 2025 Saiteja Infotech Private Limited. All rights reserved.</p>
+        <div className="flex flex-col items-center mt-2 text-center">
+          <p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            © 2026 Saiteja Infotech Private Limited.
+          </p>
+          <p className="text-[9px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">
+            All rights reserved.
+          </p>
+        </div>
       </div>
 
       {/* Theme Toggle Button */}
