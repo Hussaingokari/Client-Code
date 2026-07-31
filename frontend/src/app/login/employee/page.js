@@ -7,7 +7,6 @@ import api from '@/lib/axios';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 import ThemeToggle from '@/components/ThemeToggle';
-import Image from 'next/image';
 
 const EyeIcon = ({ show, toggle }) => (
   <button type="button" onClick={toggle} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
@@ -70,11 +69,10 @@ export default function EmployeeLogin() {
       <div className="hidden lg:flex lg:w-[45%] flex-col bg-slate-900 relative">
         <div className="flex-1 relative overflow-hidden">
           {/* Unsplash Image matching the vibe */}
-          <Image 
+          <img 
             src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1200&q=80" 
             alt="Team Working" 
-            fill
-            className="object-cover opacity-90"
+            className="absolute inset-0 w-full h-full object-cover opacity-90"
           />
           {/* Green separator line */}
           <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[#10b981] dark:bg-[#DBFF00] z-10 transition-colors"></div>
@@ -207,7 +205,7 @@ export default function EmployeeLogin() {
 
              <div className="flex gap-4">
                <button type="button" className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-slate-200 dark:border-white/10 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors text-[12px] font-bold text-slate-700 dark:text-slate-300">
-                 <Image src="https://www.svgrepo.com/show/475656/google-color.svg" width={16} height={16} className="w-4 h-4" alt="Google" />
+                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-4 h-4" alt="Google" />
                  Google
                </button>
                <button type="button" className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-slate-200 dark:border-white/10 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors text-[12px] font-bold text-slate-700 dark:text-slate-300">

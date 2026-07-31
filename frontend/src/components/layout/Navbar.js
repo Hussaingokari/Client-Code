@@ -16,18 +16,18 @@ export default function Navbar() {
 
   const isAdmin = user?.role === 'ADMIN' || user?.role === 'HR';
 
+  useEffect(() => {
+    fetchUnreadCount();
+    const interval = setInterval(fetchUnreadCount, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
   const fetchUnreadCount = async () => {
     try {
       const res = await getUnreadCount();
       setUnreadCount(res.data?.data || 0);
     } catch {}
   };
-
-  useEffect(() => {
-    fetchUnreadCount();
-    const interval = setInterval(fetchUnreadCount, 30000);
-    return () => clearInterval(interval);
-  }, []);
 
   const handleBellClick = () => {
     if (isAdmin) {
