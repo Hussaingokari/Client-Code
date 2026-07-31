@@ -223,19 +223,21 @@ export default function EmployeeLogin() {
         </div>
 
         {/* Footer */}
-        <div className="absolute bottom-6 text-[10px] text-slate-400 dark:text-slate-500 flex flex-col md:flex-row items-center gap-4 w-full justify-center xl:justify-end xl:pr-12">
-          <div className="flex flex-col text-center md:text-right">
+        <div className="absolute bottom-6 left-0 w-full px-6 xl:px-12 flex flex-col xl:flex-row justify-between items-center gap-4 text-[10px] text-slate-400 dark:text-slate-500">
+          <div className="flex flex-col text-center xl:text-left">
             <span className="font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">© 2026 Saiteja Infotech Private Limited.</span>
             <span className="text-[9px] text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">All rights reserved.</span>
           </div>
-          <div className="flex gap-4 items-center">
-            <Link href="/terms" className="hover:text-slate-600 dark:hover:text-slate-300 font-bold">Terms & Conditions</Link>
-            <Link href="/privacy" className="hover:text-slate-600 dark:hover:text-slate-300 font-bold">Privacy Policy</Link>
+          <div className="flex gap-6 items-center">
+            <Link href="/terms" className="hover:text-slate-600 dark:hover:text-slate-300 font-bold uppercase tracking-wider">Terms & Conditions</Link>
+            <Link href="/privacy" className="hover:text-slate-600 dark:hover:text-slate-300 font-bold uppercase tracking-wider">Privacy Policy</Link>
           </div>
         </div>
 
         {/* Theme Toggle */}
-        <ThemeToggle />
+        <div className="absolute top-6 right-6 xl:top-8 xl:right-12 z-50">
+          <ThemeToggle />
+        </div>
       </div>
     </div>
   );
