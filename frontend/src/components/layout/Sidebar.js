@@ -1,104 +1,42 @@
-// 'use client';
-import { useState } from 'react';
+'use client';
+import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/store/authSlice';
 
-const NAV_ITEMS = [
-  { key: 'dashboard', path: '/admin/dashboard', label: 'Dashboard', icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-  ) },
-  { key: 'employees', label: 'Employees', icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-  ), subItems: [
-    { label: 'Manage Employees', path: '/admin/employees' },
-    { label: 'Directory', path: '/admin/directory' },
-    { label: 'ORG Chart', path: '/admin/org-chart' },
-  ]},
-  { key: 'checklist', label: 'Checklist', path: '/admin/checklist', icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-  ), subItems: [
-    { label: 'Tasks', path: '/admin/checklist/tasks' }
-  ] },
-  { key: 'timeoff', label: 'Time Off', path: '/admin/timeoff', icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-  ), subItems: [
-    { label: 'Leave Requests', path: '/admin/leave' }
-  ] },
-  { key: 'attendance', label: 'Attendance', path: '/admin/attendance', icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-  ), subItems: [
-    { label: 'Daily Log', path: '/admin/attendance/log' }
-  ] },
-  { key: 'payroll', label: 'Payroll', path: '/admin/payroll', icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"/><path d="M7 15h0M2 9.5h20"/></svg>
-  ), subItems: [
-    { label: 'Payslips', path: '/admin/payroll/payslips' }
-  ] },
-  { key: 'performance', label: 'Performance', path: '/admin/performance', icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-  ), subItems: [
-    { label: 'Reviews', path: '/admin/performance/reviews' }
-  ] },
-  { key: 'recruitment', label: 'Recruitment', path: '/admin/recruitment', icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-  ), subItems: [
-    { label: 'Candidates', path: '/admin/recruitment/candidates' }
-  ] },
+const EMP_MENU = [
+  { key: '/employee/dashboard', label: 'Dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+  { key: '/employee/attendance', label: 'Attendance', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
+  { key: '/employee/leave', label: 'Leave Management', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
+  { key: '/employee/payslips', label: 'Payslips', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+  { key: '/employee/performance', label: 'Performance', icon: 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z' },
+  { key: '/employee/onboarding', label: 'Onboarding', icon: 'M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z' },
+  { key: '/employee/notifications', label: 'Notifications', icon: 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9' },
 ];
 
-function NavItem({ item, pathname, router }) {
-  const isActive = pathname === item.path || (item.subItems && item.subItems.some(sub => pathname === sub.path || pathname.startsWith(sub.path)));
-  const [isOpen, setIsOpen] = useState(isActive);
+const ADMIN_MENU = [
+  { key: '/admin/dashboard', label: 'Dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+  { key: '/admin/employees', label: 'Employees', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
+  { key: '/admin/leave', label: 'Leave Management', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
+  { key: '/admin/payroll', label: 'Payroll', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+  { key: '/admin/performance', label: 'Performance', icon: 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z' },
+  { key: '/admin/training', label: 'Training', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
+  { key: '/admin/recruitment', label: 'Recruitment', icon: 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
+  { key: '/admin/onboarding', label: 'Onboarding', icon: 'M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z' },
+  { key: '/admin/onboarding/greetings', label: 'Send Greeting', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
+  { key: '/admin/onboarding/offerletter', label: 'Send Offer Letter', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
+  { key: '/admin/onboarding/interview', label: 'Send Interview', icon: 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4zm6 0a4 4 0 10-4-4' },
+  { key: '/admin/onboarding/document-request', label: 'Document Request', icon: 'M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h9l5 5v11a2 2 0 01-2 2zm-7-9V7h-2v5H7l5 5 5-5h-3z' },
+  { key: '/admin/notifications', label: 'Notifications', icon: 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9' },
+];
 
-  if (item.subItems) {
-    return (
-      <div className="mb-0.5">
-        <div 
-          onClick={() => setIsOpen(!isOpen)}
-          className={`flex items-center justify-between px-4 py-2.5 rounded-xl cursor-pointer transition-colors ${isActive ? 'text-slate-800 dark:text-white font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
-        >
-          <div className="flex items-center gap-3 font-semibold text-[13px] tracking-wide">
-            <span className={isActive ? 'text-[#10b981] dark:text-[#DBFF00]' : ''}>{item.icon}</span>
-            {item.label}
-          </div>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-200 ${isOpen ? '' : '-rotate-90'}`}><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-        {isOpen && (
-          <div className="ml-[1.35rem] mt-1 mb-2 flex flex-col border-l border-slate-200 dark:border-slate-700/50">
-            {item.subItems.map(sub => {
-              const isSubActive = pathname === sub.path;
-              return (
-                <div
-                  key={sub.path}
-                  onClick={() => router.push(sub.path)}
-                  className={`px-4 py-2 text-[12px] cursor-pointer rounded-r-xl transition-all font-semibold ${isSubActive ? 'bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white border-l-2 border-[#10b981] dark:border-[#DBFF00] -ml-[1px]' : 'text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
-                >
-                  {sub.label}
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-    );
-  }
-
+function NavIcon({ path }) {
   return (
-    <div 
-      onClick={() => router.push(item.path)}
-      className={`flex items-center justify-between px-4 py-3 rounded-xl cursor-pointer mb-2 transition-all text-[13px] font-semibold tracking-wide ${isActive ? 'bg-[#10b981] dark:bg-[#10b981] text-white shadow-[0_4px_12px_rgba(16,185,129,0.2)] dark:shadow-none' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-800 dark:hover:text-slate-200'}`}
-    >
-      <div className="flex items-center gap-3">
-        {item.key !== 'dashboard' && item.icon}
-        {item.label}
-      </div>
-      {item.key === 'dashboard' && (
-        <div className={isActive ? 'text-white' : 'text-slate-400'}>
-          {item.icon}
-        </div>
-      )}
-    </div>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="2"
+      strokeLinecap="round" strokeLinejoin="round">
+      <path d={path} />
+    </svg>
   );
 }
 
@@ -106,73 +44,152 @@ export default function Sidebar({ role }) {
   const router = useRouter();
   const pathname = usePathname();
   const dispatch = useDispatch();
+  const { user } = useSelector((s) => s.auth);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const handleToggle = () => setIsMobileOpen((prev) => !prev);
+    window.addEventListener('toggleMobileSidebar', handleToggle);
+    return () => window.removeEventListener('toggleMobileSidebar', handleToggle);
+  }, []);
+
+  const menu = role === 'ADMIN' || role === 'HR' ? ADMIN_MENU : EMP_MENU;
+  const settingsRoute = role === 'ADMIN' || role === 'HR'
+    ? '/admin/settings'
+    : '/employee/settings';
 
   const handleLogout = () => {
     dispatch(logout());
     router.push('/');
   };
 
+  const isItemActive = (key) => {
+    if (pathname === key) return true;
+    
+    const allKeys = [...menu.map(m => m.key), settingsRoute];
+    const bestMatch = allKeys.reduce((best, k) => {
+      if (pathname === k || pathname.startsWith(k + '/')) {
+        if (!best || k.length > best.length) {
+          return k;
+        }
+      }
+      return best;
+    }, null);
+
+    return key === bestMatch;
+  };
+
+  const navItemStyle = (key) => {
+    const active = isItemActive(key);
+    return {
+      display: 'flex', alignItems: 'center', gap: '10px',
+      padding: '10px 12px', borderRadius: '8px',
+      cursor: 'pointer', marginBottom: '2px',
+      background: active ? '#3b82f6' : 'transparent',
+      color: active ? 'white' : '#93c5fd',
+      fontSize: '13px', fontWeight: active ? '600' : '400',
+      transition: 'all 0.15s',
+    };
+  };
+
   return (
-    <div className="app-sidebar bg-white dark:bg-[#0f172a] border-r border-slate-100 dark:border-slate-800/60 flex flex-col h-screen overflow-hidden">
-      {/* Header */}
-      <div className="h-[70px] shrink-0 flex items-center justify-between px-6">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/admin/dashboard')}>
-          <div className="w-6 h-6 rounded bg-[#10b981] flex items-center justify-center text-white font-black text-sm">H</div>
-          <span className="font-extrabold text-slate-900 dark:text-white tracking-tight text-[15px]">HRDashboard</span>
-        </div>
-        <button className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
-        </button>
-      </div>
-
-      {/* Nav Items */}
-      <div className="flex-1 overflow-y-auto px-4 py-2 no-scrollbar">
-        {NAV_ITEMS.map(item => <NavItem key={item.key} item={item} pathname={pathname} router={router} />)}
-      </div>
-
-      {/* Footer Tools */}
-      <div className="p-4 flex flex-col gap-1 shrink-0 bg-white dark:bg-[#0f172a]">
-        <div className="flex items-center justify-between px-4 py-2.5 rounded-xl cursor-pointer text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-800 dark:hover:text-white transition-colors">
-          <div className="flex items-center gap-3 text-[13px] font-semibold tracking-wide">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            Help Center
-          </div>
-          <span className="w-5 h-5 flex items-center justify-center bg-[#ef4444] text-white text-[10px] font-bold rounded-full">8</span>
-        </div>
-        
-        <div 
-          onClick={() => router.push('/admin/settings')}
-          className="flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-[13px] font-semibold tracking-wide text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-800 dark:hover:text-white transition-colors"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          Setting
-        </div>
-        
-        <div 
-          onClick={handleLogout}
-          className="flex items-center gap-3 px-4 py-2.5 mt-1 rounded-xl cursor-pointer text-[13px] font-semibold tracking-wide text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-          Logout
-        </div>
-
-        {/* Theme Toggle matching design */}
-        <div className="mt-4 px-2 mb-2">
-          <div className="bg-[#f8fafc] dark:bg-[#1e293b] rounded-full p-1 flex items-center justify-between relative border border-slate-100 dark:border-slate-800">
-            <button onClick={() => document.documentElement.classList.remove('dark')} className="flex-1 flex items-center justify-center gap-2 py-2 z-10 text-[11px] font-bold text-slate-800 dark:text-slate-400 group relative">
-              <div className="absolute inset-0 bg-white dark:bg-transparent rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.08)] dark:shadow-none transition-all duration-300 -z-10 group-hover:bg-white"></div>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-              Light
-            </button>
-            <button onClick={() => document.documentElement.classList.add('dark')} className="flex-1 flex items-center justify-center gap-2 py-2 z-10 text-[11px] font-bold text-slate-400 dark:text-white group relative">
-              <div className="absolute inset-0 bg-transparent dark:bg-[#0f172a] rounded-full shadow-none dark:shadow-[0_2px_8px_rgba(0,0,0,0.4)] transition-all duration-300 -z-10 group-hover:bg-slate-200/50 dark:group-hover:bg-[#0f172a]"></div>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-              Dark
-            </button>
+    <>
+      {isMobileOpen && (
+        <div
+          className="mobile-overlay"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+      <div className={`app-sidebar ${isMobileOpen ? 'mobile-open' : ''}`}>
+        {/* Logo */}
+        <div style={{
+          padding: '20px 20px 16px',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{
+              width: '36px', height: '36px',
+              background: '#3b82f6', borderRadius: '10px',
+              display: 'flex', alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '16px', fontWeight: '800', color: 'white',
+            }}>H</div>
+            <div>
+              <div style={{ color: 'white', fontSize: '16px', fontWeight: '800', lineHeight: 1 }}>HRMS</div>
+              <div style={{ color: '#93c5fd', fontSize: '9px', letterSpacing: '1px', marginTop: '2px' }}>HR MANAGEMENT</div>
+            </div>
           </div>
         </div>
+
+        {/* Main Menu */}
+        <div style={{ flex: 1, padding: '12px 10px', overflowY: 'auto' }}>
+          {menu.map((item) => (
+            <div
+              key={item.key}
+              onClick={() => { setIsMobileOpen(false); router.push(item.key); }}
+              style={navItemStyle(item.key)}
+              onMouseEnter={e => {
+                if (pathname !== item.key)
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
+              }}
+              onMouseLeave={e => {
+                if (pathname !== item.key)
+                  e.currentTarget.style.background = 'transparent';
+              }}
+            >
+              <NavIcon path={item.icon} />
+              {item.label}
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom — Settings + Logout */}
+        <div style={{ padding: '10px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+
+          {/* Settings */}
+          <div
+            onClick={() => { setIsMobileOpen(false); router.push(settingsRoute); }}
+            style={{
+              ...navItemStyle(settingsRoute),
+              marginBottom: '4px',
+            }}
+            onMouseEnter={e => {
+              if (pathname !== settingsRoute)
+                e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
+            }}
+            onMouseLeave={e => {
+              if (pathname !== settingsRoute)
+                e.currentTarget.style.background = 'transparent';
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Settings
+          </div>
+
+          {/* Logout */}
+          <div
+            onClick={handleLogout}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '10px',
+              padding: '10px 12px', borderRadius: '8px',
+              cursor: 'pointer', color: '#fca5a5',
+              fontSize: '13px', transition: 'all 0.15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.15)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Logout
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
-
