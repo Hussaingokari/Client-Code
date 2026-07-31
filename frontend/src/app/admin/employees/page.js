@@ -1,559 +1,213 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
-import {
-  getAllEmployees,
-  searchEmployees,
-  createEmployee,
-  updateEmployee,
-  deleteEmployee,
-} from '@/lib/adminApi';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { getAllEmployees } from '@/lib/adminApi';
 import toast from 'react-hot-toast';
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Search, ChevronDown, Download, Plus, X, Calendar, Edit, Eye, MoreHorizontal, Settings, HelpCircle } from 'lucide-react';
 
 function Badge({ status }) {
   const map = {
-    ACTIVE: { bg: '#dcfce7', color: '#16a34a' },
-    INACTIVE: { bg: '#fee2e2', color: '#dc2626' },
-    ADMIN: { bg: '#dbeafe', color: '#1d4ed8' },
-    HR: { bg: '#fdf4ff', color: '#9333ea' },
-    EMPLOYEE: { bg: '#f1f5f9', color: '#374151' },
+    ACTIVE: { bg: 'bg-emerald-100 dark:bg-emerald-500/10', color: 'text-emerald-500', label: 'ACTIVE' },
+    ON_BOARDING: { bg: 'bg-amber-100 dark:bg-amber-500/10', color: 'text-amber-500', label: 'ON BOARDING' },
+    PROBATION: { bg: 'bg-fuchsia-100 dark:bg-fuchsia-500/10', color: 'text-fuchsia-500', label: 'PROBATION' },
+    ON_LEAVE: { bg: 'bg-rose-100 dark:bg-rose-500/10', color: 'text-rose-500', label: 'ON LEAVE' },
+    INACTIVE: { bg: 'bg-slate-100 dark:bg-slate-800', color: 'text-slate-500', label: 'INACTIVE' },
   };
-  const style = map[status] || { bg: '#f1f5f9', color: '#64748b' };
+  const s = map[status] || map.ACTIVE;
   return (
-    <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '700', background: style.bg, color: style.color }}>
-      {status}
+    <span className={`${s.bg} ${s.color} px-2.5 py-1 rounded-full text-[9px] font-black tracking-wider flex items-center justify-center w-fit mx-auto`}>
+      {s.label}
     </span>
   );
 }
 
-function InputField({
-  label,
-  name,
-  type = 'text',
-  required,
-  placeholder,
-  value,
-  onChange,
-  max,
-  maxLength,
-  numericOnly,
-}) {
-  return (
-    <div>
-      <label style={{ fontSize: '12px', fontWeight: '600', color: '#374151', display: 'block', marginBottom: '5px' }}>
-        {label} {required && <span style={{ color: '#ef4444' }}>*</span>}
-      </label>
-      <input
-        type={type}
-        value={value || ''}
-        onChange={e => {
-          let val = e.target.value;
-          if (numericOnly) {
-            // Strip anything that isn't a digit — blocks letters and special characters
-            val = val.replace(/[^0-9]/g, '');
-          }
-          if (maxLength) {
-            val = val.slice(0, maxLength);
-          }
-          onChange(name, val);
-        }}
-        onKeyPress={e => {
-          if (numericOnly && !/[0-9]/.test(e.key)) {
-            e.preventDefault();
-          }
-        }}
-        onPaste={e => {
-          if (numericOnly) {
-            const pasted = e.clipboardData.getData('text');
-            if (/[^0-9]/.test(pasted)) {
-              e.preventDefault();
-            }
-          }
-        }}
-        placeholder={placeholder}
-        required={required}
-        max={max}
-        maxLength={maxLength}
-        inputMode={numericOnly ? 'numeric' : undefined}
-        style={{
-          width: '100%',
-          padding: '9px 12px',
-          border: '1.5px solid #e2e8f0',
-          borderRadius: '8px',
-          fontSize: '13px',
-          outline: 'none',
-          boxSizing: 'border-box',
-        }}
-        onFocus={e => e.target.style.borderColor = '#3b82f6'}
-        onBlur={e => e.target.style.borderColor = '#e2e8f0'}
-      />
-    </div>
-  );
-}
-
-const EMPTY_FORM = {
-  employeeId: "", firstName: '', lastName: '', email: '',
-  password: '', phone: '', department: '',
-  designation: '', basicSalary: '',
-  dateOfJoining: '', dateOfBirth: '',
-  role: 'EMPLOYEE',
-};
-
-export default function EmployeeManagementPage() {
+export default function EmployeesPage() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [searching, setSearching] = useState(false);
-  const [showForm, setShowForm] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  const [editId, setEditId] = useState(null);
-  const [form, setForm] = useState(EMPTY_FORM);
-  const [submitting, setSubmitting] = useState(false);
-  const [deleting, setDeleting] = useState(null);
-  const [page, setPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [totalElements, setTotalElements] = useState(0);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
-  const [showPassword, setShowPassword] = useState(false);
-
-  const fetchEmployees = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await getAllEmployees(page, 10);
-      const data = res.data?.data;
-      setEmployees(data?.content || []);
-      setTotalPages(data?.totalPages || 0);
-      setTotalElements(data?.totalElements || 0);
-    } catch (err) {
-      toast.error('Failed to load employees');
-    } finally {
-      setLoading(false);
-    }
-  }, [page]);
-
-  const handleSearch = useCallback(async () => {
-    if (!search.trim()) return;
-    setSearching(true);
-    try {
-      const res = await searchEmployees(search, page, 10);
-      const data = res.data?.data;
-      setEmployees(data?.content || []);
-      setTotalPages(data?.totalPages || 0);
-      setTotalElements(data?.totalElements || 0);
-    } catch (err) {
-      toast.error('Search failed');
-    } finally {
-      setSearching(false);
-    }
-  }, [search, page]);
+  const [isSlideOutOpen, setIsSlideOutOpen] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (search.trim()) {
-        handleSearch();
-      } else {
-        fetchEmployees();
+    const fetchAll = async () => {
+      try {
+        const res = await getAllEmployees(0, 10);
+        if (res.data?.data?.content) {
+          // Add dummy statuses for visual demonstration
+          const data = res.data.data.content.map((e, i) => ({
+            ...e,
+            empStatus: i === 1 ? 'ON_BOARDING' : i === 2 ? 'PROBATION' : i === 3 ? 'ON_LEAVE' : 'ACTIVE',
+            account: i === 2 || i === 3 ? 'Need Invitation' : 'Activated'
+          }));
+          setEmployees(data);
+        }
+      } catch (err) {
+        toast.error('Failed to load employees');
+      } finally {
+        setLoading(false);
       }
-    }, search.trim() ? 400 : 0);
-    return () => clearTimeout(timer);
-  }, [search, page, handleSearch, fetchEmployees]);
-
-  const openAddForm = () => {
-    setEditMode(false);
-    setEditId(null);
-    setForm(EMPTY_FORM);
-    setShowForm(true);
-  };
-
-  const openEditForm = (emp) => {
-    setEditMode(true);
-    setEditId(emp.id);
-    setForm({
-      employeeId: emp.employeeId || '',
-      firstName: emp.firstName || '',
-      lastName: emp.lastName || '',
-      email: emp.email || '',
-      password: '',
-      phone: emp.phone || '',
-      department: emp.department || '',
-      designation: emp.designation || '',
-      basicSalary: emp.basicSalary || '',
-      dateOfJoining: emp.dateOfJoining || '',
-      dateOfBirth: emp.dateOfBirth || '',
-      role: emp.role || 'EMPLOYEE',
-    });
-    setShowForm(true);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (form.phone && form.phone.length !== 10) {
-      toast.error('Phone number must be exactly 10 digits');
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      const payload = {
-        ...form,
-        basicSalary: form.basicSalary ? parseFloat(form.basicSalary) : 0,
-      };
-      if (editMode) {
-        if (!payload.password) delete payload.password;
-        await updateEmployee(editId, payload);
-        toast.success('Employee updated successfully!');
-      } else {
-        await createEmployee(payload);
-        toast.success('Employee created successfully!');
-      }
-      setShowForm(false);
-      setForm(EMPTY_FORM);
-      fetchEmployees();
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Operation failed');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    setDeleting(id);
-    try {
-      await deleteEmployee(id);
-      toast.success('Employee deleted successfully!');
-      setShowDeleteConfirm(null);
-      fetchEmployees();
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Delete failed');
-    } finally {
-      setDeleting(null);
-    }
-  };
-
-  const handleFieldChange = (name, val) => setForm(prev => ({ ...prev, [name]: val }));
+    };
+    fetchAll();
+  }, []);
 
   return (
-    <div>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+    <div className="relative h-full flex flex-col">
+      {/* Header Area */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div>
-          <h1 style={{ fontSize: '22px', fontWeight: '800', color: '#1e293b', marginBottom: '4px' }}>
-            Employee Management
+          <h1 className="text-[26px] font-extrabold text-slate-900 dark:text-white tracking-tight mb-1">
+            Employees
           </h1>
-          <p style={{ fontSize: '13px', color: '#94a3b8' }}>
-            {totalElements} total employees
+          <p className="text-[13px] font-medium text-slate-500 dark:text-slate-400">
+            Manage your Employee
           </p>
         </div>
-        <button
-          onClick={openAddForm}
-          style={{
-            padding: '10px 20px', background: '#1e3a5f',
-            color: 'white', border: 'none', borderRadius: '10px',
-            fontSize: '13px', fontWeight: '700', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', gap: '6px',
-          }}
-        >
-          + Add Employee
-        </button>
-      </div>
-
-      {/* Search Bar */}
-      <div style={{ position: 'relative', marginBottom: '20px', maxWidth: '400px' }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"
-          style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }}>
-          <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" />
-        </svg>
-        <input
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="Search by name, email, department..."
-          style={{
-            width: '100%', paddingLeft: '38px', paddingRight: '16px',
-            height: '40px', border: '1.5px solid #e2e8f0',
-            borderRadius: '10px', fontSize: '13px', outline: 'none',
-          }}
-          onFocus={e => e.target.style.borderColor = '#3b82f6'}
-          onBlur={e => e.target.style.borderColor = '#e2e8f0'}
-        />
-        {(searching) && (
-          <span style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', fontSize: '12px', color: '#94a3b8' }}>
-            Searching...
-          </span>
-        )}
-      </div>
-
-      {/* Table */}
-      <div className="table-responsive" style={{
-        background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0',
-        boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
-      }}>
-        {/* Table Header */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '0.6fr 2fr 1.2fr 1.2fr 1fr 1fr 1fr',
-          gap: '16px',
-          padding: '10px 20px', background: '#f8fafc',
-          borderBottom: '1px solid #e2e8f0',
-        }}>
-          {['Emp ID', 'Employee', 'Department', 'Designation', 'Role', 'Status', 'Actions'].map(h => (
-            <div key={h} style={{ fontSize: '11px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              {h}
-            </div>
-          ))}
+        <div className="flex items-center gap-3">
+          <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-[13px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+            <Download className="w-4 h-4" /> Download
+          </button>
+          <button 
+            onClick={() => setIsSlideOutOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-[#0f172a] dark:bg-[#10b981] rounded-xl text-[13px] font-bold text-white shadow-md shadow-slate-900/10 dark:shadow-emerald-900/20 hover:opacity-90 transition-opacity"
+          >
+            <Plus className="w-4 h-4" /> Add New
+          </button>
         </div>
+      </div>
 
-        {loading ? (
-          <div style={{ padding: '60px', textAlign: 'center', color: '#94a3b8' }}>Loading employees...</div>
-        ) : employees.length === 0 ? (
-          <div style={{ padding: '60px', textAlign: 'center' }}>
-            <div style={{ fontSize: '40px', marginBottom: '12px' }}>👥</div>
-            <div style={{ fontSize: '15px', fontWeight: '600', color: '#1e293b', marginBottom: '8px' }}>
-              {search ? 'No employees found' : 'No employees yet'}
-            </div>
-            <div style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '16px' }}>
-              {search ? `No results for "${search}"` : 'Add your first employee'}
-            </div>
-            {!search && (
-              <button onClick={openAddForm} style={{ padding: '10px 20px', background: '#1e3a5f', color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
-                + Add Employee
-              </button>
-            )}
+      {/* Main Content Card */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-6 flex-1 shadow-sm">
+        
+        {/* Filters */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+          <div className="relative w-full md:w-96">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input type="text" placeholder="Search employee" className="w-full pl-10 pr-4 py-2.5 border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 rounded-xl text-[13px] focus:outline-none focus:ring-1 focus:ring-emerald-500 text-slate-700 dark:text-white placeholder:text-slate-400" />
           </div>
-        ) : (
-          <>
-            {employees.map((emp, i) => (
-              <div key={emp.id} style={{
-                display: 'grid',
-                gridTemplateColumns: '0.6fr 2fr 1.2fr 1.2fr 1fr 1fr 1fr',
-                gap: '16px',
-                padding: '13px 20px', borderBottom: '1px solid #f1f5f9',
-                alignItems: 'center',
-              }}
-                onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
-                onMouseLeave={e => e.currentTarget.style.background = 'white'}
-              >
-                <div style={{ fontSize: '12px', color: '#94a3b8', fontWeight: '600' }}>
-                  {emp.employeeId}
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
-                  <div style={{
-                    width: '34px', height: '34px', borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #1e3a5f, #3b82f6)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '12px', fontWeight: '700', color: 'white', flexShrink: 0,
-                  }}>
-                    {emp.firstName?.[0]}{emp.lastName?.[0]}
-                  </div>
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: '13px', fontWeight: '600', color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {emp.firstName} {emp.lastName}
-                    </div>
-                    <div style={{ fontSize: '11px', color: '#94a3b8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{emp.email}</div>
-                  </div>
-                </div>
-
-                <div style={{ fontSize: '13px', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{emp.department || '—'}</div>
-                <div style={{ fontSize: '13px', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{emp.designation || '—'}</div>
-                <Badge status={emp.role} />
-                <Badge status={emp.active ? 'ACTIVE' : 'INACTIVE'} />
-
-                <div style={{ display: 'flex', gap: '6px' }}>
-                  <button
-                    onClick={() => openEditForm(emp)}
-                    style={{
-                      padding: '5px 12px', background: '#eff6ff',
-                      color: '#3b82f6', border: '1px solid #bfdbfe',
-                      borderRadius: '6px', fontSize: '11px', fontWeight: '700',
-                      cursor: 'pointer',
-                    }}
-                  >Edit</button>
-                  <button
-                    onClick={() => setShowDeleteConfirm(emp)}
-                    style={{
-                      padding: '5px 12px', background: '#fee2e2',
-                      color: '#dc2626', border: '1px solid #fecaca',
-                      borderRadius: '6px', fontSize: '11px', fontWeight: '700',
-                      cursor: 'pointer',
-                    }}
-                  >Delete</button>
-                </div>
+          
+          <div className="flex w-full md:w-auto items-center gap-3">
+            {['All Offices', 'All Job Titles', 'All Status'].map(filter => (
+              <div key={filter} className="flex-1 md:flex-none border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-xl px-4 py-2.5 text-[12px] font-semibold text-slate-600 dark:text-slate-300 flex items-center justify-between gap-6 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 relative group">
+                {filter} <ChevronDown className="w-4 h-4 text-slate-400" />
               </div>
             ))}
+          </div>
+        </div>
 
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div style={{ padding: '14px 20px', display: 'flex', justifyContent: 'center', gap: '8px', borderTop: '1px solid #e2e8f0' }}>
-                <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
-                  style={{ padding: '6px 14px', border: '1px solid #e2e8f0', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: page === 0 ? '#cbd5e1' : '#374151', background: 'white', cursor: page === 0 ? 'not-allowed' : 'pointer' }}>
-                  ← Prev
-                </button>
-                <span style={{ padding: '6px 14px', fontSize: '12px', color: '#64748b' }}>
-                  Page {page + 1} of {totalPages}
-                </span>
-                <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page >= totalPages - 1}
-                  style={{ padding: '6px 14px', border: '1px solid #e2e8f0', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: page >= totalPages - 1 ? '#cbd5e1' : '#374151', background: 'white', cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer' }}>
-                  Next →
-                </button>
-              </div>
-            )}
-          </>
-        )}
+        {/* Table */}
+        <div className="overflow-x-auto min-h-[400px]">
+          <table className="w-full text-left border-collapse whitespace-nowrap">
+            <thead>
+              <tr className="border-b border-slate-100 dark:border-slate-800/60">
+                <th className="py-4 px-4"><input type="checkbox" className="rounded border-slate-300 dark:border-slate-600 text-emerald-500 focus:ring-emerald-500 bg-transparent" /></th>
+                <th className="py-4 px-2 font-semibold text-[11px] text-slate-400 tracking-wider">Employee Name ↕</th>
+                <th className="py-4 px-2 font-semibold text-[11px] text-slate-400 tracking-wider">Job Title ↕</th>
+                <th className="py-4 px-2 font-semibold text-[11px] text-slate-400 tracking-wider">Line Manager ↕</th>
+                <th className="py-4 px-2 font-semibold text-[11px] text-slate-400 tracking-wider">Department ↕</th>
+                <th className="py-4 px-2 font-semibold text-[11px] text-slate-400 tracking-wider">Office ↕</th>
+                <th className="py-4 px-2 font-semibold text-[11px] text-slate-400 tracking-wider text-center">Employee Status ↕</th>
+                <th className="py-4 px-2 font-semibold text-[11px] text-slate-400 tracking-wider text-center">Account ↕</th>
+                <th className="py-4 px-4 font-semibold text-[11px] text-slate-400 tracking-wider text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr><td colSpan="9" className="text-center py-10 text-slate-500">Loading employees...</td></tr>
+              ) : (
+                employees.map((emp, i) => (
+                  <tr key={emp.id || i} className="border-b border-slate-50 dark:border-slate-800/30 hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
+                    <td className="py-4 px-4"><input type="checkbox" className="rounded border-slate-300 dark:border-slate-600 text-emerald-500 focus:ring-emerald-500 bg-transparent" /></td>
+                    <td className="py-4 px-2">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-xs shrink-0">
+                          {emp.name.substring(0,2).toUpperCase()}
+                        </div>
+                        <div>
+                          <div className="text-[13px] font-bold text-slate-800 dark:text-slate-100">{emp.name}</div>
+                          <div className="text-[11px] text-slate-400">{emp.email}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-4 px-2 text-[13px] font-semibold text-slate-600 dark:text-slate-300">{emp.department || 'UI UX Designer'}</td>
+                    <td className="py-4 px-2 text-[13px] font-semibold text-slate-500">@Manager</td>
+                    <td className="py-4 px-2 text-[13px] font-semibold text-slate-500">Team Product</td>
+                    <td className="py-4 px-2 text-[13px] font-semibold text-slate-500">Unpixel Office</td>
+                    <td className="py-4 px-2"><Badge status={emp.empStatus} /></td>
+                    <td className="py-4 px-2 text-[13px] font-semibold text-center text-slate-500">{emp.account}</td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="w-7 h-7 rounded bg-emerald-500 flex items-center justify-center text-white mx-auto cursor-pointer shadow shadow-emerald-500/20 hover:bg-emerald-600 transition-colors">
+                        <Eye className="w-3.5 h-3.5" />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+        
+        {/* Pagination placeholder */}
+        <div className="mt-6 flex items-center gap-2">
+           <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 bg-white dark:bg-slate-800">&lt;</button>
+           <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#0f172a] text-white text-[12px] font-bold shadow-md">1</button>
+           <button className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-600 dark:text-slate-400 text-[12px] font-bold hover:bg-slate-50 dark:hover:bg-slate-800">2</button>
+           <button className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-600 dark:text-slate-400 text-[12px] font-bold hover:bg-slate-50 dark:hover:bg-slate-800">3</button>
+           <span className="text-slate-400 text-sm tracking-widest">...</span>
+           <button className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-600 dark:text-slate-400 text-[12px] font-bold hover:bg-slate-50 dark:hover:bg-slate-800">10</button>
+           <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 bg-white dark:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-300">&gt;</button>
+        </div>
       </div>
 
-      {/* Add/Edit Employee Modal */}
-      {showForm && (
-        <div style={{
-          position: 'fixed', inset: 0,
-          background: 'rgba(0,0,0,0.5)',
-          display: 'flex', alignItems: 'center',
-          justifyContent: 'center', zIndex: 100, padding: '20px',
-        }}>
-          <div style={{
-            background: 'white', borderRadius: '16px',
-            padding: '28px', width: '100%', maxWidth: '600px',
-            maxHeight: '90vh', overflowY: 'auto',
-            boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '800', color: '#1e293b' }}>
-                {editMode ? 'Edit Employee' : 'Add New Employee'}
-              </h2>
-              <button onClick={() => setShowForm(false)}
-                style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#94a3b8' }}>✕</button>
+      {/* Slide-out Form Drawer */}
+      {isSlideOutOpen && (
+        <>
+          <div className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40 transition-opacity" onClick={() => setIsSlideOutOpen(false)}></div>
+          <div className="fixed top-0 right-0 bottom-0 w-full md:w-[400px] bg-white dark:bg-slate-900 shadow-2xl z-50 flex flex-col transform transition-transform duration-300">
+            
+            <div className="absolute -left-12 top-1/2 -translate-y-1/2 w-10 h-10 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center shadow-lg cursor-pointer text-slate-700 dark:text-slate-200 z-50" onClick={() => setIsSlideOutOpen(false)}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
             </div>
 
-            <form onSubmit={handleSubmit}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-                <InputField
-                  label="Employee ID"
-                  name="employeeId"
-                  required
-                  placeholder="EMP0004"
-                  value={form.employeeId}
-                  onChange={handleFieldChange}
-                />                <InputField label="First Name" name="firstName" required placeholder="John" value={form.firstName} onChange={handleFieldChange} />
-                <InputField label="Last Name" name="lastName" required placeholder="Doe" value={form.lastName} onChange={handleFieldChange} />
-                <InputField label="Email" name="email" type="email" required placeholder="john@hrms.com" value={form.email} onChange={handleFieldChange} />
-                <div style={{ position: "relative" }}>
-                  <InputField
-                    label={editMode ? "Password (leave blank to keep)" : "Password"}
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    required={!editMode}
-                    placeholder="Min 8 characters"
-                    value={form.password}
-                    onChange={handleFieldChange}
-                  />
-
-                  <span
-                    onClick={() => setShowPassword(!showPassword)}
-                    style={{
-                      position: "absolute",
-                      right: "12px",
-                      top: "38px",
-                      cursor: "pointer",
-                      color: "#64748b",
-                      fontSize: "16px"
-                    }}
-                  >
-                    {showPassword ? <FaEye /> : <FaEyeSlash />}
-                  </span>
+            <div className="p-8 flex-1 overflow-y-auto">
+              <h2 className="text-[22px] font-extrabold text-slate-900 dark:text-white tracking-tight mb-8">Add New Profile</h2>
+              
+              <div className="space-y-5">
+                <div>
+                  <label className="block text-[12px] font-bold text-slate-700 dark:text-slate-300 mb-2">First Name <span className="text-red-500">*</span></label>
+                  <input type="text" className="w-full px-4 py-3 border border-red-400 dark:border-red-500/50 bg-white dark:bg-slate-800 rounded-xl text-[13px] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-red-400" />
+                  <p className="text-[11px] text-red-500 mt-2 flex items-center gap-1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> This field is required.</p>
                 </div>
-                <InputField
-                  label="Phone"
-                  name="phone"
-                  type="tel"
-                  placeholder="9876543210"
-                  value={form.phone}
-                  onChange={handleFieldChange}
-                  numericOnly
-                  maxLength={10}
-                />
-                <InputField label="Department" name="department" placeholder="Engineering" value={form.department} onChange={handleFieldChange} />
-                <InputField label="Designation" name="designation" placeholder="Software Engineer" value={form.designation} onChange={handleFieldChange} />
-                <InputField label="Basic Salary" name="basicSalary" type="number" placeholder="50000" value={form.basicSalary} onChange={handleFieldChange} />
-                <InputField label="Date of Joining" name="dateOfJoining" type="date" value={form.dateOfJoining} onChange={handleFieldChange} />
-                <InputField
-                  label="Date of Birth"
-                  name="dateOfBirth"
-                  type="date"
-                  value={form.dateOfBirth}
-                  onChange={handleFieldChange}
-                  max={new Date().toISOString().split("T")[0]}
-                />
-              </div>
 
-              {/* Role */}
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ fontSize: '12px', fontWeight: '600', color: '#374151', display: 'block', marginBottom: '5px' }}>
-                  Role <span style={{ color: '#ef4444' }}>*</span>
-                </label>
-                <select
-                  value={form.role}
-                  onChange={e => setForm({ ...form, role: e.target.value })}
-                  style={{ width: '100%', padding: '9px 12px', border: '1.5px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', outline: 'none', background: 'white' }}
-                >
-                  <option value="EMPLOYEE">EMPLOYEE</option>
-                  <option value="HR">HR</option>
-                  <option value="ADMIN">ADMIN</option>
-                </select>
-              </div>
+                <div>
+                  <label className="block text-[12px] font-bold text-slate-700 dark:text-slate-300 mb-2">Last Name <span className="text-red-500">*</span></label>
+                  <input type="text" defaultValue="Candra" className="w-full px-4 py-3 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-xl text-[13px] font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500" />
+                </div>
 
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <button type="button" onClick={() => setShowForm(false)}
-                  style={{ flex: 1, padding: '12px', background: 'white', color: '#374151', border: '1.5px solid #e2e8f0', borderRadius: '10px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
-                  Cancel
-                </button>
-                <button type="submit" disabled={submitting}
-                  style={{ flex: 1, padding: '12px', background: '#1e3a5f', color: 'white', border: 'none', borderRadius: '10px', fontSize: '14px', fontWeight: '700', cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1 }}>
-                  {submitting ? '⏳ Saving...' : editMode ? 'Update Employee' : 'Add Employee'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+                <div>
+                  <label className="block text-[12px] font-bold text-slate-700 dark:text-slate-300 mb-2">Email Address <span className="text-red-500">*</span></label>
+                  <input type="email" defaultValue="pristia@gmail.com" className="w-full px-4 py-3 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-xl text-[13px] font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500" />
+                </div>
 
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          zIndex: 100, padding: '20px',
-        }}>
-          <div style={{
-            background: 'white', borderRadius: '16px', padding: '28px',
-            width: '100%', maxWidth: '400px',
-            boxShadow: '0 20px 60px rgba(0,0,0,0.2)', textAlign: 'center',
-          }}>
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>⚠️</div>
-            <h2 style={{ fontSize: '18px', fontWeight: '800', color: '#1e293b', marginBottom: '8px' }}>
-              Delete Employee?
-            </h2>
-            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '24px' }}>
-              Are you sure you want to delete <strong>{showDeleteConfirm.firstName} {showDeleteConfirm.lastName}</strong>?
-              This action cannot be undone.
-            </p>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button
-                onClick={() => setShowDeleteConfirm(null)}
-                style={{ flex: 1, padding: '12px', background: 'white', color: '#374151', border: '1.5px solid #e2e8f0', borderRadius: '10px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}
-              >
+                <div>
+                  <label className="block text-[12px] font-bold text-slate-700 dark:text-slate-300 mb-2">Join Date <span className="text-red-500">*</span></label>
+                  <div className="relative">
+                    <input type="text" defaultValue="23 Mar 2023" className="w-full pl-4 pr-10 py-3 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-xl text-[13px] font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500" />
+                    <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-slate-100 dark:border-slate-800 flex gap-3">
+              <button onClick={() => setIsSlideOutOpen(false)} className="flex-1 py-3 border border-slate-200 dark:border-slate-700 rounded-xl text-[13px] font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                 Cancel
               </button>
-              <button
-                onClick={() => handleDelete(showDeleteConfirm.id)}
-                disabled={deleting === showDeleteConfirm.id}
-                style={{ flex: 1, padding: '12px', background: '#dc2626', color: 'white', border: 'none', borderRadius: '10px', fontSize: '14px', fontWeight: '700', cursor: 'pointer' }}
-              >
-                {deleting === showDeleteConfirm.id ? '⏳ Deleting...' : 'Yes, Delete'}
+              <button onClick={() => setIsSlideOutOpen(false)} className="flex-1 py-3 bg-[#0f172a] dark:bg-[#10b981] rounded-xl text-[13px] font-bold text-white shadow-lg shadow-slate-900/10 dark:shadow-emerald-900/20 hover:opacity-90 transition-opacity">
+                Create
               </button>
             </div>
           </div>
-        </div>
+        </>
       )}
+
     </div>
   );
 }
