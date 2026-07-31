@@ -458,7 +458,7 @@ export default function EmployeeManagementPage() {
                       fontSize: "16px"
                     }}
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
                 </div>
                 <InputField
