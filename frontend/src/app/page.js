@@ -1,118 +1,89 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function Home() {
   const router = useRouter();
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      padding: '20px',
-    }}>
-      <div style={{
-        background: 'white', borderRadius: '20px',
-        padding: '48px 40px', width: '100%', maxWidth: '440px',
-        boxShadow: '0 8px 40px rgba(0,0,0,0.12)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center',
-      }}>
+    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-[#f8fafc] dark:bg-slate-900 transition-colors duration-500">
+      {/* Dynamic Background Elements */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-100/50 dark:bg-[#DBFF00]/10 blur-[100px] sm:blur-[120px] animate-pulse"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-100/50 dark:bg-[#DBFF00]/10 blur-[100px] sm:blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+
+      <div className="w-full max-w-md relative z-10 backdrop-blur-xl bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 p-10 rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-2xl flex flex-col items-center transform transition-all duration-500 hover:scale-[1.01]">
         {/* Header */}
-        <div style={{
-          width: '64px', height: '64px',
-          background: 'linear-gradient(135deg, #1e3a5f, #2563eb)',
-          borderRadius: '16px',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginBottom: '16px',
-        }}>
-          <span style={{ color: 'white', fontSize: '28px', fontWeight: '800' }}>H</span>
+        <div className="w-16 h-16 rounded-[16px] bg-[#10b981] dark:from-[#DBFF00] dark:to-[#a3cc00] flex items-center justify-center shadow-lg shadow-emerald-500/20 dark:shadow-[#DBFF00]/20 mb-6 relative group">
+          <div className="absolute inset-0 bg-white/20 dark:bg-black/10 rounded-[16px] blur-md group-hover:blur-lg transition-all"></div>
+          <span className="text-white dark:text-slate-900 text-3xl font-black tracking-tight relative z-10">H</span>
         </div>
-        <h1 style={{ fontSize: '24px', fontWeight: '800', color: '#1e293b', marginBottom: '4px' }}>HRMS</h1>
-        <p style={{ fontSize: '13px', fontWeight: '600', color: '#3b82f6', letterSpacing: '2px', marginBottom: '4px' }}>HR MANAGEMENT SYSTEM</p>
-        <p style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '8px' }}>Streamline · Manage · Empower</p>
-        <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '32px' }}>Choose how you want to sign in</p>
+        <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-1 tracking-tight">HRMS</h1>
+        <h2 className="text-[13px] font-semibold text-slate-500 dark:text-slate-400 mb-5 tracking-wide text-center uppercase">
+          Saiteja Infotech Private Limited
+        </h2>
+        
+        <div className="w-6 h-[2px] rounded-full bg-slate-200 dark:bg-white/10 mb-5"></div>
+        
+        <div className="flex flex-col items-center mb-8">
+          <p className="text-[11px] font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-500 dark:from-[#DBFF00] dark:to-emerald-400 uppercase tracking-[0.35em] mb-2">
+            Workspace
+          </p>
+          <div className="flex items-center gap-2 text-[11px] text-slate-400 dark:text-slate-500 font-medium uppercase tracking-widest">
+            <span>Streamline</span>
+            <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600"></span>
+            <span>Manage</span>
+            <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600"></span>
+            <span>Empower</span>
+          </div>
+        </div>
+
+        <p className="text-xs font-semibold text-slate-400 dark:text-slate-400 mb-4 w-full text-left uppercase tracking-wider">Select Portal</p>
 
         {/* Employee Card */}
         <Link
           href="/login/employee"
-          style={{
-            width: '100%', border: '2px solid #3b82f6',
-            borderRadius: '14px', padding: '16px 20px',
-            display: 'flex', alignItems: 'center', gap: '14px',
-            marginBottom: '14px', cursor: 'pointer',
-            background: '#eff6ff', transition: 'all 0.2s',
-            textDecoration: 'none',
-          }}
-          onMouseOver={e => e.currentTarget.style.background = '#dbeafe'}
-          onMouseOut={e => e.currentTarget.style.background = '#eff6ff'}
+          className="group w-full flex items-center gap-5 p-4 mb-4 rounded-[16px] border border-slate-100 dark:border-white/10 bg-white dark:bg-white/5 hover:border-emerald-500/30 dark:hover:border-[#DBFF00]/50 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md dark:shadow-lg dark:hover:shadow-[#DBFF00]/20"
         >
-          <div style={{
-            width: '48px', height: '48px', background: '#dbeafe',
-            borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-          }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="#3b82f6">
-              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          <div className="w-12 h-12 rounded-[12px] bg-emerald-50 dark:bg-[#DBFF00]/10 flex items-center justify-center shrink-0 group-hover:bg-emerald-100 dark:group-hover:bg-[#DBFF00]/20 transition-colors">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-[#10b981] dark:text-[#DBFF00] stroke-[2] stroke-linecap-round stroke-linejoin-round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
             </svg>
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '15px', fontWeight: '700', color: '#1e293b', marginBottom: '3px' }}>Employee Login</div>
-            <div style={{ fontSize: '12px', color: '#64748b' }}>Access your personal dashboard and services</div>
+          <div className="flex-1 text-left">
+            <div className="text-sm font-bold text-slate-800 dark:text-white mb-0.5 group-hover:text-[#10b981] dark:group-hover:text-[#DBFF00] transition-colors">Employee Portal</div>
+            <div className="text-[11px] font-medium text-slate-400 dark:text-slate-400">Access your personal dashboard</div>
           </div>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#3b82f6"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+          <div className="w-8 h-8 rounded-full bg-slate-50 dark:bg-white/5 flex items-center justify-center group-hover:bg-emerald-50 dark:group-hover:bg-[#DBFF00]/10 group-hover:translate-x-1 transition-all">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-slate-400 dark:text-slate-500 group-hover:text-[#10b981] dark:group-hover:text-[#DBFF00] stroke-[2.5] stroke-linecap-round stroke-linejoin-round"><path d="m9 18 6-6-6-6" /></svg>
+          </div>
         </Link>
 
         {/* Admin Card */}
         <Link
           href="/login/admin"
-          style={{
-            width: '100%', border: '2px solid #16a34a',
-            borderRadius: '14px', padding: '16px 20px',
-            display: 'flex', alignItems: 'center', gap: '14px',
-            marginBottom: '32px', cursor: 'pointer',
-            background: '#f0fdf4', transition: 'all 0.2s',
-            textDecoration: 'none',
-          }}
-          onMouseOver={e => e.currentTarget.style.background = '#dcfce7'}
-          onMouseOut={e => e.currentTarget.style.background = '#f0fdf4'}
+          className="group w-full flex items-center gap-5 p-4 mb-8 rounded-[16px] border border-slate-100 dark:border-white/10 bg-white dark:bg-white/5 hover:border-emerald-500/30 dark:hover:border-[#DBFF00]/50 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md dark:shadow-lg dark:hover:shadow-[#DBFF00]/20"
         >
-          <div style={{
-            width: '48px', height: '48px', background: '#dcfce7',
-            borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-          }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="#16a34a">
-              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+          <div className="w-12 h-12 rounded-[12px] bg-emerald-50 dark:bg-[#DBFF00]/10 flex items-center justify-center shrink-0 group-hover:bg-emerald-100 dark:group-hover:bg-[#DBFF00]/20 transition-colors">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-[#10b981] dark:text-[#DBFF00] stroke-[2] stroke-linecap-round stroke-linejoin-round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
             </svg>
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: '15px', fontWeight: '700', color: '#1e293b', marginBottom: '3px' }}>HR / Admin Login</div>
-            <div style={{ fontSize: '12px', color: '#64748b' }}>Access admin panel and manage the system</div>
+          <div className="flex-1 text-left">
+            <div className="text-sm font-bold text-slate-800 dark:text-white mb-0.5 group-hover:text-[#10b981] dark:group-hover:text-[#DBFF00] transition-colors">HR / Admin Portal</div>
+            <div className="text-[11px] font-medium text-slate-400 dark:text-slate-400">Manage system and personnel</div>
           </div>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#16a34a"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+          <div className="w-8 h-8 rounded-full bg-slate-50 dark:bg-white/5 flex items-center justify-center group-hover:bg-emerald-50 dark:group-hover:bg-[#DBFF00]/10 group-hover:translate-x-1 transition-all">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-slate-400 dark:text-slate-500 group-hover:text-[#10b981] dark:group-hover:text-[#DBFF00] stroke-[2.5] stroke-linecap-round stroke-linejoin-round"><path d="m9 18 6-6-6-6" /></svg>
+          </div>
         </Link>
 
-        {/* Illustration */}
-        <div style={{ display: 'flex', gap: '20px', marginBottom: '24px', alignItems: 'flex-end' }}>
-          <svg viewBox="0 0 80 80" width="80" height="80">
-            <rect x="10" y="30" width="60" height="40" rx="4" fill="#dbeafe"/>
-            <rect x="20" y="40" width="40" height="4" rx="2" fill="#93c5fd"/>
-            <rect x="20" y="48" width="30" height="4" rx="2" fill="#bfdbfe"/>
-            <rect x="20" y="56" width="35" height="4" rx="2" fill="#bfdbfe"/>
-            <circle cx="40" cy="18" r="10" fill="#3b82f6"/>
-            <path d="M36 18l3 3 5-5" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round"/>
-          </svg>
-          <svg viewBox="0 0 80 80" width="80" height="80">
-            <rect x="10" y="30" width="60" height="40" rx="4" fill="#dcfce7"/>
-            <rect x="20" y="40" width="40" height="4" rx="2" fill="#86efac"/>
-            <rect x="20" y="48" width="30" height="4" rx="2" fill="#bbf7d0"/>
-            <rect x="20" y="56" width="35" height="4" rx="2" fill="#bbf7d0"/>
-            <circle cx="40" cy="18" r="10" fill="#16a34a"/>
-            <path d="M36 18l3 3 5-5" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round"/>
-          </svg>
-        </div>
-
-        <p style={{ fontSize: '11px', color: '#cbd5e1' }}>© 2025 HRMS. All rights reserved.</p>
+        <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">© 2025 Saiteja Infotech Private Limited. All rights reserved.</p>
       </div>
+
+      {/* Theme Toggle Button */}
+      <ThemeToggle />
     </div>
   );
 }

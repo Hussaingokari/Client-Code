@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 /* =========================================================
    RESPONSIVE GLOBAL LAYOUT & MOBILE BREAKPOINTS (< 768px)
    ========================================================= */
@@ -14,6 +16,12 @@ body {
   width: 100%;
   max-width: 100vw;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark, html.dark body {
+  background: #0f172a;
+  color: #f8fafc;
 }
 
 /* Base Layout Containers */
