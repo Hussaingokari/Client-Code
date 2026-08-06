@@ -120,3 +120,10 @@ export const markAdminNotificationRead = (id) =>
 
 export const markAllAdminNotificationsRead = () =>
   api.put('/api/notifications/read-all');
+
+export const changePassword = (currentPassword, newPassword, confirmPassword) =>
+  api.post('/api/auth/change-password', {
+    currentPassword,
+    newPassword,
+    confirmPassword,
+  });

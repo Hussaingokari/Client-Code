@@ -70,6 +70,20 @@ public class LeaveService {
                     "End date must be after start date");
         }
 
+        if (req.getReason() != null && req.getReason().length() > 255) {
+            throw new IllegalArgumentException("Reason must be 255 characters or less");
+        }
+
+        List<LeaveRequest> existingLeaves = leaveRepo.findAllByEmployee(emp);
+        boolean hasOverlap = existingLeaves.stream()
+                .anyMatch(l -> l.getStatus() != LeaveStatus.REJECTED
+                        && l.getStatus() != LeaveStatus.CANCELLED
+                        && !req.getStartDate().isAfter(l.getEndDate())
+                        && !req.getEndDate().isBefore(l.getStartDate()));
+        if (hasOverlap) {
+            throw new IllegalArgumentException("You already have a leave request during this period");
+        }
+
         int days = calculateWorkingDays(
                 req.getStartDate(), req.getEndDate());
 
@@ -112,27 +126,29 @@ public class LeaveService {
                 + req.getStartDate() + " to "
                 + req.getEndDate() + ".";
 
-        // Notify manager if selected
-        if (manager != null) {
-            notificationService.createAndSend(
-                    manager,
+        java.util.concurrent.CompletableFuture.runAsync(() -> {
+            // Notify manager if selected
+            if (manager != null) {
+                notificationService.createAndSend(
+                        manager,
+                        "New Leave Request",
+                        notifMsg,
+                        NotificationType.LEAVE_APPLIED,
+                        "LEAVE_REQUEST",
+                        saved.getId()
+                );
+            }
+
+            // Notify ALL admins and HR
+            notifyAllAdmins(
                     "New Leave Request",
                     notifMsg,
                     NotificationType.LEAVE_APPLIED,
                     "LEAVE_REQUEST",
-                    saved.getId()
+                    saved.getId(),
+                    manager != null ? manager.getId() : null
             );
-        }
-
-        // Notify ALL admins and HR
-        notifyAllAdmins(
-                "New Leave Request",
-                notifMsg,
-                NotificationType.LEAVE_APPLIED,
-                "LEAVE_REQUEST",
-                saved.getId(),
-                manager != null ? manager.getId() : null
-        );
+        });
 
         return toResponse(saved);
     }
@@ -149,8 +165,12 @@ public class LeaveService {
             throw new IllegalStateException(
                     "Leave is not awaiting manager approval");
         }
-
         Employee manager = employeeService.findById(managerId);
+        boolean isOverride = manager.getRole() == Role.ADMIN || manager.getRole() == Role.HR;
+        if (!isOverride && (leave.getManager() == null || !leave.getManager().getId().equals(managerId))) {
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "You are not the assigned manager for this leave request.");
+        }
         leave.setManagerRemarks(req.getRemarks());
         leave.setManagerActionAt(LocalDateTime.now());
 
@@ -421,12 +441,21 @@ public class LeaveService {
     @Transactional(readOnly = true)
     @Cacheable("dashboardData")
     public Page<LeaveDTOs.Response> getPendingLeaves(Pageable pageable) {
-        return leaveRepo.findByApprovalStageIn(
+        org.springframework.data.domain.Page<com.hrms.entity.LeaveRequest> allPending = leaveRepo.findByApprovalStageIn(
                 java.util.List.of(
                         ApprovalStage.MANAGER_PENDING,
                         ApprovalStage.HR_PENDING
                 ), pageable
-        ).map(this::toResponse);
+        );
+        
+        java.util.List<LeaveDTOs.Response> filteredList = allPending.stream()
+                .filter(leave -> leave.getStatus() != LeaveStatus.CANCELLED &&
+                                 leave.getStatus() != LeaveStatus.REJECTED &&
+                                 leave.getStatus() != LeaveStatus.CANCELLATION_PENDING)
+                .map(this::toResponse)
+                .toList();
+        
+        return new org.springframework.data.domain.PageImpl<>(filteredList, pageable, allPending.getTotalElements());
     }
 
     @Transactional(readOnly = true)

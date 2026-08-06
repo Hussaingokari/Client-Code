@@ -55,3 +55,10 @@ export const uploadFile = (file) => {
 
 export const uploadOnboardingDocument = (onboardingId, documentKey, { fileUrl, fileName }) =>
   api.post(`/api/onboarding/documents/${onboardingId}/${documentKey}/upload`, { fileUrl, fileName });
+
+export const changePassword = (currentPassword, newPassword, confirmPassword) =>
+  api.post('/api/auth/change-password', {
+    currentPassword,
+    newPassword,
+    confirmPassword,
+  });

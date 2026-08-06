@@ -79,7 +79,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
  
             helper.setTo(toEmail);
-            helper.setSubject("Submission of Required Documents – SAITEJA INFOTECH PVT LTD");
+            helper.setSubject("Submission of Required Documents – PAXSAT");
  
             String formattedInterviewDate = interviewDate != null ? interviewDate.format(DEADLINE_FORMAT) : "N/A";
             String formattedDeadline = deadline != null ? deadline.format(DEADLINE_FORMAT) : "N/A";
@@ -166,7 +166,7 @@ public class EmailService {
                             <p style="color: #94a3b8; font-size: 13px;">If you didn't request this, please ignore this email or contact your HR Admin immediately.</p>
                         </div>
                         <div class="footer">
-                            © 2025 HR Management System · SAITEJA INFOTECH PVT LTD
+                            © 2026 PAXSAT BUSINESS SOLUTION PRIVATE LIMITED
                         </div>
                     </div>
                 </body>
@@ -186,7 +186,7 @@ public class EmailService {
             String hrEmail) {
  
         return "Dear " + candidateName + ",\n\n" +
-                "Greetings from SAITEJA INFOTECH PVT LTD.\n\n" +
+                "Greetings from PAXSAT.\n\n" +
                 "We would like to thank you for attending the interview held on " + interviewDate + " " +
                 "for the position of " + jobTitle + ". Following the interview, we request you to " +
                 "submit the necessary documents for verification and further processing of your application.\n\n" +
@@ -208,7 +208,7 @@ public class EmailService {
                 "We appreciate your prompt cooperation and look forward to receiving your documents.\n\n" +
                 "Yours faithfully,\n" +
                 "Human Resources Department\n" +
-                "SAITEJA INFOTECH PVT LTD";
+                "PAXSAT";
     }
  
     /**
@@ -219,7 +219,7 @@ public class EmailService {
                 +
                 "<div style=\"background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;\">"
                 +
-                "<h1 style=\"color: white; margin: 0; font-size: 28px; font-weight: bold;\">🏢 SAITEJA INFOTECH PRIVATE LIMITED </h1>"
+                "<h1 style=\"color: white; margin: 0; font-size: 28px; font-weight: bold;\">🏢 PAXSAT</h1>"
                 +
  
                 "<p style=\"color: #e0e0e0; margin: 8px 0 0 0; font-size: 14px;\">HR Management System</p>" +
@@ -230,7 +230,7 @@ public class EmailService {
                 emailBody +
                 "</div>" +
                 "<div style=\"margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0;\">" +
-                "<p style=\"color: #2a5298; font-size: 13px; margin: 5px 0 0 0;\">© 2025 SAITEJA INFOTECH PVT LTD. All rights reserved.</p>"
+                "<p style=\"color: #2a5298; font-size: 13px; margin: 5px 0 0 0;\">© 2026 PAXSAT. All rights reserved.</p>"
                 +
                 "</div>" +
                 "</div>" +

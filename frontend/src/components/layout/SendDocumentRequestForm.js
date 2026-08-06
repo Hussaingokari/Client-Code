@@ -36,6 +36,20 @@ export default function SendDocumentRequestForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setBanner(null);
+
+        if (!/^[A-Za-z\s]+$/.test(candidateName)) {
+            setBanner({ type: "error", message: "Candidate name should only contain letters and spaces." });
+            return;
+        }
+        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+            setBanner({ type: "error", message: "Please enter a valid email address." });
+            return;
+        }
+        if (/^\d+$/.test(jobTitle) || !/[a-zA-Z]/.test(jobTitle)) {
+            setBanner({ type: "error", message: "Job Role must contain letters." });
+            return;
+        }
+
         setSubmitting(true);
 
         try {
@@ -60,12 +74,12 @@ export default function SendDocumentRequestForm() {
     };
 
     return (
-        <div className="max-w-xl mx-auto bg-white dark:bg-slate-900 rounded-2xl shadow-sm p-8">
+        <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-sm p-8" style={{ colorScheme: 'light' }}>
             <div className="flex items-center gap-3 mb-1">
                 <span className="text-blue-600 text-2xl">✉️</span>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">Send Document Request</h2>
+                <h2 className="text-2xl font-bold text-gray-900 ">Send Document Request</h2>
             </div>
-            <p className="text-gray-500 dark:text-slate-400 mb-6">Send onboarding document request email to the candidate.</p>
+            <p className="text-gray-500 mb-6">Send onboarding document request email to the candidate.</p>
 
             {banner && (
                 <div
@@ -80,7 +94,7 @@ export default function SendDocumentRequestForm() {
 
             <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                    <label className="block text-sm font-semibold text-gray-800 dark:text-slate-200 mb-1">
+                    <label className="block text-sm font-semibold text-gray-800 mb-1">
                         Candidate Name
                     </label>
                     <input
@@ -89,12 +103,12 @@ export default function SendDocumentRequestForm() {
                         value={candidateName}
                         onChange={(e) => setCandidateName(e.target.value)}
                         placeholder="Enter Candidate Name"
-                        className="w-full border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-semibold text-gray-800 dark:text-slate-200 mb-1">
+                    <label className="block text-sm font-semibold text-gray-800 mb-1">
                         Email Address
                     </label>
                     <input
@@ -103,12 +117,12 @@ export default function SendDocumentRequestForm() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter Email Address"
-                        className="w-full border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-semibold text-gray-800 dark:text-slate-200 mb-1">
+                    <label className="block text-sm font-semibold text-gray-800 mb-1">
                         Job Role
                     </label>
                     <input
@@ -117,12 +131,12 @@ export default function SendDocumentRequestForm() {
                         value={jobTitle}
                         onChange={(e) => setJobTitle(e.target.value)}
                         placeholder="Enter Job Role"
-                        className="w-full border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-semibold text-gray-800 dark:text-slate-200 mb-1">
+                    <label className="block text-sm font-semibold text-gray-800 mb-1">
                         Interview Date
                     </label>
                     <input
@@ -131,12 +145,12 @@ export default function SendDocumentRequestForm() {
                         max={today}
                         value={interviewDate}
                         onChange={(e) => setInterviewDate(e.target.value)}
-                        className="w-full border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-semibold text-gray-800 dark:text-slate-200 mb-1">
+                    <label className="block text-sm font-semibold text-gray-800 mb-1">
                         Submission Deadline
                     </label>
                     <input
@@ -145,18 +159,18 @@ export default function SendDocumentRequestForm() {
                         min={today}
                         value={submissionDeadline}
                         onChange={(e) => setSubmissionDeadline(e.target.value)}
-                        className="w-full border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-semibold text-gray-800 dark:text-slate-200 mb-2">
+                    <label className="block text-sm font-semibold text-gray-800 mb-2">
                         Email Preview
                     </label>
-                    <div className="border border-gray-200 dark:border-slate-700 rounded-lg bg-gray-50 dark:bg-slate-800 p-4 max-h-64 overflow-y-auto text-sm text-gray-700 dark:text-slate-300 leading-relaxed">
+                    <div className="border border-gray-200 rounded-lg bg-gray-50 p-4 max-h-64 overflow-y-auto text-sm text-gray-700 leading-relaxed">
                         <p>Dear {candidateName || "Candidate"},</p>
                         <br />
-                        <p>Greetings from SAITEJA INFOTECH PVT LTD.</p>
+                        <p>Greetings from PAXSAT BUSINESS SOLUTIONS PVT LTD.</p>
                         <br />
                         <p>
                             We would like to thank you for attending the interview held on{" "}
@@ -181,7 +195,7 @@ export default function SendDocumentRequestForm() {
                             <strong>Submission Guidelines:</strong>
                         </p>
                         <ul className="list-disc ml-5">
-                            <li>Kindly send scanned copies of all documents in PDF format to hr@saitejainfotechprivatelimited.com.</li>
+                            <li>Kindly send scanned copies of all documents in PDF format to info@paxsat.com.</li>
                             <li>Ensure that all documents are clear and legible.</li>
                             <li>
                                 Please submit the documents by{" "}
@@ -191,7 +205,7 @@ export default function SendDocumentRequestForm() {
                         <br />
                         <p>Yours faithfully,</p>
                         <p>Human Resources Department</p>
-                        <p>SAITEJA INFOTECH PVT LTD</p>
+                        <p>PAXSAT BUSINESS SOLUTIONS PVT LTD</p>
                     </div>
                 </div>
 

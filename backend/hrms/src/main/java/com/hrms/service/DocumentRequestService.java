@@ -24,7 +24,7 @@ public class DocumentRequestService {
     // The inbox candidates should send their documents to.
     // Add hr.documents.email=your-hr-inbox@company.com to application.properties to
     // override.
-    @Value("${hr.documents.email:hr@saitejainfotech.com}")
+    @Value("${hr.documents.email:hr@paxsat.com}")
     private String hrDocumentsEmail;
 
     public DocumentRequestResponseDTO sendDocumentRequest(DocumentRequestDTO dto) {

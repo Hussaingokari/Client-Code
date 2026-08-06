@@ -1,3 +1,42 @@
+// import { createSlice } from '@reduxjs/toolkit';
+
+// const authSlice = createSlice({
+//   name: 'auth',
+//   initialState: {
+//     user: null,
+//     token: null,
+//     isAuthenticated: false,
+//   },
+//   reducers: {
+//     loginSuccess: (state, action) => {
+//       state.user = action.payload.user;
+//       state.token = action.payload.token;
+//       state.isAuthenticated = true;
+//       localStorage.setItem('accessToken', action.payload.token);
+//       localStorage.setItem('user', JSON.stringify(action.payload.user));
+//     },
+//     logout: (state) => {
+//       state.user = null;
+//       state.token = null;
+//       state.isAuthenticated = false;
+//       localStorage.removeItem('accessToken');
+//       localStorage.removeItem('user');
+//     },
+//     loadUser: (state) => {
+//       const token = localStorage.getItem('accessToken');
+//       const user = localStorage.getItem('user');
+//       if (token && user) {
+//         state.token = token;
+//         state.user = JSON.parse(user);
+//         state.isAuthenticated = true;
+//       }
+//     },
+//   },
+// });
+
+// export const { loginSuccess, logout, loadUser } = authSlice.actions;
+// export default authSlice.reducer;
+
 import { createSlice } from '@reduxjs/toolkit';
 
 const authSlice = createSlice({
@@ -6,30 +45,44 @@ const authSlice = createSlice({
     user: null,
     token: null,
     isAuthenticated: false,
+    isInitialized: false,
   },
   reducers: {
     loginSuccess: (state, action) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isAuthenticated = true;
-      localStorage.setItem('accessToken', action.payload.token);
-      localStorage.setItem('user', JSON.stringify(action.payload.user));
+      state.isInitialized = true;
+      sessionStorage.setItem('accessToken', action.payload.token);
+      sessionStorage.setItem('user', JSON.stringify(action.payload.user));
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('user');
+      state.isInitialized = true;
+      sessionStorage.removeItem('accessToken');
+      sessionStorage.removeItem('user');
     },
     loadUser: (state) => {
-      const token = localStorage.getItem('accessToken');
-      const user = localStorage.getItem('user');
-      if (token && user) {
-        state.token = token;
-        state.user = JSON.parse(user);
-        state.isAuthenticated = true;
+      // Clean up old localStorage items from previous versions
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('user');
       }
+
+      const token = sessionStorage.getItem('accessToken');
+      const user = sessionStorage.getItem('user');
+      if (token && user && token !== 'undefined' && user !== 'undefined') {
+        try {
+          state.user = JSON.parse(user);
+          state.token = token;
+          state.isAuthenticated = true;
+        } catch (e) {
+          // invalid JSON in sessionStorage, ignore
+        }
+      }
+      state.isInitialized = true;
     },
   },
 });

@@ -8,12 +8,15 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "leave_balance",
         uniqueConstraints = @UniqueConstraint(columnNames = {"employee_id", "leave_type", "year"}))
-@Data @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class LeaveBalance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Version
+    private Long version;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)

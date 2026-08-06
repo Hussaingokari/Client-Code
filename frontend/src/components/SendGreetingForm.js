@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useGreeting } from '@/lib/useGreeting';
 import { Mail, Loader } from 'lucide-react';
+import DOMPurify from 'dompurify';
 
 export default function SendGreetingForm() {
     const { loading, error, success, sendGreeting } = useGreeting();
@@ -16,7 +17,7 @@ export default function SendGreetingForm() {
     const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
-        const userStr = localStorage.getItem('user');
+        const userStr = sessionStorage.getItem('user');
         if (userStr) {
             try {
                 const user = JSON.parse(userStr);
@@ -40,13 +41,19 @@ export default function SendGreetingForm() {
                     }
                 });
                 const data = response.data;
-                setTemplates(data);
-                if (data.length > 0) {
-                    // FIX: pick the "Admission Greeting" template specifically instead of
-                    // blindly using whichever template happens to come back first.
-                    const greetingTemplate =
-                        data.find(t => t.templateName === 'Admission Greeting') || data[0];
-                    setTemplateId(greetingTemplate.id);
+                
+                if (Array.isArray(data)) {
+                    setTemplates(data);
+                    if (data.length > 0) {
+                        const greetingTemplate =
+                            data.find(t => t.templateName === 'Admission Greeting') || data[0];
+                        if (greetingTemplate) {
+                            setTemplateId(greetingTemplate.id);
+                        }
+                    }
+                } else {
+                    console.error('Invalid response format for templates:', data);
+                    setTemplates([]);
                 }
             } catch (err) {
                 console.error('Failed to fetch templates:', err);
@@ -235,10 +242,7 @@ export default function SendGreetingForm() {
                     }}>
                         Greeting Preview
                     </label>
-                    {/* FIX: use dangerouslySetInnerHTML so <strong> tags in the template
-                        body render as real bold text instead of literal markup. This is
-                        safe here because the content comes from our own trusted DB
-                        templates, not from arbitrary user input. */}
+                    {/* FIX: sanitize the template body before rendering to prevent XSS. */}
                     <div
                         style={{
                             width: '100%',
@@ -255,7 +259,7 @@ export default function SendGreetingForm() {
                             boxSizing: 'border-box',
                         }}
                         dangerouslySetInnerHTML={{
-                            __html: greetingPreview || 'Enter candidate name to see preview...',
+                            __html: greetingPreview ? DOMPurify.sanitize(greetingPreview) : 'Enter candidate name to see preview...',
                         }}
                     />
                 </div>

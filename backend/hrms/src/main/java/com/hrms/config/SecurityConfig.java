@@ -31,7 +31,12 @@ public class SecurityConfig {
 
     // Fully public — no token needed at all
     private static final String[] PUBLIC_URLS = {
-            "/api/auth/**",
+             "/api/auth/login",
+            "/api/auth/refresh",
+            "/api/auth/forgot-password",
+            "/api/auth/reset-password",
+
+           
             "/api/files/**",
             "/api/recruitment/jobs",
             "/api/recruitment/jobs/*/apply",
@@ -98,6 +103,8 @@ public class SecurityConfig {
                         .requestMatchers(ADMIN_HR_URLS).hasAnyRole("ADMIN", "HR")
                         // ATTENDANCE - Employee authenticated endpoints (check-in, check-out, my,
                         // my/detailed-report)
+                          // Change Password - Authenticated endpoint
+                        .requestMatchers("/api/auth/change-password").authenticated()
                         .requestMatchers("/api/attendance/check-in").authenticated()
                         .requestMatchers("/api/attendance/check-out").authenticated()
                         .requestMatchers("/api/attendance/my").authenticated()

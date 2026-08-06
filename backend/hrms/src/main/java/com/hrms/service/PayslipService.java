@@ -44,9 +44,7 @@ public class PayslipService {
                 .da(payroll.getDa())
                 .specialAllowance(payroll.getSpecialAllowance())
                 .grossSalary(payroll.getGrossSalary())
-                .pf(payroll.getPf())
                 .esi(payroll.getEsi())
-                .pt(payroll.getPt())
                 .tds(payroll.getTds())
                 .totalDeductions(payroll.getTotalDeductions())
                 .netSalary(payroll.getNetSalary())
@@ -66,15 +64,19 @@ public class PayslipService {
     }
 
     @Transactional(readOnly = true)
-    public PayslipDTOs.Response getByPayslipNumber(String payslipNumber) {
-        return toResponse(payslipRepo.findByPayslipNumber(payslipNumber)
-                .orElseThrow(() -> new NoSuchElementException("Payslip not found: " + payslipNumber)));
+    public PayslipDTOs.Response getByPayslipNumber(String payslipNumber, Employee emp) {
+        Payslip payslip = getEntityByPayslipNumber(payslipNumber, emp);
+        return toResponse(payslip);
     }
 
     @Transactional(readOnly = true)
-    public Payslip getEntityByPayslipNumber(String payslipNumber) {
-        return payslipRepo.findByPayslipNumber(payslipNumber)
+    public Payslip getEntityByPayslipNumber(String payslipNumber, Employee emp) {
+        Payslip payslip = payslipRepo.findByPayslipNumber(payslipNumber)
                 .orElseThrow(() -> new NoSuchElementException("Payslip not found: " + payslipNumber));
+        if (emp.getRole() == com.hrms.enums.Role.EMPLOYEE && !payslip.getEmployee().getId().equals(emp.getId())) {
+            throw new org.springframework.security.access.AccessDeniedException("You are not authorized to view this payslip.");
+        }
+        return payslip;
     }
 
     private PayslipDTOs.Response toResponse(Payslip p) {
@@ -93,9 +95,7 @@ public class PayslipService {
         r.setDa(p.getDa());
         r.setSpecialAllowance(p.getSpecialAllowance());
         r.setGrossSalary(p.getGrossSalary());
-        r.setPf(p.getPf());
         r.setEsi(p.getEsi());
-        r.setPt(p.getPt());
         r.setTds(p.getTds());
         r.setTotalDeductions(p.getTotalDeductions());
         r.setNetSalary(p.getNetSalary());

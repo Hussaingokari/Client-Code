@@ -6,6 +6,7 @@ import { loginSuccess } from '@/store/authSlice';
 import api from '@/lib/axios';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import Image from 'next/image';
 import ThemeToggle from '@/components/ThemeToggle';
 
 const EyeIcon = ({ show, toggle }) => (
@@ -69,20 +70,25 @@ export default function EmployeeLogin() {
       <div className="hidden lg:flex lg:w-[45%] flex-col bg-slate-900 relative">
         <div className="flex-1 relative overflow-hidden">
           {/* Unsplash Image matching the vibe */}
-          <img 
-            src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1200&q=80" 
-            alt="Team Working" 
-            className="absolute inset-0 w-full h-full object-cover opacity-90"
+          <Image
+            src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1200&q=80"
+            alt="Team Working"
+            fill
+            className="object-cover opacity-90"
           />
           {/* Green separator line */}
           <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[#10b981] dark:bg-[#DBFF00] z-10 transition-colors"></div>
         </div>
         <div className="h-auto p-12 lg:px-16 lg:py-14 flex flex-col justify-center bg-[#111827]">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-8 rounded bg-transparent border-2 border-[#10b981] dark:border-[#DBFF00] flex items-center justify-center transition-colors">
-              <span className="text-[#10b981] dark:text-[#DBFF00] font-bold text-lg leading-none">H</span>
-            </div>
-            <span className="text-white font-bold text-[17px] tracking-tight">Saiteja Infotech Private Limited - Employee</span>
+            <Image
+              src="/logo/paxsat-logo.png"
+              alt="PAXSAT"
+              width={80}
+              height={80}
+              className="w-20 h-20 object-contain"
+            />
+            <span className="text-white font-bold text-[17px] tracking-tight">PAXSAT - Employee</span>
           </div>
           <h1 className="text-white text-4xl xl:text-5xl font-bold leading-[1.1] mb-4 tracking-tight">
             Let's empower your<br/>employees today.
@@ -205,7 +211,7 @@ export default function EmployeeLogin() {
 
              <div className="flex gap-4">
                <button type="button" className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-slate-200 dark:border-white/10 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors text-[12px] font-bold text-slate-700 dark:text-slate-300">
-                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-4 h-4" alt="Google" />
+                 <Image src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width={16} height={16} />
                  Google
                </button>
                <button type="button" className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-slate-200 dark:border-white/10 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors text-[12px] font-bold text-slate-700 dark:text-slate-300">
@@ -225,7 +231,7 @@ export default function EmployeeLogin() {
         {/* Footer */}
         <div className="absolute bottom-6 left-0 w-full px-6 xl:px-12 flex flex-col xl:flex-row justify-between items-center gap-4 text-[10px] text-slate-400 dark:text-slate-500">
           <div className="flex flex-col text-center xl:text-left">
-            <span className="font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">© 2026 Saiteja Infotech Private Limited.</span>
+            <span className="font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">© 2026 Paxsat Business Solution Private Limited.</span>
             <span className="text-[9px] text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">All rights reserved.</span>
           </div>
           <div className="flex gap-6 items-center">

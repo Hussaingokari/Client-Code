@@ -231,7 +231,7 @@ public class GreetingService {
                 +
                 "<div style=\"background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;\">"
                 +
-                "<h1 style=\"color: white; margin: 0; font-size: 28px; font-weight: bold;\">🏢 SAITEJA INFOTECH PRIVATE LIMITED</h1>"
+                "<h1 style=\"color: white; margin: 0; font-size: 28px; font-weight: bold;\">🏢  PAXSAT BUSINESS SOLUTION PRIVATE LIMITED</h1>"
                 +
                 "<p style=\"color: #e0e0e0; margin: 8px 0 0 0; font-size: 14px;\">HR Management System</p>" +
                 "</div>" +
@@ -241,7 +241,7 @@ public class GreetingService {
                 emailBody +
                 "</div>" +
                 "<div style=\"margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0;\">" +
-                "<p style=\"color: #2a5298; font-size: 13px; margin: 5px 0 0 0;\">© 2026 SAITEJA INFOTECH PVT LTD. All rights reserved.</p>"
+                "<p style=\"color: #2a5298; font-size: 13px; margin: 5px 0 0 0;\">© 2026 PAXSAT. All rights reserved.</p>"
                 +
                 "</div>" +
                 "</div>" +

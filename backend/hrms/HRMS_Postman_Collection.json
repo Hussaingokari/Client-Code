@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "HRMS API Collection",
+    "name": "PAXSAT API Collection",
     "description": "Complete HR Management System API - Postman Collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
@@ -33,7 +33,7 @@
             "url": "{{baseUrl}}/api/auth/login",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"superadmin@hrms.com\",\n  \"password\": \"Admin@123\",\n  \"loginType\": \"ADMIN\"\n}"
+              "raw": "{\n  \"email\": \"superadmin@paxsat.com\",\n  \"password\": \"Admin@123\",\n  \"loginType\": \"ADMIN\"\n}"
             }
           }
         },
@@ -57,7 +57,7 @@
             "url": "{{baseUrl}}/api/auth/login",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"emp@hrms.com\",\n  \"password\": \"Emp@12345\",\n  \"loginType\": \"EMPLOYEE\"\n}"
+              "raw": "{\n  \"email\": \"emp@paxsat.com\",\n  \"password\": \"Emp@12345\",\n  \"loginType\": \"EMPLOYEE\"\n}"
             }
           }
         },
@@ -69,7 +69,7 @@
             "url": "{{baseUrl}}/api/auth/login",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"hr@hrms.com\",\n  \"password\": \"Hr@12345\",\n  \"loginType\": \"ADMIN\"\n}"
+              "raw": "{\n  \"email\": \"hr@paxsat.com\",\n  \"password\": \"Hr@12345\",\n  \"loginType\": \"ADMIN\"\n}"
             }
           }
         },
@@ -101,7 +101,7 @@
             "url": "{{baseUrl}}/api/employees",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Hussain\",\n  \"lastName\": \"Gokari\",\n  \"email\": \"hussain@hrms.com\",\n  \"password\": \"Test@1234\",\n  \"phone\": \"9876543210\",\n  \"department\": \"Engineering\",\n  \"designation\": \"Java Developer\",\n  \"basicSalary\": 50000,\n  \"dateOfJoining\": \"2024-01-15\",\n  \"dateOfBirth\": \"1998-06-20\",\n  \"role\": \"EMPLOYEE\"\n}"
+              "raw": "{\n  \"firstName\": \"Hussain\",\n  \"lastName\": \"Gokari\",\n  \"email\": \"hussain@paxsat.com\",\n  \"password\": \"Test@1234\",\n  \"phone\": \"9876543210\",\n  \"department\": \"Engineering\",\n  \"designation\": \"Java Developer\",\n  \"basicSalary\": 50000,\n  \"dateOfJoining\": \"2024-01-15\",\n  \"dateOfBirth\": \"1998-06-20\",\n  \"role\": \"EMPLOYEE\"\n}"
             }
           }
         },

@@ -32,7 +32,7 @@ jobs:
 
       - name: Build Next.js Production App
         env:
-          NEXT_PUBLIC_API_BASE_URL: "https://hrms.saitejainfotechprivatelimited.com"
+          NEXT_PUBLIC_API_BASE_URL: "https://paxsat.com"
         run: npm run build
 
       - name: Configure AWS Credentials

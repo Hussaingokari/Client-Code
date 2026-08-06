@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/store/authSlice';
+import Image from 'next/image';
 
 const EMP_MENU = [
   { key: '/employee/dashboard', label: 'Dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
@@ -101,25 +102,25 @@ export default function Sidebar({ role }) {
         />
       )}
       <div className={`app-sidebar ${isMobileOpen ? 'mobile-open' : ''}`}>
-        {/* Logo */}
-        <div style={{
-          padding: '20px 20px 16px',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{
-              width: '36px', height: '36px',
-              background: '#3b82f6', borderRadius: '10px',
-              display: 'flex', alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '16px', fontWeight: '800', color: 'white',
-            }}>H</div>
-            <div>
-              <div style={{ color: 'white', fontSize: '16px', fontWeight: '800', lineHeight: 1 }}>HRMS</div>
-              <div style={{ color: '#93c5fd', fontSize: '9px', letterSpacing: '1px', marginTop: '2px' }}>HR MANAGEMENT</div>
-            </div>
-          </div>
-        </div>
+   {/* Logo */}
+<div style={{
+  padding: '24px 20px 20px',
+  borderBottom: '1px solid rgba(255,255,255,0.08)',
+}}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+    <Image
+      src="/logo/paxsat-logo.png"
+      alt="PAXSAT"
+      width={72}
+      height={72}
+      style={{ objectFit: 'contain' }}
+    />
+    <div>
+      <div style={{ color: 'white', fontSize: '16px', fontWeight: '800', lineHeight: 1 }}>PAXSAT</div>
+      <div style={{ color: '#93c5fd', fontSize: '9px', letterSpacing: '1px', marginTop: '2px' }}>BUSINESS SOLUTIONS PVT LTD</div>
+    </div>
+  </div>
+</div>
 
         {/* Main Menu */}
         <div style={{ flex: 1, padding: '12px 10px', overflowY: 'auto' }}>
