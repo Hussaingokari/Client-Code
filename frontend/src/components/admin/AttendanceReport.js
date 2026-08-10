@@ -139,7 +139,10 @@ export default function AttendanceReport() {
                     type="text"
                     placeholder="Search employee or code..."
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => {
+                        const val = e.target.value;
+                        if (/^[a-zA-Z0-9\s-]*$/.test(val)) setSearch(val);
+                    }}
                     style={{
                         flex: 1, minWidth: '200px', padding: '8px 12px',
                         border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '13px',

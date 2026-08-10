@@ -235,7 +235,10 @@ export default function OnboardingEmployeesPage() {
                     </svg>
                     <input
                         value={search}
-                        onChange={e => setSearch(e.target.value)}
+                        onChange={e => {
+                            const val = e.target.value;
+                            if (/^[a-zA-Z0-9\s@.-]*$/.test(val)) setSearch(val);
+                        }}
                         placeholder="Search by name, email, or employee code..."
                         style={{ width: '100%', paddingLeft: '38px', paddingRight: '16px', height: '40px', border: '1.5px solid #e2e8f0', borderRadius: '10px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
                     />

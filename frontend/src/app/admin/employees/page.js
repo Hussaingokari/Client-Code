@@ -298,7 +298,10 @@ export default function EmployeeManagementPage() {
         <input
           className="hrms-input"
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onChange={e => {
+            const val = e.target.value;
+            if (/^[a-zA-Z0-9\s@.-]*$/.test(val)) setSearch(val);
+          }}
           placeholder="Search by name, email, department..."
           style={{
             width: '100%', paddingLeft: '38px', paddingRight: '16px',
