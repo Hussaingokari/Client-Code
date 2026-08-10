@@ -230,20 +230,6 @@ export default function SendInterviewForm() {
             />
           </div>
 
-          {/* <div>
-            <label className="block text-sm font-medium text-gray-900 mb-2">Platform</label>
-            <input
-              type="text"
-              name="platform"
-              value={onlineData.platform}
-              onChange={handleOnlineChange}
-              placeholder="e.g., Microsoft Teams"
-              disabled={onlineLoading}
-              required
-              className="w-full px-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-60"
-            />
-          </div> */}
-
 
           <div>
   <label className="block text-sm font-medium text-gray-900 mb-2">Platform</label>

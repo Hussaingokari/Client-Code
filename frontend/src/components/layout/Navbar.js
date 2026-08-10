@@ -122,7 +122,13 @@ export default function Navbar() {
         </svg>
         <input
           value={search}
-          onChange={e => { setSearch(e.target.value); setShowResults(true); }}
+          onChange={e => {
+            const val = e.target.value;
+            if (/^[a-zA-Z0-9\s-]*$/.test(val)) {
+              setSearch(val);
+              setShowResults(true);
+            }
+          }}
           onFocus={() => setShowResults(true)}
           onBlur={() => setTimeout(() => setShowResults(false), 200)}
           placeholder="Search pages..."

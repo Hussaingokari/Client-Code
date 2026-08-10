@@ -130,6 +130,20 @@ export default function RecruitmentPage() {
     } finally { setUpdatingApp(null); }
   };
 
+  const handleCloseJob = async (jobId) => {
+    if (!confirm('Are you sure you want to close this job posting?')) return;
+    try {
+      await api.put(`/api/recruitment/jobs/${jobId}`, { status: 'CLOSED' });
+      toast.success('Job closed successfully');
+      fetchJobs();
+      if (selectedJob?.id === jobId) {
+        setSelectedJob(prev => ({ ...prev, status: 'CLOSED' }));
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to close job');
+    }
+  };
+
   return (
     <div>
       {/* Header */}
@@ -217,9 +231,23 @@ export default function RecruitmentPage() {
             boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden',
           }}>
             <div style={{ padding: '16px 20px', borderBottom: '1px solid #e2e8f0', background: '#f8fafc' }}>
-              <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#1e293b', marginBottom: '2px' }}>
-                {selectedJob.title}
-              </h3>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#1e293b' }}>
+                  {selectedJob.title}
+                </h3>
+                {selectedJob.status === 'OPEN' && (
+                  <button
+                    onClick={() => handleCloseJob(selectedJob.id)}
+                    style={{
+                      fontSize: '11px', padding: '4px 10px', background: '#fee2e2',
+                      color: '#dc2626', border: '1px solid #fecaca', borderRadius: '6px',
+                      fontWeight: '700', cursor: 'pointer'
+                    }}
+                  >
+                    Close Job
+                  </button>
+                )}
+              </div>
               <p style={{ fontSize: '12px', color: '#94a3b8' }}>
                 {applications.length} application(s) received
               </p>

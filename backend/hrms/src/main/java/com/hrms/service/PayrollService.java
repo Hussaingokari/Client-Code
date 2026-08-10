@@ -4,6 +4,7 @@ import com.hrms.dto.PayrollDTOs;
 import com.hrms.entity.Employee;
 import com.hrms.entity.Payroll;
 import com.hrms.repository.PayrollRepository;
+import com.hrms.repository.AttendanceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.NoSuchElementException;
 
@@ -20,6 +22,7 @@ import java.util.NoSuchElementException;
 public class PayrollService {
 
     private final PayrollRepository payrollRepo;
+    private final AttendanceRepository attendanceRepo;
     private final EmployeeService employeeService;
 
     // ---- Configurable rates (adjust to match your company policy) ----
@@ -42,7 +45,15 @@ public class PayrollService {
         }
 
         int standardDays = YearMonth.of(request.getYear(), request.getMonth()).lengthOfMonth();
-        int presentDays = standardDays; // no attendance integration yet — assumes full month present
+        
+        LocalDate fromDate = LocalDate.of(request.getYear(), request.getMonth(), 1);
+        LocalDate toDate = YearMonth.of(request.getYear(), request.getMonth()).atEndOfMonth();
+        LocalDate today = LocalDate.now();
+        if (toDate.isAfter(today)) {
+            toDate = today;
+        }
+        
+        int presentDays = (int) attendanceRepo.countPresentDays(employee, fromDate, toDate);
         int lopDays = 0;
 
         BigDecimal targetGross = basic;
