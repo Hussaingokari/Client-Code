@@ -7,6 +7,7 @@ import { store } from '@/store/store';
 import { Toaster } from 'react-hot-toast';
 import { loadUser } from '@/store/authSlice';
 import { useEffect } from 'react';
+import SessionTimeout from '@/components/layout/SessionTimeout';
 
 const geist = Geist({ subsets: ['latin'] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
       <body className={geist.className} suppressHydrationWarning>
         <Provider store={store}>
           <Toaster position="top-right" />
+          <SessionTimeout />
           {children}
         </Provider>
       </body>
