@@ -230,7 +230,7 @@ export default function SendInterviewForm() {
             />
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-900 mb-2">Platform</label>
             <input
               type="text"
@@ -242,7 +242,30 @@ export default function SendInterviewForm() {
               required
               className="w-full px-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-60"
             />
-          </div>
+          </div> */}
+
+
+          <div>
+  <label className="block text-sm font-medium text-gray-900 mb-2">Platform</label>
+  <select
+    name="platform"
+    value={onlineData.platform}
+    onChange={handleOnlineChange}
+    disabled={onlineLoading}
+    required
+    className="w-full px-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-60"
+  >
+    <option value="">Select a platform</option>
+    <option value="Microsoft Teams">Microsoft Teams</option>
+    <option value="Zoom">Zoom</option>
+    <option value="Google Meet">Google Meet</option>
+    <option value="Google Hangouts">Google Hangouts</option>
+    <option value="Cisco Webex">Cisco Webex</option>
+    <option value="Other">Other</option>
+  </select>
+</div>
+
+
 
           <div>
             <label className="block text-sm font-medium text-gray-900 mb-2">Meeting Link</label>
