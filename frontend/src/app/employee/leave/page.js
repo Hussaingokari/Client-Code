@@ -604,8 +604,7 @@ export default function LeavePage() {
               </div>
             )}
           </>
-        )}
-      </div>
+        )}      </div> 
     </div>
   );
 }

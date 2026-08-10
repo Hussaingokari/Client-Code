@@ -176,9 +176,9 @@ public class EmployeeService {
             userCacheService.evict(emp.getEmail());
         }
         if (entityManager != null) {
-            entityManager.createQuery("UPDATE LeaveRequest l SET l.manager = null WHERE l.manager.id = :id")
+            entityManager.createQuery("UPDATE LeaveRequest l SET l.reviewedBy = null WHERE l.reviewedBy.id = :id")
                     .setParameter("id", id).executeUpdate();
-            entityManager.createQuery("UPDATE LeaveRequest l SET l.approvedBy = null WHERE l.approvedBy.id = :id")
+            entityManager.createQuery("UPDATE LeaveRequest l SET l.cancellationReviewedBy = null WHERE l.cancellationReviewedBy.id = :id")
                     .setParameter("id", id).executeUpdate();
             entityManager.createQuery("UPDATE Onboarding o SET o.assignedHr = null WHERE o.assignedHr.id = :id")
                     .setParameter("id", id).executeUpdate();
@@ -189,22 +189,21 @@ public class EmployeeService {
             entityManager.createQuery("UPDATE PerformanceReview p SET p.reviewer = null WHERE p.reviewer.id = :id")
                     .setParameter("id", id).executeUpdate();
 
-            // Null out OnboardingDocument's reviewer reference before touching
-            // onboarding/employee rows
-            entityManager
-                    .createQuery("UPDATE OnboardingDocument d SET d.reviewedByHr = null WHERE d.reviewedByHr.id = :id")
+            // Null out OnboardingDocument's reviewer reference before touching onboarding/employee rows
+            entityManager.createQuery("UPDATE OnboardingDocument d SET d.reviewedByHr = null WHERE d.reviewedByHr.id = :id")
                     .setParameter("id", id).executeUpdate();
 
-            entityManager.createQuery("DELETE FROM Attendance a WHERE a.employee.id = :id").setParameter("id", id)
-                    .executeUpdate();
-            entityManager.createQuery("DELETE FROM LeaveRequest l WHERE l.employee.id = :id").setParameter("id", id)
-                    .executeUpdate();
-            entityManager.createQuery("DELETE FROM LeaveBalance l WHERE l.employee.id = :id").setParameter("id", id)
-                    .executeUpdate();
-            entityManager.createQuery("DELETE FROM Payroll p WHERE p.employee.id = :id").setParameter("id", id)
-                    .executeUpdate();
-            entityManager.createQuery("DELETE FROM Payslip p WHERE p.employee.id = :id").setParameter("id", id)
-                    .executeUpdate();
+            // Delete dependent records first
+            entityManager.createQuery("DELETE FROM AttendanceBreak ab WHERE ab.attendance.employee.id = :id").setParameter("id", id).executeUpdate();
+            entityManager.createQuery("DELETE FROM Attendance a WHERE a.employee.id = :id").setParameter("id", id).executeUpdate();
+            
+            entityManager.createQuery("DELETE FROM LeaveRequest l WHERE l.employee.id = :id").setParameter("id", id).executeUpdate();
+            entityManager.createQuery("DELETE FROM LeaveBalance l WHERE l.employee.id = :id").setParameter("id", id).executeUpdate();
+            
+            // Payslip depends on Payroll, so delete Payslip first
+            entityManager.createQuery("DELETE FROM Payslip p WHERE p.employee.id = :id").setParameter("id", id).executeUpdate();
+            entityManager.createQuery("DELETE FROM Payroll p WHERE p.employee.id = :id").setParameter("id", id).executeUpdate();
+            
             entityManager.createQuery("DELETE FROM PerformanceReview p WHERE p.employee.id = :id")
                     .setParameter("id", id).executeUpdate();
             entityManager.createQuery("DELETE FROM Notification n WHERE n.recipient.id = :id").setParameter("id", id)
@@ -270,5 +269,4 @@ public class EmployeeService {
         String full = (first + " " + last).trim();
         return full.isEmpty() ? null : full;
     }
-
 }

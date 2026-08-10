@@ -9,22 +9,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ThemeToggle from '@/components/ThemeToggle';
 
-// const EyeIcon = ({ show, toggle }) => (
-//   <button type="button" onClick={toggle} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
-//     {show ? (
-//       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-//         <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" />
-//         <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19" />
-//         <line x1="1" y1="1" x2="23" y2="23" />
-//       </svg>
-//     ) : (
-//       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-//         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-//         <circle cx="12" cy="12" r="3" />
-//       </svg>
-//     )}
-//   </button>
-// );
 
 const EyeIcon = ({ show, toggle }) => (
   <button type="button" onClick={toggle} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
@@ -99,13 +83,13 @@ export default function EmployeeLogin() {
         <div className="h-auto p-12 lg:px-16 lg:py-14 flex flex-col justify-center bg-[#111827]">
           <div className="flex items-center gap-3 mb-6">
             <Image
-              src="/logo/paxsat-logo.png"
-              alt="PAXSAT"
+               src="/logo/paxsat-logo.png"
+  alt="PAXSAT Business Solutions Pvt Ltd"
               width={80}
               height={80}
               className="w-20 h-20 object-contain"
             />
-            <span className="text-white font-bold text-[17px] tracking-tight">PAXSAT - Employee</span>
+            <span className="text-white font-bold text-[17px] tracking-tight">PAXSAT  PVT  LTD - Employee</span>
           </div>
           <h1 className="text-white text-4xl xl:text-5xl font-bold leading-[1.1] mb-4 tracking-tight">
             Let's empower your<br/>employees today.
@@ -248,7 +232,7 @@ export default function EmployeeLogin() {
         {/* Footer */}
         <div className="absolute bottom-6 left-0 w-full px-6 xl:px-12 flex flex-col xl:flex-row justify-between items-center gap-4 text-[10px] text-slate-400 dark:text-slate-500">
           <div className="flex flex-col text-center xl:text-left">
-            <span className="font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">© 2026 Paxsat Business Solution Private Limited.</span>
+            <span className="font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">© 2021 PAXSAT BUSINESS SOLUTIONS PVT. LTD.</span>
             <span className="text-[9px] text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">All rights reserved.</span>
           </div>
           <div className="flex gap-6 items-center">
