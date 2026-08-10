@@ -200,7 +200,7 @@ export default function AdminDashboard() {
             <StatCard
               label="Present Today"
               value={presentToday}
-              sub={`of ${todayAttendance.length} checked in`}
+              sub={`${todayAttendance.length} employee checked in`}
               color="#16a34a" bg="#dcfce7" icon="✅"
             />
             <StatCard
