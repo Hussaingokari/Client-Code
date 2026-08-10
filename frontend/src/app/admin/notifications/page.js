@@ -41,8 +41,8 @@ export default function AdminNotificationsPage() {
     try {
       const [notifRes, unreadRes] = await Promise.allSettled([
         filter === 'UNREAD'
-          ? api.get(`/api/notifications/unread?page=${page}&size=10`)
-          : getAdminNotifications(page, 10),
+          ? api.get(`/api/notifications/unread?page=${page}&size=30`)
+          : getAdminNotifications(page, 30),
         getAdminUnreadCount(),
       ]);
       if (notifRes.status === 'fulfilled') {
