@@ -4,6 +4,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/store/authSlice';
 import Image from 'next/image';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const EMP_MENU = [
   { key: '/employee/dashboard', label: 'Dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
@@ -146,6 +147,11 @@ export default function Sidebar({ role }) {
 
         {/* Bottom — Settings + Logout */}
         <div style={{ padding: '10px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+
+          {/* Theme Toggle */}
+          <div style={{ marginBottom: '8px', paddingLeft: '8px', display: 'flex', justifyContent: 'center' }}>
+            <ThemeToggle />
+          </div>
 
           {/* Settings */}
           <div
