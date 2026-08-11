@@ -117,7 +117,7 @@ export default function AdminNotificationsPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
           <h1 style={{
-            fontSize: '22px', fontWeight: '800', color: '#1e293b',
+            fontSize: '22px', fontWeight: '800', color: 'var(--text-main)',
             marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '10px',
           }}>
             Notifications
@@ -131,7 +131,7 @@ export default function AdminNotificationsPage() {
               </span>
             )}
           </h1>
-          <p style={{ fontSize: '13px', color: '#94a3b8' }}>
+          <p style={{ fontSize: '13px', color: 'var(--text-lighter)' }}>
             System alerts and activity updates
           </p>
         </div>
@@ -151,7 +151,7 @@ export default function AdminNotificationsPage() {
 
       {/* Filter Tabs */}
       <div style={{
-        display: 'flex', gap: '4px', background: '#f1f5f9',
+        display: 'flex', gap: '4px', background: 'var(--bg-muted)',
         borderRadius: '10px', padding: '4px',
         width: 'fit-content', marginBottom: '20px',
       }}>
@@ -160,7 +160,7 @@ export default function AdminNotificationsPage() {
             style={{
               padding: '8px 20px',
               background: filter === f ? 'white' : 'transparent',
-              color: filter === f ? '#1e293b' : '#64748b',
+              color: filter === f ? 'var(--text-main)' : 'var(--text-light)',
               border: 'none', borderRadius: '8px',
               fontSize: '13px', fontWeight: filter === f ? '700' : '400',
               cursor: 'pointer',
@@ -174,28 +174,28 @@ export default function AdminNotificationsPage() {
 
       {/* Notifications List */}
       <div style={{
-        background: 'white', borderRadius: '12px',
-        border: '1px solid #e2e8f0',
+        background: 'var(--bg-card)', borderRadius: '12px',
+        border: '1px solid var(--border-main)',
         boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden',
       }}>
         {loading ? (
-          <div style={{ padding: '60px', textAlign: 'center', color: '#94a3b8' }}>
+          <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-lighter)' }}>
             Loading notifications...
           </div>
         ) : notifications.length === 0 ? (
           <div style={{ padding: '80px', textAlign: 'center' }}>
             <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔔</div>
-            <div style={{ fontSize: '16px', fontWeight: '600', color: '#1e293b', marginBottom: '8px' }}>
+            <div style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-main)', marginBottom: '8px' }}>
               {filter === 'UNREAD' ? 'All caught up!' : 'No notifications yet'}
             </div>
-            <div style={{ fontSize: '13px', color: '#94a3b8' }}>
+            <div style={{ fontSize: '13px', color: 'var(--text-lighter)' }}>
               {filter === 'UNREAD'
                 ? 'No unread notifications'
                 : 'System notifications will appear here'}
             </div>
             {filter === 'UNREAD' && (
               <button onClick={() => setFilter('ALL')}
-                style={{ marginTop: '16px', padding: '8px 20px', background: '#1e3a5f', color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
+                style={{ marginTop: '16px', padding: '8px 20px', background: 'var(--bg-sidebar)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
                 View All
               </button>
             )}
@@ -210,21 +210,21 @@ export default function AdminNotificationsPage() {
                 background: n.isRead ? 'white' : '#f8fbff',
                 transition: 'background 0.2s',
               }}
-                onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
+                onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-app)'}
                 onMouseLeave={e => e.currentTarget.style.background = n.isRead ? 'white' : '#f8fbff'}
               >
                 {/* Unread dot */}
                 <div style={{ paddingTop: '6px', flexShrink: 0 }}>
                   <div style={{
                     width: '8px', height: '8px', borderRadius: '50%',
-                    background: n.isRead ? '#e2e8f0' : '#3b82f6',
+                    background: n.isRead ? 'var(--border-main)' : '#3b82f6',
                   }}/>
                 </div>
 
                 {/* Icon */}
                 <div style={{
                   width: '40px', height: '40px', flexShrink: 0,
-                  background: '#f1f5f9', borderRadius: '10px',
+                  background: 'var(--bg-muted)', borderRadius: '10px',
                   display: 'flex', alignItems: 'center',
                   justifyContent: 'center', fontSize: '20px',
                 }}>
@@ -236,17 +236,17 @@ export default function AdminNotificationsPage() {
                   <div style={{
                     fontSize: '14px',
                     fontWeight: n.isRead ? '500' : '700',
-                    color: '#1e293b', marginBottom: '4px',
+                    color: 'var(--text-main)', marginBottom: '4px',
                   }}>
                     {n.title}
                   </div>
                   <div style={{
-                    fontSize: '13px', color: '#64748b',
+                    fontSize: '13px', color: 'var(--text-light)',
                     lineHeight: '1.5', marginBottom: '6px',
                   }}>
                     {n.message}
                   </div>
-                  <div style={{ fontSize: '11px', color: '#94a3b8' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--text-lighter)' }}>
                     {formatTimeAgo(n.createdAt, now)}
                   </div>
                 </div>
@@ -272,21 +272,21 @@ export default function AdminNotificationsPage() {
               <div style={{
                 padding: '14px 20px', display: 'flex',
                 justifyContent: 'center', gap: '8px',
-                borderTop: '1px solid #e2e8f0',
+                borderTop: '1px solid var(--border-main)',
               }}>
                 <button
                   onClick={() => setPage(p => Math.max(0, p - 1))}
                   disabled={page === 0}
-                  style={{ padding: '6px 14px', border: '1px solid #e2e8f0', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: page === 0 ? '#cbd5e1' : '#374151', background: 'white', cursor: page === 0 ? 'not-allowed' : 'pointer' }}>
+                  style={{ padding: '6px 14px', border: '1px solid var(--border-main)', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: page === 0 ? 'var(--border-dark)' : '#374151', background: 'var(--bg-card)', cursor: page === 0 ? 'not-allowed' : 'pointer' }}>
                   ← Prev
                 </button>
-                <span style={{ padding: '6px 14px', fontSize: '12px', color: '#64748b' }}>
+                <span style={{ padding: '6px 14px', fontSize: '12px', color: 'var(--text-light)' }}>
                   {page + 1} / {totalPages}
                 </span>
                 <button
                   onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                   disabled={page >= totalPages - 1}
-                  style={{ padding: '6px 14px', border: '1px solid #e2e8f0', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: page >= totalPages - 1 ? '#cbd5e1' : '#374151', background: 'white', cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer' }}>
+                  style={{ padding: '6px 14px', border: '1px solid var(--border-main)', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: page >= totalPages - 1 ? 'var(--border-dark)' : '#374151', background: 'var(--bg-card)', cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer' }}>
                   Next →
                 </button>
               </div>
