@@ -45,14 +45,14 @@ export default function ForgotPasswordPage() {
   const inputStyle = {
     width: '100%',
     padding: '12px 14px',
-    border: '1.5px solid #e2e8f0',
+    border: '1.5px solid var(--border-main)',
     borderRadius: '10px',
     fontSize: '14px',
     outline: 'none',
     boxSizing: 'border-box',
     fontFamily: 'inherit',
-    color: '#1e293b',
-    background: 'white',
+    color: 'var(--text-main)',
+    background: 'var(--bg-card)',
     transition: 'border 0.2s',
   };
 
@@ -121,7 +121,7 @@ export default function ForgotPasswordPage() {
       padding: '20px',
     }}>
       <div style={{
-        background: 'white', borderRadius: '28px',
+        background: 'var(--bg-card)', borderRadius: '28px',
         padding: '40px 36px', width: '100%', maxWidth: '420px',
         boxShadow: '0 8px 40px rgba(59,130,246,0.12)',
         display: 'flex', flexDirection: 'column', alignItems: 'center',
@@ -148,7 +148,7 @@ export default function ForgotPasswordPage() {
             <div key={s} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <div style={{
                 width: '32px', height: '32px', borderRadius: '50%',
-                background: step >= s ? '#1e3a5f' : '#e2e8f0',
+                background: step >= s ? '#1e3a5f' : 'var(--border-main)',
                 color: step >= s ? 'white' : '#94a3b8',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: '13px', fontWeight: '700', transition: 'all 0.3s',
@@ -163,7 +163,7 @@ export default function ForgotPasswordPage() {
               {i < 2 && (
                 <div style={{
                   width: '40px', height: '2px',
-                  background: step > s ? '#1e3a5f' : '#e2e8f0',
+                  background: step > s ? '#1e3a5f' : 'var(--border-main)',
                   transition: 'all 0.3s',
                 }} />
               )}
@@ -188,10 +188,10 @@ export default function ForgotPasswordPage() {
         {/* ── STEP 1 — Enter Email ── */}
         {step === 1 && (
           <>
-            <h1 style={{ fontSize: '22px', fontWeight: '800', color: '#1e293b', marginBottom: '6px' }}>
+            <h1 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text-main)', marginBottom: '6px' }}>
               Forgot Password?
             </h1>
-            <p style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '28px', textAlign: 'center', lineHeight: 1.6 }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-lighter)', marginBottom: '28px', textAlign: 'center', lineHeight: 1.6 }}>
               Enter your registered email and we&apos;ll send you an OTP to reset your password
             </p>
 
@@ -215,7 +215,7 @@ export default function ForgotPasswordPage() {
                     required
                     style={{ ...inputStyle, paddingLeft: '38px' }}
                     onFocus={e => e.target.style.borderColor = '#1e3a5f'}
-                    onBlur={e => e.target.style.borderColor = '#e2e8f0'}
+                    onBlur={e => e.target.style.borderColor = 'var(--border-main)'}
                   />
                 </div>
               </div>
@@ -223,7 +223,7 @@ export default function ForgotPasswordPage() {
               <button type="submit" disabled={loading}
                 style={{
                   width: '100%', padding: '13px',
-                  background: '#1e3a5f', color: 'white',
+                  background: 'var(--bg-sidebar)', color: 'white',
                   border: 'none', borderRadius: '10px',
                   fontSize: '14px', fontWeight: '700',
                   cursor: loading ? 'not-allowed' : 'pointer',
@@ -236,8 +236,8 @@ export default function ForgotPasswordPage() {
               <button type="button" onClick={() => router.back()}
                 style={{
                   width: '100%', padding: '12px',
-                  background: 'white', color: '#374151',
-                  border: '1.5px solid #e2e8f0', borderRadius: '10px',
+                  background: 'var(--bg-card)', color: '#374151',
+                  border: '1.5px solid var(--border-main)', borderRadius: '10px',
                   fontSize: '13px', fontWeight: '600', cursor: 'pointer',
                 }}>
                 ← Back to Login
@@ -249,10 +249,10 @@ export default function ForgotPasswordPage() {
         {/* ── STEP 2 — Enter OTP + New Password ── */}
         {step === 2 && (
           <>
-            <h1 style={{ fontSize: '22px', fontWeight: '800', color: '#1e293b', marginBottom: '6px' }}>
+            <h1 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text-main)', marginBottom: '6px' }}>
               Reset Password
             </h1>
-            <p style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '4px', textAlign: 'center' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-lighter)', marginBottom: '4px', textAlign: 'center' }}>
               OTP sent to
             </p>
             <p style={{ fontSize: '14px', fontWeight: '700', color: '#1e3a5f', marginBottom: '24px' }}>
@@ -283,9 +283,9 @@ export default function ForgotPasswordPage() {
                     padding: '14px',
                   }}
                   onFocus={e => e.target.style.borderColor = '#1e3a5f'}
-                  onBlur={e => e.target.style.borderColor = '#e2e8f0'}
+                  onBlur={e => e.target.style.borderColor = 'var(--border-main)'}
                 />
-                <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px', textAlign: 'center' }}>
+                <div style={{ fontSize: '11px', color: 'var(--text-lighter)', marginTop: '6px', textAlign: 'center' }}>
                   Check your email inbox or spam folder · Valid for 10 minutes
                 </div>
               </div>
@@ -304,7 +304,7 @@ export default function ForgotPasswordPage() {
                     required
                     style={{ ...inputStyle, paddingRight: '44px' }}
                     onFocus={e => e.target.style.borderColor = '#1e3a5f'}
-                    onBlur={e => e.target.style.borderColor = '#e2e8f0'}
+                    onBlur={e => e.target.style.borderColor = 'var(--border-main)'}
                   />
                   <EyeIcon show={showNew} toggle={() => setShowNew(!showNew)} />
                 </div>
@@ -324,7 +324,7 @@ export default function ForgotPasswordPage() {
                     required
                     style={{ ...inputStyle, paddingRight: '44px' }}
                     onFocus={e => e.target.style.borderColor = '#1e3a5f'}
-                    onBlur={e => e.target.style.borderColor = '#e2e8f0'}
+                    onBlur={e => e.target.style.borderColor = 'var(--border-main)'}
                   />
                   <EyeIcon show={showConfirm} toggle={() => setShowConfirm(!showConfirm)} />
                 </div>
@@ -332,9 +332,9 @@ export default function ForgotPasswordPage() {
 
               {/* Password Rules */}
               <div style={{
-                background: '#f8fafc', borderRadius: '10px',
+                background: 'var(--bg-app)', borderRadius: '10px',
                 padding: '12px', marginBottom: '20px',
-                border: '1px solid #e2e8f0',
+                border: '1px solid var(--border-main)',
               }}>
                 {[
                   { rule: 'At least 6 characters', met: met6chars },
@@ -342,7 +342,7 @@ export default function ForgotPasswordPage() {
                 ].map((r, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: i === 0 ? '4px' : 0 }}>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-                      stroke={r.met ? '#16a34a' : '#cbd5e1'} strokeWidth="3"
+                      stroke={r.met ? '#16a34a' : 'var(--border-dark)'} strokeWidth="3"
                       strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
@@ -356,7 +356,7 @@ export default function ForgotPasswordPage() {
               <button type="submit" disabled={loading}
                 style={{
                   width: '100%', padding: '13px',
-                  background: '#1e3a5f', color: 'white',
+                  background: 'var(--bg-sidebar)', color: 'white',
                   border: 'none', borderRadius: '10px',
                   fontSize: '14px', fontWeight: '700',
                   cursor: loading ? 'not-allowed' : 'pointer',
@@ -369,8 +369,8 @@ export default function ForgotPasswordPage() {
               <button type="button" onClick={() => setStep(1)}
                 style={{
                   width: '100%', padding: '12px',
-                  background: 'white', color: '#374151',
-                  border: '1.5px solid #e2e8f0', borderRadius: '10px',
+                  background: 'var(--bg-card)', color: '#374151',
+                  border: '1.5px solid var(--border-main)', borderRadius: '10px',
                   fontSize: '13px', fontWeight: '600', cursor: 'pointer',
                   marginBottom: '16px',
                 }}>
@@ -380,7 +380,7 @@ export default function ForgotPasswordPage() {
 
             {/* Resend OTP */}
             <div style={{ textAlign: 'center' }}>
-              <span style={{ fontSize: '12px', color: '#94a3b8' }}>
+              <span style={{ fontSize: '12px', color: 'var(--text-lighter)' }}>
                 Didn&apos;t receive OTP?{' '}
               </span>
               <button
@@ -408,17 +408,17 @@ export default function ForgotPasswordPage() {
               </svg>
             </div>
 
-            <h1 style={{ fontSize: '22px', fontWeight: '800', color: '#1e293b', marginBottom: '8px' }}>
+            <h1 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text-main)', marginBottom: '8px' }}>
               Password Reset! 🎉
             </h1>
-            <p style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '32px', lineHeight: 1.6 }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-lighter)', marginBottom: '32px', lineHeight: 1.6 }}>
               Your password has been reset successfully. You can now login with your new password.
             </p>
 
             <button onClick={() => router.push('/')}
               style={{
                 width: '100%', padding: '13px',
-                background: '#1e3a5f', color: 'white',
+                background: 'var(--bg-sidebar)', color: 'white',
                 border: 'none', borderRadius: '10px',
                 fontSize: '14px', fontWeight: '700', cursor: 'pointer',
               }}>
