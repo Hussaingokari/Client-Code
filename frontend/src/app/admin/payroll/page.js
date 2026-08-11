@@ -160,7 +160,7 @@ export default function PayrollPage() {
         display: 'flex', alignItems: 'center', gap: '16px',
         boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
       }}>
-        <span style={{ fontSize: '13px', fontWeight: '600', color: '#374151' }}>Filter by:</span>
+        <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-sub)' }}>Filter by:</span>
         <select
           value={month}
           onChange={e => setMonth(parseInt(e.target.value))}
@@ -376,7 +376,7 @@ export default function PayrollPage() {
             <form onSubmit={handleGenerate}>
               {/* Employee */}
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ fontSize: '13px', fontWeight: '600', color: '#374151', display: 'block', marginBottom: '6px' }}>
+                <label style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-sub)', display: 'block', marginBottom: '6px' }}>
                   Employee <span style={{ color: '#ef4444' }}>*</span>
                 </label>
                 <select
@@ -396,7 +396,7 @@ export default function PayrollPage() {
 
               {/* Month */}
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ fontSize: '13px', fontWeight: '600', color: '#374151', display: 'block', marginBottom: '6px' }}>
+                <label style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-sub)', display: 'block', marginBottom: '6px' }}>
                   Month <span style={{ color: '#ef4444' }}>*</span>
                 </label>
                 <select
@@ -412,7 +412,7 @@ export default function PayrollPage() {
 
               {/* Year */}
               <div style={{ marginBottom: '24px' }}>
-                <label style={{ fontSize: '13px', fontWeight: '600', color: '#374151', display: 'block', marginBottom: '6px' }}>
+                <label style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-sub)', display: 'block', marginBottom: '6px' }}>
                   Year <span style={{ color: '#ef4444' }}>*</span>
                 </label>
                 <select
@@ -428,7 +428,7 @@ export default function PayrollPage() {
 
               <div style={{ display: 'flex', gap: '10px' }}>
                 <button type="button" onClick={() => setShowForm(false)}
-                  style={{ flex: 1, padding: '12px', background: 'var(--bg-card)', color: '#374151', border: '1.5px solid var(--border-main)', borderRadius: '10px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
+                  style={{ flex: 1, padding: '12px', background: 'var(--bg-card)', color: 'var(--text-sub)', border: '1.5px solid var(--border-main)', borderRadius: '10px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
                   Cancel
                 </button>
                 <button type="submit" disabled={generating}
