@@ -159,7 +159,7 @@ export default function AdminNotificationsPage() {
           <button key={f} onClick={() => { setFilter(f); setPage(0); }}
             style={{
               padding: '8px 20px',
-              background: filter === f ? 'white' : 'transparent',
+              background: filter === f ? 'var(--bg-card)' : 'transparent',
               color: filter === f ? 'var(--text-main)' : 'var(--text-light)',
               border: 'none', borderRadius: '8px',
               fontSize: '13px', fontWeight: filter === f ? '700' : '400',
