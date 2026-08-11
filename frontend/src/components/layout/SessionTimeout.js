@@ -62,24 +62,20 @@ export default function SessionTimeout() {
 
   return (
     <div style={{
-      position: 'fixed',
-      bottom: '20px',
-      left: '20px',
-      background: isWarning ? '#fee2e2' : 'white',
-      border: `1px solid ${isWarning ? '#f87171' : '#e2e8f0'}`,
-      color: isWarning ? '#b91c1c' : '#475569',
-      padding: '8px 16px',
+      background: isWarning ? '#fee2e2' : 'var(--bg-app)',
+      border: `1px solid ${isWarning ? '#f87171' : 'var(--border-main)'}`,
+      color: isWarning ? '#b91c1c' : 'var(--text-light)',
+      padding: '6px 12px',
       borderRadius: '20px',
-      fontSize: '13px',
+      fontSize: '12px',
       fontWeight: '600',
       display: 'flex',
       alignItems: 'center',
-      gap: '8px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-      zIndex: 9999,
+      gap: '6px',
+      whiteSpace: 'nowrap',
       transition: 'all 0.3s ease'
     }}>
-      <Clock size={16} color={isWarning ? '#dc2626' : '#64748b'} />
+      <Clock size={16} color={isWarning ? '#dc2626' : 'var(--text-light)'} />
       Session expires in {minutes}:{seconds.toString().padStart(2, '0')}
     </div>
   );
