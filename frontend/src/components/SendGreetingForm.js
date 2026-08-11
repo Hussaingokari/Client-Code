@@ -118,7 +118,7 @@ export default function SendGreetingForm() {
             maxWidth: '600px',
             margin: '0 auto',
             padding: '32px 24px',
-            background: 'white',
+            background: 'var(--bg-card)',
             borderRadius: '12px',
             boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
         }}>
@@ -133,7 +133,7 @@ export default function SendGreetingForm() {
                     <h1 style={{
                         fontSize: '28px',
                         fontWeight: '700',
-                        color: '#1e293b',
+                        color: 'var(--text-main)',
                         margin: 0,
                     }}>
                         Send Greeting to Candidate
@@ -141,7 +141,7 @@ export default function SendGreetingForm() {
                 </div>
                 <p style={{
                     fontSize: '13px',
-                    color: '#64748b',
+                    color: 'var(--text-light)',
                     margin: '8px 0 0 0',
                 }}>
                     Send admission greetings directly to candidate email
@@ -155,7 +155,7 @@ export default function SendGreetingForm() {
                         display: 'block',
                         fontSize: '13px',
                         fontWeight: '600',
-                        color: '#1e293b',
+                        color: 'var(--text-main)',
                         marginBottom: '8px',
                     }}>
                         Candidate Name
@@ -170,23 +170,23 @@ export default function SendGreetingForm() {
                         style={{
                             width: '100%',
                             padding: '10px 12px',
-                            border: '1.5px solid #e2e8f0',
+                            border: '1.5px solid var(--border-main)',
                             borderRadius: '8px',
                             fontSize: '13px',
                             outline: 'none',
                             boxSizing: 'border-box',
-                            background: '#f8fafc',
-                            color: '#1e293b',
+                            background: 'var(--bg-app)',
+                            color: 'var(--text-main)',
                             transition: 'all 0.2s',
                             opacity: loading ? 0.6 : 1,
                         }}
                         onFocusCapture={(e) => {
                             e.target.style.borderColor = '#3b82f6';
-                            e.target.style.background = 'white';
+                            e.target.style.background = 'var(--bg-card)';
                         }}
                         onBlurCapture={(e) => {
-                            e.target.style.borderColor = '#e2e8f0';
-                            e.target.style.background = '#f8fafc';
+                            e.target.style.borderColor = 'var(--border-main)';
+                            e.target.style.background = 'var(--bg-app)';
                         }}
                     />
                 </div>
@@ -196,7 +196,7 @@ export default function SendGreetingForm() {
                         display: 'block',
                         fontSize: '13px',
                         fontWeight: '600',
-                        color: '#1e293b',
+                        color: 'var(--text-main)',
                         marginBottom: '8px',
                     }}>
                         Email Address
@@ -211,23 +211,23 @@ export default function SendGreetingForm() {
                         style={{
                             width: '100%',
                             padding: '10px 12px',
-                            border: '1.5px solid #e2e8f0',
+                            border: '1.5px solid var(--border-main)',
                             borderRadius: '8px',
                             fontSize: '13px',
                             outline: 'none',
                             boxSizing: 'border-box',
-                            background: '#f8fafc',
-                            color: '#1e293b',
+                            background: 'var(--bg-app)',
+                            color: 'var(--text-main)',
                             transition: 'all 0.2s',
                             opacity: loading ? 0.6 : 1,
                         }}
                         onFocusCapture={(e) => {
                             e.target.style.borderColor = '#3b82f6';
-                            e.target.style.background = 'white';
+                            e.target.style.background = 'var(--bg-card)';
                         }}
                         onBlurCapture={(e) => {
-                            e.target.style.borderColor = '#e2e8f0';
-                            e.target.style.background = '#f8fafc';
+                            e.target.style.borderColor = 'var(--border-main)';
+                            e.target.style.background = 'var(--bg-app)';
                         }}
                     />
                 </div>
@@ -237,7 +237,7 @@ export default function SendGreetingForm() {
                         display: 'block',
                         fontSize: '13px',
                         fontWeight: '600',
-                        color: '#1e293b',
+                        color: 'var(--text-main)',
                         marginBottom: '8px',
                     }}>
                         Greeting Preview
@@ -247,10 +247,10 @@ export default function SendGreetingForm() {
                         style={{
                             width: '100%',
                             padding: '12px 12px',
-                            border: '1.5px solid #e2e8f0',
+                            border: '1.5px solid var(--border-main)',
                             borderRadius: '8px',
-                            background: '#f8fafc',
-                            color: '#475569',
+                            background: 'var(--bg-app)',
+                            color: 'var(--text-muted)',
                             fontSize: '12px',
                             lineHeight: '1.6',
                             whiteSpace: 'pre-wrap',
@@ -270,42 +270,42 @@ export default function SendGreetingForm() {
                     gap: '16px',
                 }}>
                     <div style={{
-                        border: '1.5px solid #e2e8f0',
+                        border: '1.5px solid var(--border-main)',
                         borderRadius: '8px',
                         padding: '12px 14px',
-                        background: '#f8fafc',
+                        background: 'var(--bg-app)',
                     }}>
                         <p style={{
                             fontSize: '11px',
-                            color: '#94a3b8',
+                            color: 'var(--text-lighter)',
                             margin: '0 0 6px 0',
                             fontWeight: '500',
                         }}>Name:</p>
                         <p style={{
                             fontSize: '13px',
                             fontWeight: '600',
-                            color: '#1e293b',
+                            color: 'var(--text-main)',
                             margin: 0,
                         }}>
                             {candidateName || '[CANDIDATE_NAME]'}
                         </p>
                     </div>
                     <div style={{
-                        border: '1.5px solid #e2e8f0',
+                        border: '1.5px solid var(--border-main)',
                         borderRadius: '8px',
                         padding: '12px 14px',
-                        background: '#f8fafc',
+                        background: 'var(--bg-app)',
                     }}>
                         <p style={{
                             fontSize: '11px',
-                            color: '#94a3b8',
+                            color: 'var(--text-lighter)',
                             margin: '0 0 6px 0',
                             fontWeight: '500',
                         }}>Email:</p>
                         <p style={{
                             fontSize: '13px',
                             fontWeight: '600',
-                            color: '#1e293b',
+                            color: 'var(--text-main)',
                             margin: 0,
                             wordBreak: 'break-all',
                         }}>
@@ -360,10 +360,10 @@ export default function SendGreetingForm() {
                         disabled={loading}
                         style={{
                             padding: '8px 16px',
-                            border: '1.5px solid #e2e8f0',
+                            border: '1.5px solid var(--border-main)',
                             borderRadius: '8px',
-                            background: 'white',
-                            color: '#475569',
+                            background: 'var(--bg-card)',
+                            color: 'var(--text-muted)',
                             fontSize: '13px',
                             fontWeight: '600',
                             cursor: loading ? 'not-allowed' : 'pointer',
@@ -374,7 +374,7 @@ export default function SendGreetingForm() {
                             if (!loading) e.target.style.background = '#f1f5f9';
                         }}
                         onMouseLeave={(e) => {
-                            if (!loading) e.target.style.background = 'white';
+                            if (!loading) e.target.style.background = 'var(--bg-card)';
                         }}
                     >
                         CANCEL

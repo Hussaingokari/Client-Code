@@ -167,14 +167,14 @@ export default function AdminLeavePage() {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '4px', background: '#F1F0FA', borderRadius: '14px', padding: '4px', width: 'fit-content', marginBottom: '20px' }}>
+      <div style={{ display: 'flex', gap: '4px', background: 'var(--bg-muted)', borderRadius: '14px', padding: '4px', width: 'fit-content', marginBottom: '20px' }}>
         {tabs.map(t => (
           <button key={t.key}
             onClick={() => { setTab(t.key); setPage(0); }}
             style={{
               padding: '9px 18px',
-              background: tab === t.key ? 'white' : 'transparent',
-              color: tab === t.key ? '#1E293B' : '#94A3B8',
+              background: tab === t.key ? 'var(--bg-card)' : 'transparent',
+              color: tab === t.key ? 'var(--text-main)' : 'var(--text-light)',
               border: 'none', borderRadius: '11px', fontSize: '13px',
               fontWeight: tab === t.key ? 700 : 500, cursor: 'pointer',
               boxShadow: tab === t.key ? '0 2px 8px rgba(0,0,0,0.4)' : 'none',
@@ -316,12 +316,12 @@ export default function AdminLeavePage() {
             {(tab === 'PENDING' || tab === 'CANCELLATIONS') && totalPages > 1 && (
               <div style={{ padding: '14px 20px', display: 'flex', justifyContent: 'center', gap: '8px', borderTop: '1px solid #F1F5F9' }}>
                 <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
-                  style={{ padding: '6px 14px', border: '1px solid #E5E7EB', borderRadius: '8px', fontSize: '12px', fontWeight: 700, color: page === 0 ? '#475569' : '#1E293B', background: 'var(--card-bg)', cursor: page === 0 ? 'not-allowed' : 'pointer' }}>
+                  style={{ padding: '6px 14px', border: '1px solid #E5E7EB', borderRadius: '8px', fontSize: '12px', fontWeight: 700, color: page === 0 ? 'var(--text-muted)' : '#1E293B', background: 'var(--card-bg)', cursor: page === 0 ? 'not-allowed' : 'pointer' }}>
                   ← Prev
                 </button>
                 <span style={{ padding: '6px 14px', fontSize: '12px', color: 'var(--text-muted)' }}>{page + 1} / {totalPages}</span>
                 <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page >= totalPages - 1}
-                  style={{ padding: '6px 14px', border: '1px solid #E5E7EB', borderRadius: '8px', fontSize: '12px', fontWeight: 700, color: page >= totalPages - 1 ? '#475569' : '#1E293B', background: 'var(--card-bg)', cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer' }}>
+                  style={{ padding: '6px 14px', border: '1px solid #E5E7EB', borderRadius: '8px', fontSize: '12px', fontWeight: 700, color: page >= totalPages - 1 ? 'var(--text-muted)' : '#1E293B', background: 'var(--card-bg)', cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer' }}>
                   Next →
                 </button>
               </div>

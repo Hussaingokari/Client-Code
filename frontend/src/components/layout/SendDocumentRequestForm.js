@@ -74,12 +74,12 @@ export default function SendDocumentRequestForm() {
     };
 
     return (
-        <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-sm p-8" style={{ colorScheme: 'light' }}>
+        <div className="max-w-xl mx-auto bg-[var(--bg-card)] rounded-2xl shadow-sm p-8" style={{ colorScheme: 'light' }}>
             <div className="flex items-center gap-3 mb-1">
                 <span className="text-blue-600 text-2xl">✉️</span>
-                <h2 className="text-2xl font-bold text-gray-900 ">Send Document Request</h2>
+                <h2 className="text-2xl font-bold text-[var(--text-main)] ">Send Document Request</h2>
             </div>
-            <p className="text-gray-500 mb-6">Send onboarding document request email to the candidate.</p>
+            <p className="text-[var(--text-light)] mb-6">Send onboarding document request email to the candidate.</p>
 
             {banner && (
                 <div
@@ -94,7 +94,7 @@ export default function SendDocumentRequestForm() {
 
             <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                    <label className="block text-sm font-semibold text-gray-800 mb-1">
+                    <label className="block text-sm font-semibold text-[var(--text-light)] mb-1">
                         Candidate Name
                     </label>
                     <input
@@ -103,12 +103,12 @@ export default function SendDocumentRequestForm() {
                         value={candidateName}
                         onChange={(e) => setCandidateName(e.target.value)}
                         placeholder="Enter Candidate Name"
-                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-[var(--bg-card)] text-[var(--text-main)] border border-[var(--border-main)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-semibold text-gray-800 mb-1">
+                    <label className="block text-sm font-semibold text-[var(--text-light)] mb-1">
                         Email Address
                     </label>
                     <input
@@ -117,12 +117,12 @@ export default function SendDocumentRequestForm() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter Email Address"
-                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-[var(--bg-card)] text-[var(--text-main)] border border-[var(--border-main)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-semibold text-gray-800 mb-1">
+                    <label className="block text-sm font-semibold text-[var(--text-light)] mb-1">
                         Job Role
                     </label>
                     <input
@@ -131,12 +131,12 @@ export default function SendDocumentRequestForm() {
                         value={jobTitle}
                         onChange={(e) => setJobTitle(e.target.value)}
                         placeholder="Enter Job Role"
-                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-[var(--bg-card)] text-[var(--text-main)] border border-[var(--border-main)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-semibold text-gray-800 mb-1">
+                    <label className="block text-sm font-semibold text-[var(--text-light)] mb-1">
                         Interview Date
                     </label>
                     <input
@@ -145,12 +145,12 @@ export default function SendDocumentRequestForm() {
                         max={today}
                         value={interviewDate}
                         onChange={(e) => setInterviewDate(e.target.value)}
-                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-[var(--bg-card)] text-[var(--text-main)] border border-[var(--border-main)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-semibold text-gray-800 mb-1">
+                    <label className="block text-sm font-semibold text-[var(--text-light)] mb-1">
                         Submission Deadline
                     </label>
                     <input
@@ -159,15 +159,15 @@ export default function SendDocumentRequestForm() {
                         min={today}
                         value={submissionDeadline}
                         onChange={(e) => setSubmissionDeadline(e.target.value)}
-                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full bg-[var(--bg-card)] text-[var(--text-main)] border border-[var(--border-main)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    <label className="block text-sm font-semibold text-[var(--text-light)] mb-2">
                         Email Preview
                     </label>
-                    <div className="border border-gray-200 rounded-lg bg-gray-50 p-4 max-h-64 overflow-y-auto text-sm text-gray-700 leading-relaxed">
+                    <div className="border border-[var(--border-main)] rounded-lg bg-[var(--bg-app)] p-4 max-h-64 overflow-y-auto text-sm text-[var(--text-light)] leading-relaxed">
                         <p>Dear {candidateName || "Candidate"},</p>
                         <br />
                         <p>Greetings from PAXSAT BUSINESS SOLUTIONS PVT LTD.</p>

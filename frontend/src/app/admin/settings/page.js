@@ -72,14 +72,14 @@
 //   const inputStyle = {
 //     width: '100%',
 //     padding: '12px 44px 12px 14px',
-//     border: '1.5px solid #e2e8f0',
+//     border: '1.5px solid var(--border-main)',
 //     borderRadius: '10px',
 //     fontSize: '14px',
 //     outline: 'none',
 //     boxSizing: 'border-box',
 //     fontFamily: 'inherit',
-//     color: '#1e293b',
-//     background: 'white',
+//     color: 'var(--text-main)',
+//     background: 'var(--bg-card)',
 //   };
 
 
@@ -89,21 +89,21 @@
 //   return (
 //     <div>
 //       <div style={{ marginBottom: '24px' }}>
-//         <h1 style={{ fontSize: '22px', fontWeight: '800', color: '#1e293b', marginBottom: '4px' }}>
+//         <h1 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text-main)', marginBottom: '4px' }}>
 //           Settings
 //         </h1>
-//         <p style={{ fontSize: '13px', color: '#94a3b8' }}>Manage your account settings</p>
+//         <p style={{ fontSize: '13px', color: 'var(--text-lighter)' }}>Manage your account settings</p>
 //       </div>
 
 //       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
 
 //         {/* Profile Info */}
-//         <div style={{ background: 'white', borderRadius: '14px', border: '1px solid #e2e8f0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
-//           <div style={{ padding: '16px 20px', borderBottom: '1px solid #e2e8f0', background: 'linear-gradient(135deg, #1e3a5f, #2563eb)', color: 'white' }}>
+//         <div style={{ background: 'var(--bg-card)', borderRadius: '14px', border: '1px solid var(--border-main)', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
+//           <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-main)', background: 'linear-gradient(135deg, #1e3a5f, #2563eb)', color: 'white' }}>
 //             <h3 style={{ fontSize: '15px', fontWeight: '700' }}>🛡️ Admin Profile</h3>
 //           </div>
 //           <div style={{ padding: '20px' }}>
-//             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', padding: '16px', background: '#f8fafc', borderRadius: '12px' }}>
+//             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', padding: '16px', background: 'var(--bg-app)', borderRadius: '12px' }}>
 //               <div style={{
 //                 width: '64px', height: '64px',
 //                 background: 'linear-gradient(135deg, #1e3a5f, #3b82f6)',
@@ -113,9 +113,9 @@
 //                 {user?.name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
 //               </div>
 //               <div>
-//                 <div style={{ fontSize: '18px', fontWeight: '800', color: '#1e293b' }}>{user?.name}</div>
-//                 <div style={{ fontSize: '13px', color: '#64748b' }}>{user?.email}</div>
-//                 <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
+//                 <div style={{ fontSize: '18px', fontWeight: '800', color: 'var(--text-main)' }}>{user?.name}</div>
+//                 <div style={{ fontSize: '13px', color: 'var(--text-light)' }}>{user?.email}</div>
+//                 <div style={{ fontSize: '12px', color: 'var(--text-lighter)', marginTop: '2px' }}>
 //                   {user?.employeeCode} · {user?.role}
 //                 </div>
 //               </div>
@@ -127,9 +127,9 @@
 //               { label: 'Employee Code', value: user?.employeeCode },
 //               { label: 'Role', value: user?.role },
 //             ].map((item, i) => (
-//               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid #f1f5f9' }}>
-//                 <span style={{ fontSize: '13px', color: '#64748b' }}>{item.label}</span>
-//                 <span style={{ fontSize: '13px', fontWeight: '600', color: '#1e293b' }}>{item.value || '—'}</span>
+//               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--border-main)' }}>
+//                 <span style={{ fontSize: '13px', color: 'var(--text-light)' }}>{item.label}</span>
+//                 <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-main)' }}>{item.value || '—'}</span>
 //               </div>
 //             ))}
 
@@ -142,8 +142,8 @@
 //         </div>
 
 //         {/* Change Password */}
-//         <div style={{ background: 'white', borderRadius: '14px', border: '1px solid #e2e8f0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
-//           <div style={{ padding: '16px 20px', borderBottom: '1px solid #e2e8f0', background: 'linear-gradient(135deg, #1e3a5f, #2563eb)', color: 'white' }}>
+//         <div style={{ background: 'var(--bg-card)', borderRadius: '14px', border: '1px solid var(--border-main)', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
+//           <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-main)', background: 'linear-gradient(135deg, #1e3a5f, #2563eb)', color: 'white' }}>
 //             <h3 style={{ fontSize: '15px', fontWeight: '700' }}>🔒 Change Password</h3>
 //           </div>
 //           <div style={{ padding: '20px' }}>
@@ -163,7 +163,7 @@
 //                     required
 //                     style={inputStyle}
 //                     onFocus={e => e.target.style.borderColor = '#1e3a5f'}
-//                     onBlur={e => e.target.style.borderColor = '#e2e8f0'}
+//                     onBlur={e => e.target.style.borderColor = 'var(--border-main)'}
 //                   />
 //                   <EyeIcon show={showCurrent} toggle={() => setShowCurrent(!showCurrent)} />
 //                 </div>
@@ -183,7 +183,7 @@
 //                     required
 //                     style={inputStyle}
 //                     onFocus={e => e.target.style.borderColor = '#1e3a5f'}
-//                     onBlur={e => e.target.style.borderColor = '#e2e8f0'}
+//                     onBlur={e => e.target.style.borderColor = 'var(--border-main)'}
 //                   />
 //                   <EyeIcon show={showNew} toggle={() => setShowNew(!showNew)} />
 //                 </div>
@@ -203,14 +203,14 @@
 //                     required
 //                     style={inputStyle}
 //                     onFocus={e => e.target.style.borderColor = '#1e3a5f'}
-//                     onBlur={e => e.target.style.borderColor = '#e2e8f0'}
+//                     onBlur={e => e.target.style.borderColor = 'var(--border-main)'}
 //                   />
 //                   <EyeIcon show={showConfirm} toggle={() => setShowConfirm(!showConfirm)} />
 //                 </div>
 //               </div>
 
 //               {/* Rules */}
-//               <div style={{ background: '#f8fafc', borderRadius: '10px', padding: '14px', marginBottom: '20px', border: '1px solid #e2e8f0' }}>
+//               <div style={{ background: 'var(--bg-app)', borderRadius: '10px', padding: '14px', marginBottom: '20px', border: '1px solid var(--border-main)' }}>
 //                 <div style={{ fontSize: '12px', fontWeight: '700', color: '#374151', marginBottom: '8px' }}>
 //                   Password Requirements:
 //                 </div>
@@ -220,7 +220,7 @@
 //                 ].map((r, i) => (
 //                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
 //                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-//                       stroke={r.met ? '#16a34a' : '#cbd5e1'} strokeWidth="3"
+//                       stroke={r.met ? '#16a34a' : 'var(--border-dark)'} strokeWidth="3"
 //                       strokeLinecap="round" strokeLinejoin="round">
 //                       <polyline points="20 6 9 17 4 12" />
 //                     </svg>
@@ -235,7 +235,7 @@
 //               <button type="submit" disabled={changing}
 //                 style={{
 //                   width: '100%', padding: '13px',
-//                   background: '#1e3a5f', color: 'white',
+//                   background: 'var(--bg-sidebar)', color: 'white',
 //                   border: 'none', borderRadius: '10px',
 //                   fontSize: '14px', fontWeight: '700',
 //                   cursor: changing ? 'not-allowed' : 'pointer',
@@ -339,14 +339,14 @@ const AdminSettingsPage = () => {
   const inputStyle = {
     width: '100%',
     padding: '12px 44px 12px 14px',
-    border: '1.5px solid #e2e8f0',
+    border: '1.5px solid var(--border-main)',
     borderRadius: '10px',
     fontSize: '14px',
     outline: 'none',
     boxSizing: 'border-box',
     fontFamily: 'inherit',
-    color: '#1e293b',
-    background: 'white',
+    color: 'var(--text-main)',
+    background: 'var(--bg-card)',
   };
 
   const met6chars = newPassword.length >= 6;
@@ -354,16 +354,16 @@ const AdminSettingsPage = () => {
 
   return (
     <div style={{ marginBottom: '24px' }}>
-      <h1 style={{ fontSize: '22px', fontWeight: '800', color: '#1e293b', marginBottom: '4px' }}>
+      <h1 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text-main)', marginBottom: '4px' }}>
         Settings
       </h1>
-      <p style={{ fontSize: '13px', color: '#94a3b8' }}>Manage your account settings</p>
+      <p style={{ fontSize: '13px', color: 'var(--text-lighter)' }}>Manage your account settings</p>
 
       <div style={{ display: 'grid', gridtemplateColumns: '1fr 1fr', gap: '20px' }}>
 
         {/* Admin Profile Info */}
         <div style={{
-          marginTop: '16px', padding: '20px', borderBottom: '1px solid #e2e8f0',
+          marginTop: '16px', padding: '20px', borderBottom: '1px solid var(--border-main)',
           background: 'linear-gradient(135deg, #1e3a5f, #2563eb)', color: 'white',
         }}>
           <h3 style={{ fontSize: '15px', fontWeight: '700' }}>👤 Admin Profile Information</h3>
@@ -377,7 +377,7 @@ const AdminSettingsPage = () => {
 
         {/* Admin Profile Details */}
         <div style={{
-          padding: '16px 20px', borderBottom: '1px solid #e2e8f0',
+          padding: '16px 20px', borderBottom: '1px solid var(--border-main)',
           background: 'linear-gradient(135deg, #1e3a5f, #2563eb)', color: 'white',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', padding: '16px 0' }}>
@@ -391,8 +391,8 @@ const AdminSettingsPage = () => {
               <div style={{ fontSize: '18px', fontWeight: '800', color: 'white' }}>
                 {user?.name}
               </div>
-              <div style={{ fontSize: '13px', color: '#64748b', marginTop: '2px' }}>{user?.email}</div>
-              <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>{user?.employeeCode} · {user?.role}</div>
+              <div style={{ fontSize: '13px', color: 'var(--text-light)', marginTop: '2px' }}>{user?.email}</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-lighter)', marginTop: '2px' }}>{user?.employeeCode} · {user?.role}</div>
             </div>
           </div>
 
@@ -408,8 +408,8 @@ const AdminSettingsPage = () => {
 
         {/* Change Password Form */}
         <div style={{
-          padding: '20px', background: 'white', borderRadius: '8px',
-          border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', overflow: 'hidden',
+          padding: '20px', background: 'var(--bg-card)', borderRadius: '8px',
+          border: '1px solid var(--border-main)', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', overflow: 'hidden',
         }}>
           <form onSubmit={handleChangePassword}>
 
@@ -427,7 +427,7 @@ const AdminSettingsPage = () => {
                   required
                   style={inputStyle}
                   onFocus={(e) => e.target.style.borderColor = '#1e3a5f'}
-                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                  onBlur={(e) => e.target.style.borderColor = 'var(--border-main)'}
                 />
                 <EyeIcon show={showCurrent} toggle={() => setShowCurrent(!showCurrent)} />
               </div>
@@ -447,7 +447,7 @@ const AdminSettingsPage = () => {
                   required
                   style={inputStyle}
                   onFocus={(e) => e.target.style.borderColor = '#1e3a5f'}
-                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                  onBlur={(e) => e.target.style.borderColor = 'var(--border-main)'}
                 />
                 <EyeIcon show={showNew} toggle={() => setShowNew(!showNew)} />
               </div>
@@ -467,7 +467,7 @@ const AdminSettingsPage = () => {
                   required
                   style={inputStyle}
                   onFocus={(e) => e.target.style.borderColor = '#1e3a5f'}
-                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                  onBlur={(e) => e.target.style.borderColor = 'var(--border-main)'}
                 />
                 <EyeIcon show={showConfirm} toggle={() => setShowConfirm(!showConfirm)} />
               </div>
@@ -475,16 +475,16 @@ const AdminSettingsPage = () => {
 
             {/* Password Rules */}
             <div style={{
-              background: '#f8fafc', borderRadius: '10px',
+              background: 'var(--bg-app)', borderRadius: '10px',
               padding: '14px', marginBottom: '20px',
-              border: '1px solid #e2e8f0',
+              border: '1px solid var(--border-main)',
             }}>
               <div style={{ fontSize: '12px', fontWeight: '700', color: '#374151', marginBottom: '8px' }}>
                 Password Requirements:
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke={met6chars ? '#16a34a' : '#cbd5e1'} strokeWidth="3"
+                  stroke={met6chars ? '#16a34a' : 'var(--border-dark)'} strokeWidth="3"
                   strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
@@ -494,7 +494,7 @@ const AdminSettingsPage = () => {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke={metMatch ? '#16a34a' : '#cbd5e1'} strokeWidth="3"
+                  stroke={metMatch ? '#16a34a' : 'var(--border-dark)'} strokeWidth="3"
                   strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
@@ -510,7 +510,7 @@ const AdminSettingsPage = () => {
               disabled={changing}
               style={{
                 width: '100%', padding: '13px',
-                background: '#1e3a5f', color: 'white',
+                background: 'var(--bg-sidebar)', color: 'white',
                 border: 'none', borderRadius: '10px',
                 fontSize: '14px', fontWeight: '700', cursor: changing ? 'not-allowed' : 'pointer',
                 opacity: changing ? 0.7 : 1,

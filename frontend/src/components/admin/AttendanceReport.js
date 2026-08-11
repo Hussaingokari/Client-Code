@@ -13,7 +13,7 @@ const STATUS_COLORS = {
 };
  
 function StatusBadge({ status }) {
-    const s = STATUS_COLORS[status] || { bg: '#f1f5f9', color: '#64748b' };
+    const s = STATUS_COLORS[status] || { bg: '#f1f5f9', color: 'var(--text-light)' };
     return (
         <span style={{
             background: s.bg, color: s.color,
@@ -123,17 +123,17 @@ export default function AttendanceReport() {
     return (
         <div>
             <div style={{ marginBottom: '20px' }}>
-                <h1 style={{ fontSize: '22px', fontWeight: '800', color: '#1e293b', marginBottom: '4px' }}>
+                <h1 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text-main)', marginBottom: '4px' }}>
                     Attendance report
                 </h1>
-                <p style={{ fontSize: '13px', color: '#94a3b8' }}>
+                <p style={{ fontSize: '13px', color: 'var(--text-lighter)' }}>
                     View attendance for all employees by date range.
                 </p>
             </div>
  
             <div style={{
                 display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap',
-                background: 'white', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '14px 16px',
+                background: 'var(--bg-card)', border: '1px solid var(--border-main)', borderRadius: '12px', padding: '14px 16px',
             }}>
                 <input
                     type="text"
@@ -145,7 +145,7 @@ export default function AttendanceReport() {
                     }}
                     style={{
                         flex: 1, minWidth: '200px', padding: '8px 12px',
-                        border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '13px',
+                        border: '1px solid var(--border-main)', borderRadius: '8px', fontSize: '13px',
                     }}
                 />
                 <input
@@ -154,7 +154,7 @@ export default function AttendanceReport() {
                     max={maxDate}
                     onChange={handleFromDateChange}
                     style={{
-                        padding: '8px 12px', border: '1px solid #e2e8f0',
+                        padding: '8px 12px', border: '1px solid var(--border-main)',
                         borderRadius: '8px', fontSize: '13px',
                     }}
                 />
@@ -164,7 +164,7 @@ export default function AttendanceReport() {
                     max={maxDate}
                     onChange={handleToDateChange}
                     style={{
-                        padding: '8px 12px', border: '1px solid #e2e8f0',
+                        padding: '8px 12px', border: '1px solid var(--border-main)',
                         borderRadius: '8px', fontSize: '13px',
                     }}
                 />
@@ -172,7 +172,7 @@ export default function AttendanceReport() {
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
                     style={{
-                        padding: '8px 12px', border: '1px solid #e2e8f0',
+                        padding: '8px 12px', border: '1px solid var(--border-main)',
                         borderRadius: '8px', fontSize: '13px',
                     }}
                 >
@@ -186,7 +186,7 @@ export default function AttendanceReport() {
                     onClick={handleExport}
                     disabled={exporting}
                     style={{
-                        padding: '8px 16px', background: '#1e3a5f', color: 'white',
+                        padding: '8px 16px', background: 'var(--bg-sidebar)', color: 'white',
                         border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '700',
                         cursor: exporting ? 'not-allowed' : 'pointer',
                     }}
@@ -196,18 +196,18 @@ export default function AttendanceReport() {
             </div>
  
             <div style={{
-                background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0',
+                background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border-main)',
                 boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden',
             }}>
                 <div className="table-responsive">
                     <div style={{ minWidth: '780px' }}>
                         <div style={{
                             display: 'grid', gridTemplateColumns: '1.8fr 1.1fr 0.9fr 0.9fr 0.9fr 0.9fr 0.8fr',
-                            padding: '10px 20px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0',
+                            padding: '10px 20px', background: 'var(--bg-app)', borderBottom: '1px solid var(--border-main)',
                         }}>
                             {['Name', 'Department', 'Status', 'Check in', 'Check out', 'Break', ''].map((h) => (
                                 <div key={h} style={{
-                                    fontSize: '11px', fontWeight: '700', color: '#64748b',
+                                    fontSize: '11px', fontWeight: '700', color: 'var(--text-light)',
                                     textTransform: 'uppercase', letterSpacing: '0.5px',
                                 }}>
                                     {h}
@@ -216,32 +216,32 @@ export default function AttendanceReport() {
                         </div>
  
                         {loading ? (
-                            <div style={{ textAlign: 'center', padding: '60px', color: '#94a3b8' }}>Loading...</div>
+                            <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-lighter)' }}>Loading...</div>
                         ) : filteredRows.length === 0 ? (
-                            <div style={{ textAlign: 'center', padding: '60px', color: '#94a3b8' }}>
+                            <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-lighter)' }}>
                                 No attendance records found for this date.
                             </div>
                         ) : (
                             filteredRows.map((r) => (
                                 <div key={r.employeeId} style={{
                                     display: 'grid', gridTemplateColumns: '1.8fr 1.1fr 0.9fr 0.9fr 0.9fr 0.9fr 0.8fr',
-                                    padding: '12px 20px', borderBottom: '1px solid #f1f5f9', alignItems: 'center',
+                                    padding: '12px 20px', borderBottom: '1px solid var(--border-main)', alignItems: 'center',
                                 }}>
                                     <div>
-                                        <div style={{ fontSize: '13px', fontWeight: '600', color: '#1e293b' }}>
+                                        <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-main)' }}>
                                             {r.employeeName}
                                         </div>
-                                        <div style={{ fontSize: '11px', color: '#94a3b8' }}>{r.employeeCode}</div>
+                                        <div style={{ fontSize: '11px', color: 'var(--text-lighter)' }}>{r.employeeCode}</div>
                                     </div>
-                                    <div style={{ fontSize: '13px', color: '#64748b' }}>{r.departmentName || '—'}</div>
+                                    <div style={{ fontSize: '13px', color: 'var(--text-light)' }}>{r.departmentName || '—'}</div>
                                     <div><StatusBadge status={r.status} /></div>
-                                    <div style={{ fontSize: '13px', color: '#64748b' }}>
+                                    <div style={{ fontSize: '13px', color: 'var(--text-light)' }}>
                                         {r.checkIn ? String(r.checkIn).slice(0, 5) : '--'}
                                     </div>
-                                    <div style={{ fontSize: '13px', color: '#64748b' }}>
+                                    <div style={{ fontSize: '13px', color: 'var(--text-light)' }}>
                                         {r.checkOut ? String(r.checkOut).slice(0, 5) : '--'}
                                     </div>
-                                    <div style={{ fontSize: '13px', color: r.onBreak ? '#f59e0b' : '#64748b', fontWeight: r.onBreak ? '700' : '400' }}>
+                                    <div style={{ fontSize: '13px', color: r.onBreak ? '#f59e0b' : 'var(--text-light)', fontWeight: r.onBreak ? '700' : '400' }}>
                                         {r.onBreak ? 'On break' : formatDuration(r.totalBreakMinutes)}
                                     </div>
                                     <div>
@@ -265,7 +265,7 @@ export default function AttendanceReport() {
                 {totalPages > 1 && (
                     <div style={{
                         display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px',
-                        padding: '14px', borderTop: '1px solid #f1f5f9',
+                        padding: '14px', borderTop: '1px solid var(--border-main)',
                     }}>
                         <button
                             disabled={page === 0}
@@ -274,7 +274,7 @@ export default function AttendanceReport() {
                         >
                             ← Prev
                         </button>
-                        <span style={{ fontSize: '12px', color: '#64748b' }}>
+                        <span style={{ fontSize: '12px', color: 'var(--text-light)' }}>
                             Page {page + 1} of {totalPages}
                         </span>
                         <button

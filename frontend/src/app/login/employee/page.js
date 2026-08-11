@@ -53,7 +53,7 @@ export default function EmployeeLogin() {
       const data = res.data.data;
       dispatch(loginSuccess({ token: data.accessToken, user: data }));
       toast.success('Welcome ' + data.name + '!', {
-        style: { background: '#1e293b', color: '#fff', borderRadius: '10px' }
+        style: { background: 'var(--text-main)', color: '#fff', borderRadius: '10px' }
       });
       router.push('/employee/dashboard');
     } catch (err) {
@@ -66,7 +66,7 @@ export default function EmployeeLogin() {
   const isFormFilled = form.email && form.password;
 
   return (
-    <div className="min-h-screen flex w-full bg-white dark:bg-slate-900 transition-colors duration-500">
+    <div className="min-h-screen flex w-full bg-[var(--bg-card)] dark:bg-slate-900 transition-colors duration-500">
       {/* Left Panel - Hidden on mobile */}
       <div className="hidden lg:flex lg:w-[45%] flex-col bg-slate-900 relative">
         <div className="flex-1 relative overflow-hidden">
@@ -152,7 +152,7 @@ export default function EmployeeLogin() {
                  onChange={handleChange}
                  placeholder="Input your registered email" 
                  required 
-                 className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 text-[13px] focus:outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] dark:focus:border-[#DBFF00] dark:focus:ring-[#DBFF00] transition-all text-slate-800 dark:text-white placeholder-slate-400" 
+                 className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-[var(--bg-card)] dark:bg-slate-900 text-[13px] focus:outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] dark:focus:border-[#DBFF00] dark:focus:ring-[#DBFF00] transition-all text-slate-800 dark:text-white placeholder-slate-400" 
                />
              </div>
 
@@ -169,7 +169,7 @@ export default function EmployeeLogin() {
                    onChange={handleChange}
                    placeholder="Input your password account" 
                    required 
-                   className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 text-[13px] focus:outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] dark:focus:border-[#DBFF00] dark:focus:ring-[#DBFF00] transition-all text-slate-800 dark:text-white placeholder-slate-400" 
+                   className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-white/10 bg-[var(--bg-card)] dark:bg-slate-900 text-[13px] focus:outline-none focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981] dark:focus:border-[#DBFF00] dark:focus:ring-[#DBFF00] transition-all text-slate-800 dark:text-white placeholder-slate-400" 
                  />
                  <EyeIcon show={showPassword} toggle={() => setShowPassword(!showPassword)} />
                </div>
@@ -205,17 +205,17 @@ export default function EmployeeLogin() {
              </button>
 
              <div className="flex items-center gap-3 my-2">
-               <div className="h-px bg-slate-100 dark:bg-white/10 flex-1"></div>
+               <div className="h-px bg-slate-100 dark:bg-[var(--bg-card)]/10 flex-1"></div>
                <span className="text-[10px] text-slate-400 font-medium">Or login with</span>
-               <div className="h-px bg-slate-100 dark:bg-white/10 flex-1"></div>
+               <div className="h-px bg-slate-100 dark:bg-[var(--bg-card)]/10 flex-1"></div>
              </div>
 
              <div className="flex gap-4">
-               <button type="button" className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-slate-200 dark:border-white/10 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors text-[12px] font-bold text-slate-700 dark:text-slate-300">
+               <button type="button" className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-slate-200 dark:border-white/10 rounded-lg hover:bg-slate-50 dark:hover:bg-[var(--bg-card)]/5 transition-colors text-[12px] font-bold text-slate-700 dark:text-slate-300">
                  <Image src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width={16} height={16} />
                  Google
                </button>
-               <button type="button" className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-slate-200 dark:border-white/10 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-colors text-[12px] font-bold text-slate-700 dark:text-slate-300">
+               <button type="button" className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-slate-200 dark:border-white/10 rounded-lg hover:bg-slate-50 dark:hover:bg-[var(--bg-card)]/5 transition-colors text-[12px] font-bold text-slate-700 dark:text-slate-300">
                  <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.19 2.31-.88 3.5-.8 1.48.06 2.58.55 3.33 1.5-3.08 1.83-2.6 5.86.35 7.15-.55 1.4-1.39 2.82-2.26 4.32zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
                  Apple
                </button>

@@ -17,6 +17,7 @@ import {
   Briefcase,
   FolderOpen,
 } from 'lucide-react';
+import SessionTimeout from '@/components/layout/SessionTimeout';
 
 export default function Navbar() {
   const { user } = useSelector((state) => state.auth);
@@ -98,8 +99,8 @@ export default function Navbar() {
           onClick={() => window.dispatchEvent(new CustomEvent('toggleMobileSidebar'))}
           style={{
             display: 'none',
-            background: '#f1f5f9', border: 'none', borderRadius: '8px',
-            padding: '8px', cursor: 'pointer', color: '#1e293b',
+            background: 'var(--bg-muted)', border: 'none', borderRadius: '8px',
+            padding: '8px', cursor: 'pointer', color: 'var(--text-main)',
             alignItems: 'center', justifyContent: 'center',
           }}
           title="Toggle Menu"
@@ -134,18 +135,18 @@ export default function Navbar() {
           placeholder="Search pages..."
           style={{
             width: '100%', paddingLeft: '36px', paddingRight: '12px',
-            height: '38px', border: '1.5px solid #e2e8f0',
+            height: '38px', border: '1.5px solid var(--border-main)',
             borderRadius: '10px', fontSize: '13px', outline: 'none',
             boxSizing: 'border-box', transition: 'border 0.2s',
-            background: '#f8fafc', color: '#1e293b',
+            background: 'var(--bg-app)', color: 'var(--text-main)',
           }}
           onFocusCapture={e => {
             e.target.style.borderColor = '#3b82f6';
-            e.target.style.background = 'white';
+            e.target.style.background = 'var(--bg-card)';
           }}
           onBlurCapture={e => {
-            e.target.style.borderColor = '#e2e8f0';
-            e.target.style.background = '#f8fafc';
+            e.target.style.borderColor = 'var(--border-main)';
+            e.target.style.background = 'var(--bg-app)';
           }}
         />
 
@@ -153,13 +154,13 @@ export default function Navbar() {
         {showResults && search.trim() && (
           <div style={{
             position: 'absolute', top: '44px', left: 0, right: 0,
-            background: 'white', borderRadius: '12px',
-            border: '1px solid #e2e8f0',
+            background: 'var(--bg-card)', borderRadius: '12px',
+            border: '1px solid var(--border-main)',
             boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
             overflow: 'hidden', zIndex: 100,
           }}>
             {filtered.length === 0 ? (
-              <div style={{ padding: '14px 16px', fontSize: '13px', color: '#94a3b8', textAlign: 'center' }}>
+              <div style={{ padding: '14px 16px', fontSize: '13px', color: 'var(--text-lighter)', textAlign: 'center' }}>
                 No results for &quot;{search}&quot;
               </div>
             ) : (
@@ -175,15 +176,15 @@ export default function Navbar() {
                       background: pathname === item.path ? '#eff6ff' : 'white',
                       transition: 'background 0.15s',
                     }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
+                    onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-app)'}
                     onMouseLeave={e => e.currentTarget.style.background = pathname === item.path ? '#eff6ff' : 'white'}
                   >
-                    <Icon size={18} color={pathname === item.path ? '#3b82f6' : '#64748b'} strokeWidth={2}/>
+                    <Icon size={18} color={pathname === item.path ? '#3b82f6' : 'var(--text-light)'} strokeWidth={2}/>
                     <div>
-                      <div style={{ fontSize: '13px', fontWeight: '600', color: '#1e293b' }}>
+                      <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-main)' }}>
                         {item.label}
                       </div>
-                      <div style={{ fontSize: '11px', color: '#94a3b8' }}>
+                      <div style={{ fontSize: '11px', color: 'var(--text-lighter)' }}>
                         {item.path}
                       </div>
                     </div>
@@ -207,13 +208,13 @@ export default function Navbar() {
         {showResults && !search.trim() && (
           <div style={{
             position: 'absolute', top: '44px', left: 0, right: 0,
-            background: 'white', borderRadius: '12px',
-            border: '1px solid #e2e8f0',
+            background: 'var(--bg-card)', borderRadius: '12px',
+            border: '1px solid var(--border-main)',
             boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
             padding: '12px 16px', zIndex: 100,
           }}>
             <div style={{
-              fontSize: '11px', color: '#94a3b8', fontWeight: '600',
+              fontSize: '11px', color: 'var(--text-lighter)', fontWeight: '600',
               marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px',
             }}>
               Quick Navigation
@@ -246,6 +247,11 @@ export default function Navbar() {
       {/* Right Side */}
       <div className="nav-right-side" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
 
+        {/* Session Timeout */}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <SessionTimeout />
+        </div>
+
         {/* Notification Bell */}
         <div
           onClick={handleBellClick}
@@ -267,7 +273,7 @@ export default function Navbar() {
         </div>
 
         {/* Divider */}
-        <div className="nav-divider" style={{ width: '1px', height: '28px', background: '#e2e8f0' }}/>
+        <div className="nav-divider" style={{ width: '1px', height: '28px', background: 'var(--border-main)' }}/>
 
         {/* Role Badge */}
         <span className="nav-role-badge" style={{
@@ -294,10 +300,10 @@ export default function Navbar() {
             {user?.name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
           </div>
           <div className="nav-user-info">
-            <div style={{ fontSize: '13px', fontWeight: '600', color: '#1e293b', whiteSpace: 'nowrap' }}>
+            <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-main)', whiteSpace: 'nowrap' }}>
               {user?.name}
             </div>
-            <div style={{ fontSize: '11px', color: '#94a3b8', whiteSpace: 'nowrap' }}>
+            <div style={{ fontSize: '11px', color: 'var(--text-lighter)', whiteSpace: 'nowrap' }}>
               {user?.employeeCode} · {user?.role === 'ADMIN' ? 'Super Admin' : user?.role}
             </div>
           </div>

@@ -79,7 +79,7 @@ function Badge({ status }) {
 function Loader() {
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px' }}>
-      <div style={{ width: '32px', height: '32px', border: '3px solid #e2e8f0', borderTopColor: '#3b82f6', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+      <div style={{ width: '32px', height: '32px', border: '3px solid var(--border-main)', borderTopColor: '#3b82f6', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
@@ -92,7 +92,7 @@ const balanceStyle = {
   CASUAL: { color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.15)', icon: <Sun size={14} /> },
   PATERNITY: { color: '#c084fc', bg: 'rgba(192, 132, 252, 0.15)', icon: <Baby size={14} /> },
   MATERNITY: { color: '#ec4899', bg: 'rgba(236, 72, 153, 0.15)', icon: <Baby size={14} /> },
-  UNPAID: { color: '#94a3b8', bg: 'rgba(148, 163, 184, 0.15)', icon: <ClipboardList size={14} /> },
+  UNPAID: { color: 'var(--text-lighter)', bg: 'rgba(148, 163, 184, 0.15)', icon: <ClipboardList size={14} /> },
 };
 
 function MiniRing({ pct, color }) {
@@ -320,7 +320,7 @@ export default function EmployeeDashboard() {
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px', position: 'relative' }}>
                 <div style={{ flex: 1, textAlign: 'center' }}>
                   <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '8px' }}>Check In</div>
-                  <div style={{ fontSize: '26px', fontWeight: '800', color: displayAtt?.checkIn ? '#10b981' : '#475569', letterSpacing: '0.5px' }}>
+                  <div style={{ fontSize: '26px', fontWeight: '800', color: displayAtt?.checkIn ? '#10b981' : 'var(--text-muted)', letterSpacing: '0.5px' }}>
                     {displayAtt?.checkIn ? displayAtt.checkIn.substring(0, 5) : '--:--'}
                   </div>
                   <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '8px' }}>
@@ -333,7 +333,7 @@ export default function EmployeeDashboard() {
 
                 <div style={{ flex: 1, textAlign: 'center' }}>
                   <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '8px' }}>Check Out</div>
-                  <div style={{ fontSize: '26px', fontWeight: '800', color: displayAtt?.checkOut ? '#f59e0b' : '#475569', letterSpacing: '0.5px' }}>
+                  <div style={{ fontSize: '26px', fontWeight: '800', color: displayAtt?.checkOut ? '#f59e0b' : 'var(--text-muted)', letterSpacing: '0.5px' }}>
                     {displayAtt?.checkOut ? displayAtt.checkOut.substring(0, 5) : '--:--'}
                   </div>
                   <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '8px' }}>

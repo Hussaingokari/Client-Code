@@ -6,12 +6,22 @@ import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
 
 export default function EmployeeLayout({ children }) {
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const { isAuthenticated, isInitialized, user } = useSelector((state) => state.auth);
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated) router.push('/');
-  }, [isAuthenticated, router]);
+    if (isInitialized) {
+      if (!isAuthenticated) router.push('/');
+    }
+  }, [isAuthenticated, isInitialized, router]);
+
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[var(--bg-app)]">
+        <div className="animate-spin w-12 h-12 border-4 border-[var(--border-main)] border-t-blue-500 rounded-full"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="app-container">
