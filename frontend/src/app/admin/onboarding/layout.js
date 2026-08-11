@@ -27,8 +27,8 @@ export default function OnboardingLayout({ children }) {
         <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
             {/* Secondary sidebar */}
             <div style={{
-                width: '190px', flexShrink: 0, background: 'white',
-                borderRadius: '12px', border: '1px solid #e2e8f0',
+                width: '190px', flexShrink: 0, background: 'var(--bg-card)',
+                borderRadius: '12px', border: '1px solid var(--border-main)',
                 boxShadow: '0 1px 4px rgba(0,0,0,0.04)', padding: '10px',
                 position: 'sticky', top: '20px',
             }}>
@@ -52,13 +52,13 @@ export default function OnboardingLayout({ children }) {
                                 display: 'flex', alignItems: 'center', gap: '10px',
                                 padding: '9px 12px', borderRadius: '8px', cursor: 'pointer',
                                 marginBottom: '2px',
-                                background: active ? '#eef2ff' : 'transparent',
-                                color: active ? '#1e293b' : '#64748b',
+                                background: active ? 'var(--bg-muted)' : 'transparent',
+                                color: active ? 'var(--text-main)' : 'var(--text-light)',
                                 borderLeft: active ? '3px solid #3b82f6' : '3px solid transparent',
                                 fontSize: '13px', fontWeight: active ? '700' : '400',
                                 transition: 'all 0.15s',
                             }}
-                            onMouseEnter={e => { if (!active) e.currentTarget.style.background = '#f8fafc'; }}
+                            onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'var(--bg-app)'; }}
                             onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}
                         >
                             <NavIcon path={item.icon} />
