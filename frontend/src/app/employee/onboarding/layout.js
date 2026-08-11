@@ -24,7 +24,7 @@ export default function EmployeeOnboardingLayout({ children }) {
 
     return (
         <div className="flex flex-col md:flex-row gap-5 items-start">
-            <div className="w-full md:w-[260px] shrink-0 bg-white rounded-xl border border-slate-200 shadow-sm p-3 md:p-4 md:sticky md:top-5 flex flex-row md:flex-col overflow-x-auto md:overflow-visible gap-2 md:gap-1 no-scrollbar">
+            <div className="w-full md:w-[260px] shrink-0 bg-[var(--bg-card)] rounded-xl border border-[var(--border-main)] shadow-sm p-3 md:p-4 md:sticky md:top-5 flex flex-row md:flex-col overflow-x-auto md:overflow-visible gap-2 md:gap-1 no-scrollbar">
                 {SUB_NAV.map(item => {
                     const active = pathname === item.key;
                     return (
@@ -33,8 +33,8 @@ export default function EmployeeOnboardingLayout({ children }) {
                             onClick={() => router.push(item.key)}
                             className={`flex items-center gap-2 md:gap-3 px-3 py-2 md:px-4 md:py-3 rounded-lg cursor-pointer transition-all duration-150 whitespace-nowrap ${
                                 active 
-                                    ? 'bg-indigo-50 text-slate-900 font-bold' 
-                                    : 'bg-transparent text-slate-500 hover:bg-slate-50 font-normal'
+                                    ? 'bg-blue-500/10 text-blue-600 font-bold' 
+                                    : 'bg-transparent text-[var(--text-main)] hover:bg-black/5 dark:hover:bg-white/5 font-normal'
                             }`}
                         >
                             <NavIcon path={item.icon} />
