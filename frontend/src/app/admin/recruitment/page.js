@@ -13,7 +13,7 @@ function Badge({ status }) {
   const map = {
     OPEN:               { bg: '#dcfce7', color: '#16a34a' },
     CLOSED:             { bg: '#fee2e2', color: '#dc2626' },
-    DRAFT:              { bg: '#f1f5f9', color: '#64748b' },
+    DRAFT:              { bg: '#f1f5f9', color: 'var(--text-light)' },
     APPLIED:            { bg: '#eff6ff', color: '#3b82f6' },
     SHORTLISTED:        { bg: '#fdf4ff', color: '#9333ea' },
     INTERVIEW_SCHEDULED:{ bg: '#fff7ed', color: '#f59e0b' },
@@ -23,7 +23,7 @@ function Badge({ status }) {
     OFFER_REJECTED:     { bg: '#fee2e2', color: '#dc2626' },
     REJECTED:           { bg: '#fee2e2', color: '#dc2626' },
   };
-  const s = map[status] || { bg: '#f1f5f9', color: '#64748b' };
+  const s = map[status] || { bg: '#f1f5f9', color: 'var(--text-light)' };
   return (
     <span style={{
       background: s.bg, color: s.color,
@@ -149,17 +149,17 @@ export default function RecruitmentPage() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
-          <h1 style={{ fontSize: '22px', fontWeight: '800', color: '#1e293b', marginBottom: '4px' }}>
+          <h1 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text-main)', marginBottom: '4px' }}>
             Recruitment
           </h1>
-          <p style={{ fontSize: '13px', color: '#94a3b8' }}>
+          <p style={{ fontSize: '13px', color: 'var(--text-lighter)' }}>
             Manage job postings and candidate applications
           </p>
         </div>
         <button
           onClick={() => setShowJobForm(true)}
           style={{
-            padding: '10px 20px', background: '#1e3a5f',
+            padding: '10px 20px', background: 'var(--bg-sidebar)',
             color: 'white', border: 'none', borderRadius: '10px',
             fontSize: '13px', fontWeight: '700', cursor: 'pointer',
           }}
@@ -170,24 +170,24 @@ export default function RecruitmentPage() {
 
         {/* Jobs List */}
         <div style={{
-          background: 'white', borderRadius: '12px',
-          border: '1px solid #e2e8f0',
+          background: 'var(--bg-card)', borderRadius: '12px',
+          border: '1px solid var(--border-main)',
           boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden',
         }}>
-          <div style={{ padding: '16px 20px', borderBottom: '1px solid #e2e8f0' }}>
-            <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#1e293b' }}>
+          <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-main)' }}>
+            <h3 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-main)' }}>
               Job Postings ({jobs.length})
             </h3>
           </div>
 
           {loading ? (
-            <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>Loading...</div>
+            <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-lighter)' }}>Loading...</div>
           ) : jobs.length === 0 ? (
             <div style={{ padding: '60px', textAlign: 'center' }}>
               <div style={{ fontSize: '40px', marginBottom: '12px' }}>💼</div>
-              <div style={{ fontSize: '14px', fontWeight: '600', color: '#1e293b', marginBottom: '8px' }}>No jobs posted yet</div>
+              <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-main)', marginBottom: '8px' }}>No jobs posted yet</div>
               <button onClick={() => setShowJobForm(true)}
-                style={{ padding: '8px 18px', background: '#1e3a5f', color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
+                style={{ padding: '8px 18px', background: 'var(--bg-sidebar)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
                 + Post First Job
               </button>
             </div>
@@ -196,26 +196,26 @@ export default function RecruitmentPage() {
               <div key={job.id}
                 onClick={() => handleSelectJob(job)}
                 style={{
-                  padding: '16px 20px', borderBottom: '1px solid #f1f5f9',
+                  padding: '16px 20px', borderBottom: '1px solid var(--border-main)',
                   cursor: 'pointer',
                   background: selectedJob?.id === job.id ? '#eff6ff' : 'white',
                   borderLeft: selectedJob?.id === job.id ? '3px solid #3b82f6' : '3px solid transparent',
                   transition: 'all 0.15s',
                 }}
-                onMouseEnter={e => { if (selectedJob?.id !== job.id) e.currentTarget.style.background = '#f8fafc'; }}
-                onMouseLeave={e => { if (selectedJob?.id !== job.id) e.currentTarget.style.background = 'white'; }}
+                onMouseEnter={e => { if (selectedJob?.id !== job.id) e.currentTarget.style.background = 'var(--bg-app)'; }}
+                onMouseLeave={e => { if (selectedJob?.id !== job.id) e.currentTarget.style.background = 'var(--bg-card)'; }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                  <div style={{ fontSize: '14px', fontWeight: '700', color: '#1e293b' }}>{job.title}</div>
+                  <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-main)' }}>{job.title}</div>
                   <Badge status={job.status}/>
                 </div>
-                <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '4px' }}>
+                <div style={{ fontSize: '12px', color: 'var(--text-light)', marginBottom: '4px' }}>
                   📍 {job.location} · {job.department} · {job.employmentType}
                 </div>
-                <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+                <div style={{ fontSize: '12px', color: 'var(--text-lighter)' }}>
                   💰 {job.salaryRange} · Exp: {job.experienceRequired}
                 </div>
-                <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px' }}>
+                <div style={{ fontSize: '11px', color: 'var(--text-lighter)', marginTop: '4px' }}>
                   Deadline: {job.applicationDeadline}
                 </div>
               </div>
@@ -226,13 +226,13 @@ export default function RecruitmentPage() {
         {/* Applications */}
         {selectedJob && (
           <div style={{
-            background: 'white', borderRadius: '12px',
-            border: '1px solid #e2e8f0',
+            background: 'var(--bg-card)', borderRadius: '12px',
+            border: '1px solid var(--border-main)',
             boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden',
           }}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e2e8f0', background: '#f8fafc' }}>
+            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-main)', background: 'var(--bg-app)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#1e293b' }}>
+                <h3 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-main)' }}>
                   {selectedJob.title}
                 </h3>
                 {selectedJob.status === 'OPEN' && (
@@ -248,24 +248,24 @@ export default function RecruitmentPage() {
                   </button>
                 )}
               </div>
-              <p style={{ fontSize: '12px', color: '#94a3b8' }}>
+              <p style={{ fontSize: '12px', color: 'var(--text-lighter)' }}>
                 {applications.length} application(s) received
               </p>
             </div>
 
             {loadingApps ? (
-              <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>Loading applications...</div>
+              <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-lighter)' }}>Loading applications...</div>
             ) : applications.length === 0 ? (
               <div style={{ padding: '60px', textAlign: 'center' }}>
                 <div style={{ fontSize: '40px', marginBottom: '12px' }}>📭</div>
-                <div style={{ fontSize: '14px', fontWeight: '600', color: '#1e293b' }}>No applications yet</div>
-                <div style={{ fontSize: '13px', color: '#94a3b8', marginTop: '4px' }}>
+                <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-main)' }}>No applications yet</div>
+                <div style={{ fontSize: '13px', color: 'var(--text-lighter)', marginTop: '4px' }}>
                   Applications will appear here when candidates apply
                 </div>
               </div>
             ) : (
               applications.map((app, i) => (
-                <div key={app.id} style={{ padding: '16px 20px', borderBottom: '1px solid #f1f5f9' }}>
+                <div key={app.id} style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-main)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <div style={{
@@ -277,10 +277,10 @@ export default function RecruitmentPage() {
                         {app.candidateName?.split(' ').map(n => n[0]).join('').slice(0, 2)}
                       </div>
                       <div>
-                        <div style={{ fontSize: '14px', fontWeight: '700', color: '#1e293b' }}>
+                        <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-main)' }}>
                           {app.candidateName}
                         </div>
-                        <div style={{ fontSize: '11px', color: '#94a3b8' }}>
+                        <div style={{ fontSize: '11px', color: 'var(--text-lighter)' }}>
                           {app.candidateEmail} · {app.candidatePhone}
                         </div>
                       </div>
@@ -288,12 +288,12 @@ export default function RecruitmentPage() {
                     <Badge status={app.status}/>
                   </div>
 
-                  <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-light)', marginBottom: '8px' }}>
                     🏢 {app.currentCompany} · {app.currentDesignation} · {app.experienceYears} yrs exp
                   </div>
 
                   {app.interviewDate && (
-                    <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '8px' }}>
+                    <div style={{ fontSize: '12px', color: 'var(--text-lighter)', marginBottom: '8px' }}>
                       📅 Interview: {app.interviewDate} · {app.interviewMode}
                       {app.interviewScore && ` · Score: ${app.interviewScore}/100`}
                     </div>
@@ -301,12 +301,12 @@ export default function RecruitmentPage() {
 
                   {/* Update Status */}
                   {selectedApp === app.id ? (
-                    <div style={{ background: '#f8fafc', borderRadius: '8px', padding: '12px', marginTop: '8px' }}>
+                    <div style={{ background: 'var(--bg-app)', borderRadius: '8px', padding: '12px', marginTop: '8px' }}>
                       <div style={{ marginBottom: '10px' }}>
                         <select
                           value={newStatus}
                           onChange={e => setNewStatus(e.target.value)}
-                          style={{ width: '100%', padding: '8px 12px', border: '1.5px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', outline: 'none', background: 'white', marginBottom: '8px' }}
+                          style={{ width: '100%', padding: '8px 12px', border: '1.5px solid var(--border-main)', borderRadius: '8px', fontSize: '13px', outline: 'none', background: 'var(--bg-card)', marginBottom: '8px' }}
                         >
                           <option value="">Select new status...</option>
                           {STATUSES.map(s => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}
@@ -316,7 +316,7 @@ export default function RecruitmentPage() {
                           <input type="date" value={interviewDate}
                             onChange={e => setInterviewDate(e.target.value)}
                             placeholder="Interview Date"
-                            style={{ width: '100%', padding: '8px 12px', border: '1.5px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', outline: 'none', boxSizing: 'border-box', marginBottom: '8px' }}
+                            style={{ width: '100%', padding: '8px 12px', border: '1.5px solid var(--border-main)', borderRadius: '8px', fontSize: '13px', outline: 'none', boxSizing: 'border-box', marginBottom: '8px' }}
                           />
                         )}
 
@@ -325,12 +325,12 @@ export default function RecruitmentPage() {
                             <input type="number" value={interviewScore}
                               onChange={e => setInterviewScore(e.target.value)}
                               placeholder="Score (0-100)"
-                              style={{ width: '100%', padding: '8px 12px', border: '1.5px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', outline: 'none', boxSizing: 'border-box', marginBottom: '8px' }}
+                              style={{ width: '100%', padding: '8px 12px', border: '1.5px solid var(--border-main)', borderRadius: '8px', fontSize: '13px', outline: 'none', boxSizing: 'border-box', marginBottom: '8px' }}
                             />
                             <input value={interviewNotes}
                               onChange={e => setInterviewNotes(e.target.value)}
                               placeholder="Interview notes..."
-                              style={{ width: '100%', padding: '8px 12px', border: '1.5px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
+                              style={{ width: '100%', padding: '8px 12px', border: '1.5px solid var(--border-main)', borderRadius: '8px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
                             />
                           </>
                         )}
@@ -339,7 +339,7 @@ export default function RecruitmentPage() {
                           <input value={rejectionReason}
                             onChange={e => setRejectionReason(e.target.value)}
                             placeholder="Rejection reason..."
-                            style={{ width: '100%', padding: '8px 12px', border: '1.5px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
+                            style={{ width: '100%', padding: '8px 12px', border: '1.5px solid var(--border-main)', borderRadius: '8px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
                           />
                         )}
                       </div>
@@ -348,13 +348,13 @@ export default function RecruitmentPage() {
                         <button
                           onClick={() => handleUpdateApplication(app.id)}
                           disabled={updatingApp === app.id}
-                          style={{ flex: 1, padding: '8px', background: '#1e3a5f', color: 'white', border: 'none', borderRadius: '7px', fontSize: '12px', fontWeight: '700', cursor: 'pointer' }}
+                          style={{ flex: 1, padding: '8px', background: 'var(--bg-sidebar)', color: 'white', border: 'none', borderRadius: '7px', fontSize: '12px', fontWeight: '700', cursor: 'pointer' }}
                         >
                           {updatingApp === app.id ? '⏳' : 'Update'}
                         </button>
                         <button
                           onClick={() => { setSelectedApp(null); setNewStatus(''); }}
-                          style={{ padding: '8px 14px', background: '#f1f5f9', color: '#64748b', border: 'none', borderRadius: '7px', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
+                          style={{ padding: '8px 14px', background: 'var(--bg-muted)', color: 'var(--text-light)', border: 'none', borderRadius: '7px', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
                         >
                           Cancel
                         </button>
@@ -388,14 +388,14 @@ export default function RecruitmentPage() {
           zIndex: 100, padding: '20px',
         }}>
           <div style={{
-            background: 'white', borderRadius: '16px', padding: '28px',
+            background: 'var(--bg-card)', borderRadius: '16px', padding: '28px',
             width: '100%', maxWidth: '560px', maxHeight: '90vh',
             overflowY: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '800', color: '#1e293b' }}>Post New Job</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '800', color: 'var(--text-main)' }}>Post New Job</h2>
               <button onClick={() => setShowJobForm(false)}
-                style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#94a3b8' }}>✕</button>
+                style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: 'var(--text-lighter)' }}>✕</button>
             </div>
 
             <form onSubmit={handleCreateJob}>
@@ -418,7 +418,7 @@ export default function RecruitmentPage() {
                       onChange={e => setJobForm({ ...jobForm, [f.name]: e.target.value })}
                       placeholder={f.placeholder}
                       required={f.required}
-                      style={{ width: '100%', padding: '9px 12px', border: '1.5px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
+                      style={{ width: '100%', padding: '9px 12px', border: '1.5px solid var(--border-main)', borderRadius: '8px', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
                     />
                   </div>
                 ))}
@@ -430,7 +430,7 @@ export default function RecruitmentPage() {
                 </label>
                 <select value={jobForm.employmentType}
                   onChange={e => setJobForm({ ...jobForm, employmentType: e.target.value })}
-                  style={{ width: '100%', padding: '9px 12px', border: '1.5px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', outline: 'none', background: 'white' }}>
+                  style={{ width: '100%', padding: '9px 12px', border: '1.5px solid var(--border-main)', borderRadius: '8px', fontSize: '13px', outline: 'none', background: 'var(--bg-card)' }}>
                   <option value="FULL_TIME">Full Time</option>
                   <option value="PART_TIME">Part Time</option>
                   <option value="CONTRACT">Contract</option>
@@ -445,7 +445,7 @@ export default function RecruitmentPage() {
                 <textarea value={jobForm.description}
                   onChange={e => setJobForm({ ...jobForm, description: e.target.value })}
                   placeholder="Job description..." required rows={3}
-                  style={{ width: '100%', padding: '9px 12px', border: '1.5px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', outline: 'none', resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit' }}
+                  style={{ width: '100%', padding: '9px 12px', border: '1.5px solid var(--border-main)', borderRadius: '8px', fontSize: '13px', outline: 'none', resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit' }}
                 />
               </div>
 
@@ -456,17 +456,17 @@ export default function RecruitmentPage() {
                 <textarea value={jobForm.requirements}
                   onChange={e => setJobForm({ ...jobForm, requirements: e.target.value })}
                   placeholder="Job requirements..." rows={3}
-                  style={{ width: '100%', padding: '9px 12px', border: '1.5px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', outline: 'none', resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit' }}
+                  style={{ width: '100%', padding: '9px 12px', border: '1.5px solid var(--border-main)', borderRadius: '8px', fontSize: '13px', outline: 'none', resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit' }}
                 />
               </div>
 
               <div style={{ display: 'flex', gap: '10px' }}>
                 <button type="button" onClick={() => setShowJobForm(false)}
-                  style={{ flex: 1, padding: '12px', background: 'white', color: '#374151', border: '1.5px solid #e2e8f0', borderRadius: '10px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
+                  style={{ flex: 1, padding: '12px', background: 'var(--bg-card)', color: '#374151', border: '1.5px solid var(--border-main)', borderRadius: '10px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
                   Cancel
                 </button>
                 <button type="submit" disabled={submitting}
-                  style={{ flex: 1, padding: '12px', background: '#1e3a5f', color: 'white', border: 'none', borderRadius: '10px', fontSize: '14px', fontWeight: '700', cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1 }}>
+                  style={{ flex: 1, padding: '12px', background: 'var(--bg-sidebar)', color: 'white', border: 'none', borderRadius: '10px', fontSize: '14px', fontWeight: '700', cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1 }}>
                   {submitting ? '⏳ Posting...' : 'Post Job'}
                 </button>
               </div>
