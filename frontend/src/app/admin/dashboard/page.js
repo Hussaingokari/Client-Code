@@ -15,18 +15,18 @@ import toast from 'react-hot-toast';
 function StatCard({ label, value, sub, color, bg, icon }) {
   return (
     <div style={{
-      background: 'white', borderRadius: '12px', padding: '20px',
-      border: '1px solid #e2e8f0', flex: 1,
+      background: 'var(--bg-card)', borderRadius: '12px', padding: '20px',
+      border: '1px solid var(--border-main)', flex: 1,
       boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-        <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>{label}</span>
+        <span style={{ fontSize: '13px', color: 'var(--text-light)', fontWeight: '500' }}>{label}</span>
         <div style={{ width: '40px', height: '40px', background: bg, borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>
           {icon}
         </div>
       </div>
       <div style={{ fontSize: '32px', fontWeight: '900', color, marginBottom: '4px' }}>{value}</div>
-      <div style={{ fontSize: '12px', color: '#94a3b8' }}>{sub}</div>
+      <div style={{ fontSize: '12px', color: 'var(--text-lighter)' }}>{sub}</div>
     </div>
   );
 }
@@ -42,7 +42,7 @@ function Badge({ status }) {
     ACTIVE: { bg: '#dcfce7', color: '#16a34a' },
     INACTIVE: { bg: '#fee2e2', color: '#dc2626' },
   };
-  const s = map[status] || { bg: '#f1f5f9', color: '#64748b' };
+  const s = map[status] || { bg: '#f1f5f9', color: 'var(--text-light)' };
   return (
     <span style={{
       background: s.bg, color: s.color,
@@ -177,16 +177,16 @@ export default function AdminDashboard() {
     <div>
       {/* Header */}
       <div style={{ marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '22px', fontWeight: '800', color: '#1e293b', marginBottom: '4px' }}>
+        <h1 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text-main)', marginBottom: '4px' }}>
           Dashboard
         </h1>
-        <p style={{ fontSize: '13px', color: '#94a3b8' }}>
+        <p style={{ fontSize: '13px', color: 'var(--text-lighter)' }}>
           Welcome back, {user?.name}! Here&apos;s your system overview.
         </p>
       </div>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '60px', color: '#94a3b8' }}>Loading...</div>
+        <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-lighter)' }}>Loading...</div>
       ) : (
         <>
           {/* Stats Row */}
@@ -221,9 +221,9 @@ export default function AdminDashboard() {
           <div className="dashboard-main-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
 
             {/* Pending Leave Approvals */}
-            <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
-              <div style={{ padding: '16px 20px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#1e293b' }}>⏳ Pending Approvals</h3>
+            <div style={{ background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border-main)', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
+              <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-main)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h3 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-main)' }}>⏳ Pending Approvals</h3>
                 <button
                   onClick={() => router.push('/admin/leave')}
                   style={{ fontSize: '12px', color: '#3b82f6', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer' }}
@@ -233,25 +233,25 @@ export default function AdminDashboard() {
               </div>
 
               {pendingLeaves.length === 0 ? (
-                <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>
+                <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-lighter)' }}>
                   <div style={{ fontSize: '32px', marginBottom: '8px' }}>🎉</div>
                   No pending approvals
                 </div>
               ) : (
                 pendingLeaves.map((l, i) => (
-                  <div key={l.id || i} style={{ padding: '14px 20px', borderBottom: '1px solid #f1f5f9' }}>
+                  <div key={l.id || i} style={{ padding: '14px 20px', borderBottom: '1px solid var(--border-main)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
                       <div>
-                        <div style={{ fontSize: '13px', fontWeight: '700', color: '#1e293b', marginBottom: '2px' }}>
+                        <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-main)', marginBottom: '2px' }}>
                           {l.employeeName}
                         </div>
-                        <div style={{ fontSize: '11px', color: '#94a3b8' }}>
+                        <div style={{ fontSize: '11px', color: 'var(--text-lighter)' }}>
                           {l.leaveType} · {l.startDate} to {l.endDate} · {l.totalDays} day(s)
                         </div>
                       </div>
                       <Badge status={l.status} />
                     </div>
-                    <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '10px', fontStyle: 'italic' }}>
+                    <div style={{ fontSize: '12px', color: 'var(--text-light)', marginBottom: '10px', fontStyle: 'italic' }}>
                       &quot;{l.reason}&quot;
                     </div>
                     <div style={{ display: 'flex', gap: '8px' }}>
@@ -290,13 +290,13 @@ export default function AdminDashboard() {
             </div>
 
             {/* Today's Attendance */}
-            <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
-              <div style={{ padding: '16px 20px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border-main)', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
+              <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-main)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                  <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#1e293b' }}>
+                  <h3 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-main)' }}>
                     📅 Today&apos;s Attendance
                   </h3>
-                  <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
+                  <p style={{ fontSize: '12px', color: 'var(--text-lighter)', marginTop: '2px' }}>
                     {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
                   </p>
                 </div>
@@ -309,7 +309,7 @@ export default function AdminDashboard() {
               </div>
 
               {todayAttendance.length === 0 ? (
-                <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>
+                <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-lighter)' }}>
                   <div style={{ fontSize: '32px', marginBottom: '8px' }}>📅</div>
                   No attendance records for today
                 </div>
@@ -318,7 +318,7 @@ export default function AdminDashboard() {
                   {todayAttendance.map((a, i) => (
                     <div key={a.id || a.employeeId || i} style={{
                       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      padding: '10px 20px', borderBottom: '1px solid #f1f5f9',
+                      padding: '10px 20px', borderBottom: '1px solid var(--border-main)',
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <div style={{
@@ -330,10 +330,10 @@ export default function AdminDashboard() {
                           {a.employeeName?.split(' ').map(n => n[0]).join('').slice(0, 2)}
                         </div>
                         <div>
-                          <div style={{ fontSize: '13px', fontWeight: '600', color: '#1e293b' }}>
+                          <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-main)' }}>
                             {a.employeeName}
                           </div>
-                          <div style={{ fontSize: '11px', color: '#94a3b8' }}>
+                          <div style={{ fontSize: '11px', color: 'var(--text-lighter)' }}>
                             In: {a.checkIn?.substring(0, 5) || '--'} · Out: {a.checkOut?.substring(0, 5) || '--'}
                           </div>
                         </div>
@@ -347,9 +347,9 @@ export default function AdminDashboard() {
           </div>
 
           {/* Recent Employees Table */}
-          <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#1e293b' }}>👥 Employees</h3>
+          <div style={{ background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border-main)', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
+            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-main)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-main)' }}>👥 Employees</h3>
               <button
                 onClick={() => router.push('/admin/employees')}
                 style={{ fontSize: '12px', color: '#3b82f6', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer' }}
@@ -360,9 +360,9 @@ export default function AdminDashboard() {
 
             <div className="table-responsive">
               <div className="admin-employees-table" style={{ minWidth: '680px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '0.5fr 2fr 1.5fr 1.5fr 1fr 1fr', padding: '10px 20px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '0.5fr 2fr 1.5fr 1.5fr 1fr 1fr', padding: '10px 20px', background: 'var(--bg-app)', borderBottom: '1px solid var(--border-main)' }}>
                   {[' Emp ID', 'Name', 'Department', 'Designation', 'Role', 'Status'].map(h => (
-                    <div key={h} style={{ fontSize: '11px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    <div key={h} style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                       {h}
                     </div>
                   ))}
@@ -371,9 +371,9 @@ export default function AdminDashboard() {
                 {employees.slice(0, 6).map((e, i) => (
                   <div key={e.id || e.employeeId || i} style={{
                     display: 'grid', gridTemplateColumns: '0.5fr 2fr 1.5fr 1.5fr 1fr 1fr',
-                    padding: '12px 20px', borderBottom: '1px solid #f1f5f9', alignItems: 'center',
+                    padding: '12px 20px', borderBottom: '1px solid var(--border-main)', alignItems: 'center',
                   }}>
-                    <div style={{ fontSize: '12px', color: '#94a3b8', fontWeight: '600' }}>
+                    <div style={{ fontSize: '12px', color: 'var(--text-lighter)', fontWeight: '600' }}>
                       {e.employeeId || e.employeeCode || '—'}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -386,14 +386,14 @@ export default function AdminDashboard() {
                         {e.firstName?.[0]}{e.lastName?.[0]}
                       </div>
                       <div>
-                        <div style={{ fontSize: '13px', fontWeight: '600', color: '#1e293b' }}>
+                        <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-main)' }}>
                           {e.firstName} {e.lastName}
                         </div>
-                        <div style={{ fontSize: '11px', color: '#94a3b8' }}>{e.email}</div>
+                        <div style={{ fontSize: '11px', color: 'var(--text-lighter)' }}>{e.email}</div>
                       </div>
                     </div>
-                    <div style={{ fontSize: '13px', color: '#64748b' }}>{e.department || '—'}</div>
-                    <div style={{ fontSize: '13px', color: '#64748b' }}>{e.designation || '—'}</div>
+                    <div style={{ fontSize: '13px', color: 'var(--text-light)' }}>{e.department || '—'}</div>
+                    <div style={{ fontSize: '13px', color: 'var(--text-light)' }}>{e.designation || '—'}</div>
                     <div>
                       <span style={{
                         background: e.role === 'ADMIN' ? '#dbeafe' : e.role === 'HR' ? '#fdf4ff' : '#f1f5f9',
@@ -424,7 +424,7 @@ export default function AdminDashboard() {
                 key={a.label}
                 onClick={() => router.push(a.route)}
                 style={{
-                  background: 'white', border: '1px solid #e2e8f0',
+                  background: 'var(--bg-card)', border: '1px solid var(--border-main)',
                   borderRadius: '12px', padding: '16px',
                   cursor: 'pointer', display: 'flex',
                   alignItems: 'center', gap: '12px',
@@ -432,19 +432,19 @@ export default function AdminDashboard() {
                   transition: 'all 0.2s',
                 }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.background = '#f8fafc';
+                  e.currentTarget.style.background = 'var(--bg-app)';
                   e.currentTarget.style.transform = 'translateY(-2px)';
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.background = 'white';
+                  e.currentTarget.style.background = 'var(--bg-card)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
                 onFocus={e => {
-                  e.currentTarget.style.background = '#f8fafc';
+                  e.currentTarget.style.background = 'var(--bg-app)';
                   e.currentTarget.style.transform = 'translateY(-2px)';
                 }}
                 onBlur={e => {
-                  e.currentTarget.style.background = 'white';
+                  e.currentTarget.style.background = 'var(--bg-card)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
@@ -457,7 +457,7 @@ export default function AdminDashboard() {
                 }}>
                   {a.icon}
                 </div>
-                <span style={{ fontSize: '13px', fontWeight: '700', color: '#1e293b' }}>
+                <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-main)' }}>
                   {a.label}
                 </span>
               </button>
