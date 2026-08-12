@@ -206,12 +206,12 @@ export default function AdminNotificationsPage() {
               <div key={n.id} style={{
                 display: 'flex', gap: '14px', alignItems: 'flex-start',
                 padding: '16px 20px',
-                borderBottom: i < notifications.length - 1 ? '1px solid #f1f5f9' : 'none',
-                background: n.isRead ? 'white' : '#f8fbff',
+                borderBottom: i < notifications.length - 1 ? '1px solid var(--border-main)' : 'none',
+                background: n.isRead ? 'var(--bg-card)' : 'rgba(59, 130, 246, 0.05)',
                 transition: 'background 0.2s',
               }}
                 onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-app)'}
-                onMouseLeave={e => e.currentTarget.style.background = n.isRead ? 'white' : '#f8fbff'}
+                onMouseLeave={e => e.currentTarget.style.background = n.isRead ? 'var(--bg-card)' : 'rgba(59, 130, 246, 0.05)'}
               >
                 {/* Unread dot */}
                 <div style={{ paddingTop: '6px', flexShrink: 0 }}>
@@ -256,8 +256,8 @@ export default function AdminNotificationsPage() {
                   <button onClick={() => handleMarkRead(n.id)}
                     style={{
                       flexShrink: 0, padding: '6px 14px',
-                      background: '#eff6ff', color: '#3b82f6',
-                      border: '1px solid #bfdbfe', borderRadius: '6px',
+                      background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6',
+                      border: '1px solid rgba(59, 130, 246, 0.2)', borderRadius: '6px',
                       fontSize: '11px', fontWeight: '700',
                       cursor: 'pointer', whiteSpace: 'nowrap',
                     }}>
@@ -277,7 +277,7 @@ export default function AdminNotificationsPage() {
                 <button
                   onClick={() => setPage(p => Math.max(0, p - 1))}
                   disabled={page === 0}
-                  style={{ padding: '6px 14px', border: '1px solid var(--border-main)', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: page === 0 ? 'var(--border-dark)' : '#374151', background: 'var(--bg-card)', cursor: page === 0 ? 'not-allowed' : 'pointer' }}>
+                  style={{ padding: '6px 14px', border: '1px solid var(--border-main)', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: page === 0 ? 'var(--border-dark)' : 'var(--text-main)', background: 'var(--bg-card)', cursor: page === 0 ? 'not-allowed' : 'pointer' }}>
                   ← Prev
                 </button>
                 <span style={{ padding: '6px 14px', fontSize: '12px', color: 'var(--text-light)' }}>
@@ -286,7 +286,7 @@ export default function AdminNotificationsPage() {
                 <button
                   onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                   disabled={page >= totalPages - 1}
-                  style={{ padding: '6px 14px', border: '1px solid var(--border-main)', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: page >= totalPages - 1 ? 'var(--border-dark)' : '#374151', background: 'var(--bg-card)', cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer' }}>
+                  style={{ padding: '6px 14px', border: '1px solid var(--border-main)', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: page >= totalPages - 1 ? 'var(--border-dark)' : 'var(--text-main)', background: 'var(--bg-card)', cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer' }}>
                   Next →
                 </button>
               </div>

@@ -74,7 +74,7 @@ export default function AdminLogin() {
   const isFormFilled = form.email && form.password;
 
   return (
-    <div className="min-h-screen flex w-full bg-[var(--bg-card)] dark:bg-slate-900 transition-colors duration-500">
+    <div className="h-screen overflow-hidden flex w-full bg-[var(--bg-card)] dark:bg-slate-900 transition-colors duration-500">
       {/* Left Panel - Hidden on mobile */}
       <div className="hidden lg:flex lg:w-[45%] flex-col bg-slate-900 relative">
         <div className="flex-1 relative overflow-hidden">
@@ -97,7 +97,7 @@ export default function AdminLogin() {
               height={64}
               className="w-16 h-16 object-contain"
             />
-            <span className="text-white font-bold text-[17px] tracking-tight">PAXSAT  PVT  LTD - Admin</span>
+            <span className="text-white font-bold text-[17px] tracking-tight">PAXSAT BUSINESS SOLUTIONS PVT LTD - ADMIN</span>
           </div>
           <h1 className="text-white text-4xl xl:text-5xl font-bold leading-[1.1] mb-4 tracking-tight">
             Manage your<br />workforce effectively.
@@ -109,18 +109,18 @@ export default function AdminLogin() {
       </div>
 
       {/* Right Panel */}
-      <div className="w-full lg:w-[55%] flex flex-col items-center justify-center relative p-8">
+      <div className="w-full lg:w-[55%] h-full overflow-y-auto flex flex-col items-center justify-center relative p-4 sm:p-8">
 
         {/* Back Button */}
         <button
           onClick={() => router.push('/')}
-          className="absolute top-8 left-8 text-slate-400 hover:text-slate-700 dark:hover:text-white flex items-center gap-2 text-sm font-medium transition-colors"
+          className="absolute top-4 sm:top-8 left-4 sm:left-8 text-slate-400 hover:text-slate-700 dark:hover:text-white flex items-center gap-2 text-sm font-medium transition-colors z-10"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
           Back
         </button>
 
-        <div className="w-full max-w-sm xl:max-w-md flex flex-col pt-12">
+        <div className="w-full max-w-sm xl:max-w-md flex flex-col pt-8 sm:pt-12 pb-24 sm:pb-20">
 
           {/* Arrow Graphic */}
           <div className="w-full flex justify-start mb-4 opacity-70">
@@ -130,7 +130,7 @@ export default function AdminLogin() {
             </svg>
           </div>
 
-          <h2 className="text-[22px] font-bold text-slate-900 dark:text-white mb-8 text-center">
+          <h2 className="text-[22px] font-bold text-slate-900 dark:text-white mb-4 sm:mb-8 text-center">
             Admin Secure Login
           </h2>
 
@@ -146,7 +146,7 @@ export default function AdminLogin() {
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5">
+          <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4 sm:gap-5">
 
             <div>
               <label htmlFor="admin-email" className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">
@@ -234,7 +234,7 @@ export default function AdminLogin() {
         </div>
 
         {/* Footer */}
-        <div className="absolute bottom-6 left-0 w-full px-6 xl:px-12 flex flex-col xl:flex-row justify-between items-center gap-4 text-[10px] text-slate-400 dark:text-slate-500">
+        <div className="absolute bottom-4 sm:bottom-6 left-0 w-full px-6 xl:px-12 flex flex-col xl:flex-row justify-between items-center gap-2 sm:gap-4 text-[10px] text-slate-400 dark:text-slate-500 bg-[var(--bg-card)]/80 dark:bg-slate-900/80 backdrop-blur-sm py-2 z-10">
           <div className="flex flex-col text-center xl:text-left">
             <span className="font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">© 2021 Paxsat Business Solution Private Limited.</span>
             <span className="text-[9px] text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">All rights reserved.</span>
@@ -246,7 +246,7 @@ export default function AdminLogin() {
         </div>
 
         {/* Theme Toggle */}
-        <div className="absolute top-6 right-6 xl:top-8 xl:right-12 z-50">
+        <div className="absolute top-4 right-4 sm:top-6 sm:right-6 xl:top-8 xl:right-12 z-50">
           <ThemeToggle />
         </div>
       </div>
