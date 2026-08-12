@@ -29,7 +29,7 @@ jobs:
           # Run the deployment commands via native SSH
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@$EC2_HOST "
             if [ ! -d \"Client-Code\" ]; then
-              git clone https://github.com/xyushman/Client-Code.git || echo \"Make sure your repo is public, or clone it manually once!\"
+              git clone https://github.com/Hussaingokari/Client-Code.git || echo \"Make sure your repo is public, or clone it manually once!\"
             fi
             cd Client-Code
             git fetch origin
