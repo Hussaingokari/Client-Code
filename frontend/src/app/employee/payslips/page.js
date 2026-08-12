@@ -23,21 +23,21 @@ function PayslipListItem({ p, selected, onSelect, formatCurrency }) {
         padding: '16px 20px',
         borderBottom: '1px solid var(--border-main)',
         cursor: 'pointer',
-        background: isSelected ? '#eff6ff' : 'white',
+        background: isSelected ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
         borderLeft: isSelected ? '3px solid #3b82f6' : '3px solid transparent',
         transition: 'all 0.15s',
       }}
       onMouseEnter={e => {
-        if (!isSelected) e.currentTarget.style.background = 'var(--bg-app)';
+        if (!isSelected) e.currentTarget.style.background = 'var(--bg-muted)';
       }}
       onMouseLeave={e => {
-        if (!isSelected) e.currentTarget.style.background = 'var(--bg-card)';
+        if (!isSelected) e.currentTarget.style.background = 'transparent';
       }}
       onFocus={e => {
-        if (!isSelected) e.currentTarget.style.background = 'var(--bg-app)';
+        if (!isSelected) e.currentTarget.style.background = 'var(--bg-muted)';
       }}
       onBlur={e => {
-        if (!isSelected) e.currentTarget.style.background = 'var(--bg-card)';
+        if (!isSelected) e.currentTarget.style.background = 'transparent';
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -54,7 +54,7 @@ function PayslipListItem({ p, selected, onSelect, formatCurrency }) {
             {formatCurrency(p.netSalary)}
           </div>
           <span style={{
-            background: p.paid ? '#dcfce7' : '#fef9c3',
+            background: p.paid ? 'rgba(22, 163, 74, 0.15)' : 'rgba(202, 138, 4, 0.15)',
             color: p.paid ? '#16a34a' : '#ca8a04',
             padding: '2px 8px', borderRadius: '20px',
             fontSize: '10px', fontWeight: '700',
