@@ -259,4 +259,4 @@ export default function EmployeeLogin() {
       </div>
     </div>
   );
-}gi
+}
