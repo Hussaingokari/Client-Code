@@ -254,7 +254,7 @@ export default function EmployeeLogin() {
 
         {/* Theme Toggle */}
         <div className="absolute top-4 right-4 sm:top-6 sm:right-6 xl:top-8 xl:right-12 z-50">
-          <ThemeToggle />
+          <ThemeToggle variant="icon" />
         </div>
       </div>
     </div>

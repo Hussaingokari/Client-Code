@@ -206,7 +206,7 @@ export default function Home() {
 
       {/* Theme Toggle */}
       <div className="absolute top-6 right-6 z-50">
-        <ThemeToggle />
+        <ThemeToggle variant="icon" />
       </div>
     </div>
   );
