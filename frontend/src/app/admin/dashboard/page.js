@@ -183,6 +183,27 @@ export default function AdminDashboard() {
         <p style={{ fontSize: '13px', color: 'var(--text-lighter)' }}>
           Welcome back, {user?.name}! Here&apos;s your system overview.
         </p>
+        {/* Decorative Mountain Graphic Top Right */}
+        <div style={{ 
+          position: 'absolute', top: -30, right: 0, height: '140px', 
+          pointerEvents: 'none', display: 'flex',
+          WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+          maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)'
+        }}>
+          <img
+            src="/up.png"
+            alt="Header Landscape"
+            style={{
+              height: '100%',
+              width: 'auto',
+              borderTopRightRadius: '16px',
+              opacity: 0.9,
+              display: 'block',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 40%)',
+              maskImage: 'linear-gradient(to right, transparent 0%, black 40%)'
+            }}
+          />
+        </div>
       </div>
 
       {loading ? (
