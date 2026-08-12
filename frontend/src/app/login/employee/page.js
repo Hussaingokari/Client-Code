@@ -100,7 +100,7 @@ export default function EmployeeLogin() {
               height={80}
               className="w-20 h-20 object-contain"
             />
-            <span className="text-white font-bold text-[17px] tracking-tight">PAXSAT  PVT  LTD - Employee</span>
+            <span className="text-white font-bold text-[17px] tracking-tight">PAXSAT  BUSINESS SOLUTIONS PVT  LTD - Employee</span>
           </div>
           <h1 className="text-white text-4xl xl:text-5xl font-bold leading-[1.1] mb-4 tracking-tight">
             Let's empower your<br />employees today.

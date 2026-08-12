@@ -97,7 +97,7 @@ export default function AdminLogin() {
               height={64}
               className="w-16 h-16 object-contain"
             />
-            <span className="text-white font-bold text-[17px] tracking-tight">PAXSAT  PVT  LTD - Admin</span>
+            <span className="text-white font-bold text-[17px] tracking-tight">PAXSAT  BUSINESS SOLUTIONS PVT  LTD - Admin</span>
           </div>
           <h1 className="text-white text-4xl xl:text-5xl font-bold leading-[1.1] mb-4 tracking-tight">
             Manage your<br />workforce effectively.
