@@ -32,6 +32,8 @@ const inputStyle = {
   borderRadius: '8px', fontSize: '13px',
   outline: 'none', boxSizing: 'border-box',
   fontFamily: 'inherit',
+  background: 'var(--bg-card)',
+  color: 'var(--text-main)',
 };
 
 const labelStyle = {
@@ -60,6 +62,7 @@ export default function TrainingPage() {
   const [score, setScore] = useState('');
   const [feedback, setFeedback] = useState('');
   const [completingId, setCompletingId] = useState(null);
+  const [closing, setClosing] = useState(false);
   const today = new Date().toISOString().split("T")[0];
 
 
@@ -128,6 +131,20 @@ export default function TrainingPage() {
     } finally { setCompleting(null); }
   };
 
+  const handleCloseTraining = async (trainingId) => {
+    if (!window.confirm('Close this training? It will be marked as Completed.')) return;
+    setClosing(true);
+    try {
+      const res = await api.put(`/api/trainings/${trainingId}`, { status: 'COMPLETED' });
+      const updated = res.data?.data;
+      toast.success('Training closed');
+      setTrainings(prev => prev.map(t => t.id === trainingId ? { ...t, status: 'COMPLETED', ...updated } : t));
+      setSelected(prev => prev && prev.id === trainingId ? { ...prev, status: 'COMPLETED', ...updated } : prev);
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to close training');
+    } finally { setClosing(false); }
+  };
+
   const handleFocus = (e) => e.target.style.borderColor = '#3b82f6';
   const handleBlur = (e) => e.target.style.borderColor = 'var(--border-main)';
 
@@ -175,7 +192,7 @@ export default function TrainingPage() {
               <div key={t.id} onClick={() => handleSelectTraining(t)}
                 style={{
                   padding: '16px 20px', borderBottom: '1px solid var(--border-main)', cursor: 'pointer',
-                  background: selected?.id === t.id ? '#eff6ff' : 'white',
+                  background: selected?.id === t.id ? 'var(--bg-selected, #eff6ff)' : 'var(--bg-card)',
                   borderLeft: selected?.id === t.id ? '3px solid #3b82f6' : '3px solid transparent',
                   transition: 'all 0.15s',
                 }}
@@ -203,13 +220,27 @@ export default function TrainingPage() {
         {/* Enrollments Panel */}
         {selected && (
           <div style={{ background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border-main)', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-main)', background: 'var(--bg-app)' }}>
-              <h3 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-main)', marginBottom: '2px' }}>
-                {selected.title}
-              </h3>
-              <p style={{ fontSize: '12px', color: 'var(--text-lighter)' }}>
-                {enrollments.length} enrolled · {selected.category}
-              </p>
+            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-main)', background: 'var(--bg-app)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+              <div>
+                <h3 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--text-main)', marginBottom: '2px' }}>
+                  {selected.title}
+                </h3>
+                <p style={{ fontSize: '12px', color: 'var(--text-lighter)' }}>
+                  {enrollments.length} enrolled · {selected.category}
+                </p>
+              </div>
+              {selected.status !== 'COMPLETED' && selected.status !== 'CANCELLED' && (
+                <button
+                  onClick={() => handleCloseTraining(selected.id)}
+                  disabled={closing}
+                  style={{
+                    flexShrink: 0, padding: '7px 14px', background: '#fee2e2', color: '#dc2626',
+                    border: '1px solid #fecaca', borderRadius: '8px', fontSize: '12px', fontWeight: '700',
+                    cursor: closing ? 'not-allowed' : 'pointer', opacity: closing ? 0.7 : 1,
+                  }}>
+                  {closing ? '⏳ Closing...' : '✕ Close Training'}
+                </button>
+              )}
             </div>
 
             {selected.description && (
@@ -271,13 +302,13 @@ export default function TrainingPage() {
                             placeholder="Score (0-100)"
                             value={score}
                             onChange={e => setScore(e.target.value)}
-                            style={{ flex: 1, minWidth: '120px', padding: '7px 10px', border: '1.5px solid var(--border-main)', borderRadius: '7px', fontSize: '12px', outline: 'none' }}
+                            style={{ flex: 1, minWidth: '120px', padding: '7px 10px', border: '1.5px solid var(--border-main)', borderRadius: '7px', fontSize: '12px', outline: 'none', background: 'var(--bg-card)', color: 'var(--text-main)' }}
                           />
                           <input
                             placeholder="Feedback..."
                             value={feedback}
                             onChange={e => setFeedback(e.target.value)}
-                            style={{ flex: 2, minWidth: '140px', padding: '7px 10px', border: '1.5px solid var(--border-main)', borderRadius: '7px', fontSize: '12px', outline: 'none' }}
+                            style={{ flex: 2, minWidth: '140px', padding: '7px 10px', border: '1.5px solid var(--border-main)', borderRadius: '7px', fontSize: '12px', outline: 'none', background: 'var(--bg-card)', color: 'var(--text-main)' }}
                           />
                           <button onClick={() => handleComplete(enr.id)} disabled={completing === enr.id}
                             style={{ padding: '7px 14px', background: '#dcfce7', color: '#16a34a', border: '1px solid #bbf7d0', borderRadius: '7px', fontSize: '12px', fontWeight: '700', cursor: 'pointer' }}>
@@ -355,7 +386,7 @@ export default function TrainingPage() {
                   <label style={labelStyle}>Category</label>
                   <select value={form.category}
                     onChange={e => setForm(prev => ({ ...prev, category: e.target.value }))}
-                    style={{ ...inputStyle, background: 'var(--bg-card)' }}>
+                    style={inputStyle}>
                     {['TECHNICAL', 'SOFT_SKILLS', 'COMPLIANCE', 'LEADERSHIP', 'SAFETY'].map(c => (
                       <option key={c} value={c}>{c.replace('_', ' ')}</option>
                     ))}
@@ -367,7 +398,7 @@ export default function TrainingPage() {
                   <label style={labelStyle}>Mode</label>
                   <select value={form.mode}
                     onChange={e => setForm(prev => ({ ...prev, mode: e.target.value }))}
-                    style={{ ...inputStyle, background: 'var(--bg-card)' }}>
+                    style={inputStyle}>
                     {['ONLINE', 'OFFLINE', 'HYBRID'].map(m => (
                       <option key={m} value={m}>{m}</option>
                     ))}
