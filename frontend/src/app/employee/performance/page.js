@@ -18,29 +18,29 @@ function StarRating({ value }) {
 
 function Badge({ status }) {
   const map = {
-    DRAFT: { bg: '#f1f5f9', color: 'var(--text-light)' },
-    SUBMITTED: { bg: '#eff6ff', color: '#3b82f6' },
-    ACKNOWLEDGED: { bg: '#dcfce7', color: '#16a34a' },
-    IN_PROGRESS: { bg: '#fff7ed', color: '#f59e0b' },
+    DRAFT: 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400',
+    SUBMITTED: 'bg-blue-50 text-blue-500 dark:bg-blue-900/30 dark:text-blue-400',
+    ACKNOWLEDGED: 'bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400',
+    IN_PROGRESS: 'bg-orange-50 text-orange-500 dark:bg-orange-900/30 dark:text-orange-400',
   };
-  const s = map[status] || { bg: '#f1f5f9', color: 'var(--text-light)' };
+  const classes = map[status] || map.DRAFT;
   return (
-    <span style={{ background: s.bg, color: s.color, padding: '4px 12px', borderRadius: '20px', fontSize: '11px', fontWeight: '700' }}>
+    <span className={`${classes} px-3 py-1 rounded-full text-[11px] font-bold`}>
       {status}
     </span>
   );
 }
 
-function getStatusBorderColor(status) {
-  if (status === 'ACKNOWLEDGED') return '#bbf7d0';
-  if (status === 'SUBMITTED') return '#bfdbfe';
-  return 'var(--border-main)';
+function getStatusBorderClass(status) {
+  if (status === 'ACKNOWLEDGED') return 'border-green-200 dark:border-green-900/50';
+  if (status === 'SUBMITTED') return 'border-blue-200 dark:border-blue-900/50';
+  return 'border-[var(--border-main)]';
 }
 
-function getStatusHeaderBg(status) {
-  if (status === 'ACKNOWLEDGED') return '#f0fdf4';
-  if (status === 'SUBMITTED') return '#eff6ff';
-  return 'var(--bg-app)';
+function getStatusHeaderBgClass(status) {
+  if (status === 'ACKNOWLEDGED') return 'bg-green-50 dark:bg-green-900/10';
+  if (status === 'SUBMITTED') return 'bg-blue-50 dark:bg-blue-900/10';
+  return 'bg-[var(--bg-app)]';
 }
 
 export default function EmployeePerformancePage() {
@@ -113,17 +113,9 @@ export default function EmployeePerformancePage() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {reviews.map((r) => (
-          <div key={r.id} style={{
-            background: 'var(--bg-card)', borderRadius: '14px',
-            border: `2px solid ${getStatusBorderColor(r.status)}`,
-            boxShadow: '0 1px 6px rgba(0,0,0,0.04)', overflow: 'hidden',
-          }}>
+          <div key={r.id} className={`bg-[var(--bg-card)] rounded-[14px] border-[2px] ${getStatusBorderClass(r.status)} shadow-sm overflow-hidden`}>
             {/* Review Header */}
-            <div style={{
-              padding: '16px 20px', borderBottom: '1px solid var(--border-main)',
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-              background: getStatusHeaderBg(r.status),
-            }}>
+            <div className={`px-5 py-4 border-b border-[var(--border-main)] flex justify-between items-center ${getStatusHeaderBgClass(r.status)}`}>
               <div>
                 <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-main)', marginBottom: '4px' }}>
                   {r.reviewPeriod}
@@ -164,24 +156,24 @@ export default function EmployeePerformancePage() {
               {/* Feedback Sections */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '20px' }}>
                 {[
-                  { label: '💪 Strengths', value: r.strengths, color: '#16a34a', bg: '#f0fdf4' },
-                  { label: '📈 Improvements', value: r.improvements, color: '#f59e0b', bg: '#fff7ed' },
-                  { label: '🎯 Goals', value: r.goals, color: '#3b82f6', bg: '#eff6ff' },
+                  { label: '💪 Strengths', value: r.strengths, textClass: 'text-green-600 dark:text-green-400', bgClass: 'bg-green-50 dark:bg-green-900/10 border-green-600/30 dark:border-green-400/20' },
+                  { label: '📈 Improvements', value: r.improvements, textClass: 'text-orange-500 dark:text-orange-400', bgClass: 'bg-orange-50 dark:bg-orange-900/10 border-orange-500/30 dark:border-orange-400/20' },
+                  { label: '🎯 Goals', value: r.goals, textClass: 'text-blue-500 dark:text-blue-400', bgClass: 'bg-blue-50 dark:bg-blue-900/10 border-blue-500/30 dark:border-blue-400/20' },
                 ].map(d => d.value && (
-                  <div key={d.label} style={{ background: d.bg, borderRadius: '10px', padding: '14px', border: `1px solid ${d.color}30` }}>
-                    <div style={{ fontSize: '12px', fontWeight: '700', color: d.color, marginBottom: '8px' }}>{d.label}</div>
-                    <div style={{ fontSize: '13px', color: '#374151', lineHeight: 1.6 }}>{d.value}</div>
+                  <div key={d.label} className={`${d.bgClass} rounded-[10px] p-[14px] border`}>
+                    <div className={`text-xs font-bold ${d.textClass} mb-2`}>{d.label}</div>
+                    <div className="text-[13px] text-gray-700 dark:text-gray-300 leading-relaxed">{d.value}</div>
                   </div>
                 ))}
               </div>
 
               {/* Employee Comments (if acknowledged) */}
               {r.employeeComments && (
-                <div style={{ background: '#f0fdf4', borderRadius: '10px', padding: '14px', border: '1px solid #bbf7d0', marginBottom: '16px' }}>
-                  <div style={{ fontSize: '12px', fontWeight: '700', color: '#16a34a', marginBottom: '6px' }}>
+                <div className="bg-green-50 dark:bg-green-900/10 rounded-[10px] p-[14px] border border-green-200 dark:border-green-900/50 mb-4">
+                  <div className="text-[12px] font-bold text-green-600 dark:text-green-400 mb-[6px]">
                     💬 Your Comments
                   </div>
-                  <div style={{ fontSize: '13px', color: '#374151', lineHeight: 1.6 }}>
+                  <div className="text-[13px] text-gray-700 dark:text-gray-300 leading-[1.6]">
                     {r.employeeComments}
                   </div>
                 </div>
@@ -189,11 +181,11 @@ export default function EmployeePerformancePage() {
 
               {/* Acknowledge Section */}
               {r.status === 'SUBMITTED' && (
-                <div style={{ background: '#eff6ff', borderRadius: '12px', padding: '16px', border: '1px solid #bfdbfe' }}>
-                  <div style={{ fontSize: '14px', fontWeight: '700', color: '#1e3a5f', marginBottom: '4px' }}>
+                <div className="bg-blue-50 dark:bg-blue-900/10 rounded-xl p-4 border border-blue-200 dark:border-blue-900/50">
+                  <div className="text-[14px] font-bold text-slate-800 dark:text-blue-100 mb-1">
                     📝 Acknowledge This Review
                   </div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-light)', marginBottom: '12px' }}>
+                  <div className="text-[12px] text-[var(--text-light)] mb-3">
                     Add your comments and acknowledge to complete the review process
                   </div>
 
@@ -204,31 +196,19 @@ export default function EmployeePerformancePage() {
                         onChange={e => setComment(e.target.value)}
                         placeholder="Add your comments about this review... (e.g. Thank you for the feedback, I will work on improving my communication skills)"
                         rows={4}
-                        style={{
-                          width: '100%', padding: '12px',
-                          border: '1.5px solid #bfdbfe', borderRadius: '10px',
-                          fontSize: '13px', outline: 'none', resize: 'vertical',
-                          boxSizing: 'border-box', fontFamily: 'inherit',
-                          marginBottom: '12px', background: 'var(--bg-card)',
-                        }}
+                        className="w-full p-3 border-[1.5px] border-blue-200 dark:border-blue-900/50 rounded-[10px] text-[13px] outline-none resize-y mb-3 bg-[var(--bg-card)] text-[var(--text-main)] focus:border-blue-500"
                       />
                       <div style={{ display: 'flex', gap: '10px' }}>
                         <button
                           onClick={() => handleAcknowledge(r.id)}
                           disabled={acknowledging}
-                          style={{
-                            flex: 1, padding: '12px', background: 'var(--bg-sidebar)',
-                            color: 'white', border: 'none', borderRadius: '10px',
-                            fontSize: '14px', fontWeight: '700',
-                            cursor: acknowledging ? 'not-allowed' : 'pointer',
-                            opacity: acknowledging ? 0.7 : 1,
-                          }}
+                          className="flex-1 p-3 bg-[var(--bg-sidebar)] text-white border-none rounded-[10px] text-[14px] font-bold cursor-pointer disabled:opacity-70 hover:opacity-90"
                         >
                           {acknowledging ? '⏳ Acknowledging...' : '✓ Acknowledge Review'}
                         </button>
                         <button
                           onClick={() => { setSelected(null); setComment(''); }}
-                          style={{ padding: '12px 20px', background: 'var(--bg-card)', color: '#374151', border: '1.5px solid var(--border-main)', borderRadius: '10px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}
+                          className="px-5 py-3 bg-[var(--bg-card)] text-[var(--text-main)] border-[1.5px] border-[var(--border-main)] rounded-[10px] text-[13px] font-bold cursor-pointer hover:bg-[var(--bg-app)]"
                         >
                           Cancel
                         </button>
@@ -237,11 +217,7 @@ export default function EmployeePerformancePage() {
                   ) : (
                     <button
                       onClick={() => setSelected(r.id)}
-                      style={{
-                        padding: '10px 24px', background: 'var(--bg-sidebar)',
-                        color: 'white', border: 'none', borderRadius: '10px',
-                        fontSize: '13px', fontWeight: '700', cursor: 'pointer',
-                      }}
+                      className="px-6 py-2.5 bg-[var(--bg-sidebar)] text-white border-none rounded-[10px] text-[13px] font-bold cursor-pointer hover:opacity-90"
                     >
                       ✍️ Add Comments & Acknowledge
                     </button>
@@ -251,9 +227,9 @@ export default function EmployeePerformancePage() {
 
               {/* Already acknowledged message */}
               {r.status === 'ACKNOWLEDGED' && (
-                <div style={{ background: '#f0fdf4', borderRadius: '10px', padding: '12px 16px', border: '1px solid #bbf7d0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div className="bg-green-50 dark:bg-green-900/10 rounded-[10px] px-4 py-3 border border-green-200 dark:border-green-900/50 flex items-center gap-2.5">
                   <span style={{ fontSize: '20px' }}>✅</span>
-                  <span style={{ fontSize: '13px', color: '#16a34a', fontWeight: '600' }}>
+                  <span className="text-[13px] text-green-600 dark:text-green-400 font-bold">
                     You have acknowledged this review
                   </span>
                 </div>

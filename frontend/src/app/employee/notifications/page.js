@@ -5,22 +5,22 @@ import api from '@/lib/axios';
 import toast from 'react-hot-toast';
 
 const TYPE_META = {
-  LEAVE_APPLIED: { icon: '🌴', bg: '#f0fdf4', color: '#16a34a' },
-  LEAVE_APPROVED: { icon: '🌴', bg: '#dcfce7', color: '#16a34a' },
-  LEAVE_REJECTED: { icon: '🌴', bg: '#fee2e2', color: '#dc2626' },
-  LEAVE_CANCELLED: { icon: '🌴', bg: '#f1f5f9', color: 'var(--text-light)' },
-  ATTENDANCE_REMINDER: { icon: '📅', bg: '#eff6ff', color: '#3b82f6' },
-  PAYROLL_GENERATED: { icon: '💰', bg: '#fef9c3', color: '#ca8a04' },
-  PERFORMANCE_REVIEWED: { icon: '⭐', bg: '#eef2ff', color: '#4f46e5' },
-  TRAINING_ENROLLED: { icon: '📚', bg: '#eff6ff', color: '#3b82f6' },
-  TRAINING_COMPLETED: { icon: '📚', bg: '#dcfce7', color: '#16a34a' },
-  ONBOARDING_INITIATED: { icon: '👋', bg: '#eef2ff', color: '#4f46e5' },
-  DOCUMENT_UPLOADED: { icon: '📄', bg: '#eff6ff', color: '#3b82f6' },
-  DOCUMENT_APPROVED: { icon: '✅', bg: '#dcfce7', color: '#16a34a' },
-  DOCUMENT_REJECTED: { icon: '⚠️', bg: '#fee2e2', color: '#dc2626' },
-  CHECKLIST_COMPLETED: { icon: '🎉', bg: '#dcfce7', color: '#16a34a' },
-  JOB_APPLICATION: { icon: '💼', bg: '#eef2ff', color: '#4f46e5' },
-  GENERAL: { icon: '🔔', bg: '#f1f5f9', color: 'var(--text-light)' },
+  LEAVE_APPLIED: { icon: '🌴', bgClass: 'bg-green-50 dark:bg-green-900/30', textClass: 'text-green-600 dark:text-green-400' },
+  LEAVE_APPROVED: { icon: '🌴', bgClass: 'bg-green-100 dark:bg-green-900/50', textClass: 'text-green-600 dark:text-green-400' },
+  LEAVE_REJECTED: { icon: '🌴', bgClass: 'bg-red-50 dark:bg-red-900/30', textClass: 'text-red-600 dark:text-red-400' },
+  LEAVE_CANCELLED: { icon: '🌴', bgClass: 'bg-slate-100 dark:bg-slate-800', textClass: 'text-slate-500 dark:text-slate-400' },
+  ATTENDANCE_REMINDER: { icon: '📅', bgClass: 'bg-blue-50 dark:bg-blue-900/30', textClass: 'text-blue-500 dark:text-blue-400' },
+  PAYROLL_GENERATED: { icon: '💰', bgClass: 'bg-yellow-50 dark:bg-yellow-900/30', textClass: 'text-yellow-600 dark:text-yellow-500' },
+  PERFORMANCE_REVIEWED: { icon: '⭐', bgClass: 'bg-indigo-50 dark:bg-indigo-900/30', textClass: 'text-indigo-500 dark:text-indigo-400' },
+  TRAINING_ENROLLED: { icon: '📚', bgClass: 'bg-blue-50 dark:bg-blue-900/30', textClass: 'text-blue-500 dark:text-blue-400' },
+  TRAINING_COMPLETED: { icon: '📚', bgClass: 'bg-green-100 dark:bg-green-900/50', textClass: 'text-green-600 dark:text-green-400' },
+  ONBOARDING_INITIATED: { icon: '👋', bgClass: 'bg-indigo-50 dark:bg-indigo-900/30', textClass: 'text-indigo-500 dark:text-indigo-400' },
+  DOCUMENT_UPLOADED: { icon: '📄', bgClass: 'bg-blue-50 dark:bg-blue-900/30', textClass: 'text-blue-500 dark:text-blue-400' },
+  DOCUMENT_APPROVED: { icon: '✅', bgClass: 'bg-green-100 dark:bg-green-900/50', textClass: 'text-green-600 dark:text-green-400' },
+  DOCUMENT_REJECTED: { icon: '⚠️', bgClass: 'bg-red-50 dark:bg-red-900/30', textClass: 'text-red-600 dark:text-red-400' },
+  CHECKLIST_COMPLETED: { icon: '🎉', bgClass: 'bg-green-100 dark:bg-green-900/50', textClass: 'text-green-600 dark:text-green-400' },
+  JOB_APPLICATION: { icon: '💼', bgClass: 'bg-indigo-50 dark:bg-indigo-900/30', textClass: 'text-indigo-500 dark:text-indigo-400' },
+  GENERAL: { icon: '🔔', bgClass: 'bg-slate-100 dark:bg-slate-800', textClass: 'text-slate-500 dark:text-slate-400' },
 };
 
 function getMeta(n) {
@@ -136,14 +136,7 @@ export default function NotificationsPage() {
           <button
             onClick={handleMarkAllRead}
             disabled={markingAll}
-            style={{
-              padding: '11px 20px',
-              background: 'var(--bg-card)', color: '#374151',
-              border: '1.5px solid var(--border-main)',
-              borderRadius: '10px', fontSize: '13px',
-              fontWeight: '700', cursor: markingAll ? 'not-allowed' : 'pointer',
-              whiteSpace: 'nowrap',
-            }}
+            className="px-5 py-[11px] bg-[var(--bg-card)] text-[var(--text-main)] border-[1.5px] border-[var(--border-main)] rounded-[10px] text-[13px] font-bold whitespace-nowrap disabled:cursor-not-allowed hover:bg-[var(--bg-app)] transition-colors"
           >
             {markingAll ? 'Marking...' : '✓ Mark all as read'}
           </button>
@@ -205,21 +198,9 @@ export default function NotificationsPage() {
                 <div
                   key={n.id}
                   onClick={() => { if (!n.read) handleMarkRead(n.id); }}
-                  style={{
-                    display: 'flex', gap: '16px', alignItems: 'flex-start',
-                    padding: '18px 22px', cursor: n.read ? 'default' : 'pointer',
-                    borderTop: i === 0 ? 'none' : '1px solid var(--border-main)',
-                    background: n.read ? 'var(--bg-card)' : 'rgba(79, 70, 229, 0.05)',
-                    transition: 'background 0.15s',
-                  }}
-                  onMouseEnter={e => { if (!n.read) e.currentTarget.style.background = 'var(--bg-app)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = n.read ? 'var(--bg-card)' : 'rgba(79, 70, 229, 0.05)'; }}
+                  className={`flex gap-4 items-start p-[18px] sm:px-[22px] ${n.read ? 'cursor-default bg-[var(--bg-card)]' : 'cursor-pointer bg-indigo-50/50 dark:bg-indigo-900/20'} ${i === 0 ? '' : 'border-t border-[var(--border-main)]'} hover:bg-[var(--bg-app)] transition-colors duration-150`}
                 >
-                  <div style={{
-                    width: '44px', height: '44px', flexShrink: 0, borderRadius: '12px',
-                    background: meta.bg, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '20px',
-                  }}>
+                  <div className={`w-11 h-11 flex-shrink-0 rounded-xl flex items-center justify-center text-xl ${meta.bgClass}`}>
                     {meta.icon}
                   </div>
 
@@ -243,13 +224,7 @@ export default function NotificationsPage() {
                   {!n.read && (
                     <button
                       onClick={e => { e.stopPropagation(); handleMarkRead(n.id); }}
-                      style={{
-                        flexShrink: 0, padding: '7px 16px',
-                        background: 'var(--bg-card)', color: '#4f46e5',
-                        border: '1.5px solid rgba(79, 70, 229, 0.2)',
-                        borderRadius: '8px', fontSize: '12px',
-                        fontWeight: '700', cursor: 'pointer', whiteSpace: 'nowrap',
-                      }}
+                      className="flex-shrink-0 px-4 py-[7px] bg-[var(--bg-card)] text-indigo-600 dark:text-indigo-400 border-[1.5px] border-indigo-500/20 rounded-lg text-xs font-bold whitespace-nowrap hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors"
                     >
                       Mark read
                     </button>
