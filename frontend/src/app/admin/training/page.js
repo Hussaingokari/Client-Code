@@ -540,3 +540,6 @@ export default function TrainingPage() {
     </div>
   );
 }
+
+
+
