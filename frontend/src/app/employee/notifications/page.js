@@ -208,12 +208,12 @@ export default function NotificationsPage() {
                   style={{
                     display: 'flex', gap: '16px', alignItems: 'flex-start',
                     padding: '18px 22px', cursor: n.read ? 'default' : 'pointer',
-                    borderTop: i === 0 ? 'none' : '1px solid #f1f5f9',
-                    background: n.read ? 'white' : '#f8faff',
+                    borderTop: i === 0 ? 'none' : '1px solid var(--border-main)',
+                    background: n.read ? 'var(--bg-card)' : 'rgba(79, 70, 229, 0.05)',
                     transition: 'background 0.15s',
                   }}
-                  onMouseEnter={e => { if (!n.read) e.currentTarget.style.background = '#f0f4ff'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = n.read ? 'white' : '#f8faff'; }}
+                  onMouseEnter={e => { if (!n.read) e.currentTarget.style.background = 'var(--bg-app)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = n.read ? 'var(--bg-card)' : 'rgba(79, 70, 229, 0.05)'; }}
                 >
                   <div style={{
                     width: '44px', height: '44px', flexShrink: 0, borderRadius: '12px',
@@ -246,7 +246,7 @@ export default function NotificationsPage() {
                       style={{
                         flexShrink: 0, padding: '7px 16px',
                         background: 'var(--bg-card)', color: '#4f46e5',
-                        border: '1.5px solid #e0e7ff',
+                        border: '1.5px solid rgba(79, 70, 229, 0.2)',
                         borderRadius: '8px', fontSize: '12px',
                         fontWeight: '700', cursor: 'pointer', whiteSpace: 'nowrap',
                       }}
@@ -263,7 +263,7 @@ export default function NotificationsPage() {
                 <button
                   onClick={() => setPage(p => Math.max(0, p - 1))}
                   disabled={page === 0}
-                  style={{ padding: '7px 16px', border: '1.5px solid var(--border-main)', borderRadius: '8px', fontSize: '12px', fontWeight: '700', color: page === 0 ? 'var(--border-dark)' : '#374151', background: 'var(--bg-card)', cursor: page === 0 ? 'not-allowed' : 'pointer' }}
+                  style={{ padding: '7px 16px', border: '1.5px solid var(--border-main)', borderRadius: '8px', fontSize: '12px', fontWeight: '700', color: page === 0 ? 'var(--border-dark)' : 'var(--text-main)', background: 'var(--bg-card)', cursor: page === 0 ? 'not-allowed' : 'pointer' }}
                 >← Prev</button>
                 <span style={{ fontSize: '12px', color: 'var(--text-light)', fontWeight: '600' }}>
                   Page {page + 1} of {totalPages}
@@ -271,7 +271,7 @@ export default function NotificationsPage() {
                 <button
                   onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                   disabled={page >= totalPages - 1}
-                  style={{ padding: '7px 16px', border: '1.5px solid var(--border-main)', borderRadius: '8px', fontSize: '12px', fontWeight: '700', color: page >= totalPages - 1 ? 'var(--border-dark)' : '#374151', background: 'var(--bg-card)', cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer' }}
+                  style={{ padding: '7px 16px', border: '1.5px solid var(--border-main)', borderRadius: '8px', fontSize: '12px', fontWeight: '700', color: page >= totalPages - 1 ? 'var(--border-dark)' : 'var(--text-main)', background: 'var(--bg-card)', cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer' }}
                 >Next →</button>
               </div>
             )}

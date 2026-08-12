@@ -18,6 +18,7 @@ import {
   FolderOpen,
 } from 'lucide-react';
 import SessionTimeout from '@/components/layout/SessionTimeout';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function Navbar() {
   const { user } = useSelector((state) => state.auth);
@@ -250,6 +251,11 @@ export default function Navbar() {
         {/* Session Timeout */}
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <SessionTimeout />
+        </div>
+
+        {/* Theme Toggle */}
+        <div style={{ display: 'flex', alignItems: 'center', marginRight: '8px' }}>
+          <ThemeToggle />
         </div>
 
         {/* Notification Bell */}
