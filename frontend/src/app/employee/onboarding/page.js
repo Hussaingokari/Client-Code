@@ -25,11 +25,11 @@ const DOC_KEY_LABELS = {
 
 function StatusPill({ status }) {
     const map = {
-        UNDER_REVIEW: { bg: '#f1f5f9', color: 'var(--text-light)', label: 'Pending' },
+        UNDER_REVIEW: { bg: 'var(--bg-muted)', color: 'var(--text-light)', label: 'Pending' },
         APPROVED: { bg: '#dcfce7', color: '#16a34a', label: 'Approved' },
         REJECTED: { bg: '#fee2e2', color: '#dc2626', label: 'Rejected' },
     };
-    const s = map[status] || { bg: '#f1f5f9', color: 'var(--text-light)', label: 'Pending' };
+    const s = map[status] || { bg: 'var(--bg-muted)', color: 'var(--text-light)', label: 'Pending' };
     return (
         <span style={{ background: s.bg, color: s.color, padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '700', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
             <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: s.color }} />
