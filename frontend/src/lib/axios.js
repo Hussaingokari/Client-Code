@@ -42,9 +42,7 @@ import axios from 'axios';
 import { store } from '@/store/store';
 import { logout } from '@/store/authSlice';
 
-const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL !== undefined 
-  ? process.env.NEXT_PUBLIC_API_BASE_URL 
-  : 'http://localhost:8080';
+const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
 
 const api = axios.create({
   baseURL,
