@@ -25,3 +25,4 @@ data/
 !.env_sample
 !.env.example
 infrastructure.zip
+*.pem
