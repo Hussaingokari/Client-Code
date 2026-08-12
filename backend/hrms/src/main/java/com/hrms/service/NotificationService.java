@@ -23,143 +23,143 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class NotificationService {
 
-    private final NotificationRepository notificationRepo;
-    private final JavaMailSender mailSender;
-    private final EmployeeRepository employeeRepository;
+        private final NotificationRepository notificationRepo;
+        private final JavaMailSender mailSender;
+        private final EmployeeRepository employeeRepository;
 
-    @Transactional
-    public Notification createAndSend(
-            Employee recipient,
-            String title,
-            String message,
-            NotificationType type,
-            String refType,
-            Long refId) {
+        @Transactional
+        public Notification createAndSend(
+                        Employee recipient,
+                        String title,
+                        String message,
+                        NotificationType type,
+                        String refType,
+                        Long refId) {
 
-        Notification notification = Notification.builder()
-                .recipient(recipient)
-                .title(title)
-                .message(message)
-                .type(type)
-                .referenceType(refType)
-                .referenceId(refId)
-                .isRead(false)
-                .build();
+                Notification notification = Notification.builder()
+                                .recipient(recipient)
+                                .title(title)
+                                .message(message)
+                                .type(type)
+                                .referenceType(refType)
+                                .referenceId(refId)
+                                .isRead(false)
+                                .build();
 
-        Notification saved = notificationRepo.save(notification);
-        java.util.concurrent.CompletableFuture.runAsync(() -> {
-            sendEmailSafe(recipient.getEmail(), title, message);
-        });
-        return saved;
-    }
+                Notification saved = notificationRepo.save(notification);
 
-    // ✅ NEW — Notify all active ADMIN + HR employees
-    @Transactional
-    public void notifyAllAdmins(
-            String title,
-            String message,
-            NotificationType type,
-            String entityType,
-            Long entityId,
-            Long excludeId) {
-
-        employeeRepository.findAll()
-                .stream()
-                .filter(e -> e.isActive() &&
-                        (e.getRole() == Role.ADMIN ||
-                                e.getRole() == Role.HR) &&
-                        (excludeId == null ||
-                                !e.getId().equals(excludeId))
-                )
-                .forEach(admin ->
-                        createAndSend(
-                                admin, title, message,
-                                type, entityType, entityId
-                        )
-                );
-    }
-
-    // ✅ NEW — Overload without excludeId
-    @Transactional
-    public void notifyAllAdmins(
-            String title,
-            String message,
-            NotificationType type,
-            String entityType,
-            Long entityId) {
-        notifyAllAdmins(
-                title, message, type,
-                entityType, entityId, null
-        );
-    }
-
-    private void sendEmailSafe(
-            String toEmail,
-            String subject,
-            String body) {
-        try {
-            SimpleMailMessage mail = new SimpleMailMessage();
-            mail.setTo(toEmail);
-            mail.setSubject(subject);
-            mail.setText(body);
-            mailSender.send(mail);
-        } catch (Exception e) {
-            log.warn("Email notification failed for {}: {}",
-                    toEmail, e.getMessage());
+                // Extract the plain value on this thread first — never touch the
+                // Hibernate-managed `recipient` entity from the async thread.
+                String recipientEmail = recipient.getEmail();
+                java.util.concurrent.CompletableFuture.runAsync(() -> {
+                        sendEmailSafe(recipientEmail, title, message);
+                });
+                return saved;
         }
-    }
 
-    @Transactional(readOnly = true)
-    public Page<NotificationDTOs.Response> getMyNotifications(
-            Employee employee, Pageable pageable) {
-        return notificationRepo
-                .findByRecipient(employee, pageable)
-                .map(this::toResponse);
-    }
+        // ✅ NEW — Notify all active ADMIN + HR employees
+        @Transactional
+        public void notifyAllAdmins(
+                        String title,
+                        String message,
+                        NotificationType type,
+                        String entityType,
+                        Long entityId,
+                        Long excludeId) {
 
-    @Transactional(readOnly = true)
-    public Page<NotificationDTOs.Response> getUnread(
-            Employee employee, Pageable pageable) {
-        return notificationRepo
-                .findByRecipientAndIsReadFalse(employee, pageable)
-                .map(this::toResponse);
-    }
+                employeeRepository.findAll()
+                                .stream()
+                                .filter(e -> e.isActive() &&
+                                                (e.getRole() == Role.ADMIN ||
+                                                                e.getRole() == Role.HR)
+                                                &&
+                                                (excludeId == null ||
+                                                                !e.getId().equals(excludeId)))
+                                .forEach(admin -> createAndSend(
+                                                admin, title, message,
+                                                type, entityType, entityId));
+        }
 
-    public long getUnreadCount(Employee employee) {
-        return notificationRepo
-                .countByRecipientAndIsReadFalse(employee);
-    }
+        // ✅ NEW — Overload without excludeId
+        @Transactional
+        public void notifyAllAdmins(
+                        String title,
+                        String message,
+                        NotificationType type,
+                        String entityType,
+                        Long entityId) {
+                notifyAllAdmins(
+                                title, message, type,
+                                entityType, entityId, null);
+        }
 
-    @Transactional
-    public void markAsRead(Long notificationId) {
-        notificationRepo.findById(notificationId)
-                .ifPresent(n -> {
-                    n.setRead(true);
-                    notificationRepo.save(n);
-                });
-    }
+        private void sendEmailSafe(
+                        String toEmail,
+                        String subject,
+                        String body) {
+                try {
+                        SimpleMailMessage mail = new SimpleMailMessage();
+                        mail.setTo(toEmail);
+                        mail.setSubject(subject);
+                        mail.setText(body);
+                        mailSender.send(mail);
+                } catch (Exception e) {
+                        log.warn("Email notification failed for {}: {}",
+                                        toEmail, e.getMessage());
+                }
+        }
 
-    @Transactional
-    public void markAllAsRead(Employee employee) {
-        notificationRepo
-                .findByRecipientAndIsReadFalse(employee,
-                        Pageable.unpaged())
-                .forEach(n -> {
-                    n.setRead(true);
-                    notificationRepo.save(n);
-                });
-    }
+        @Transactional(readOnly = true)
+        public Page<NotificationDTOs.Response> getMyNotifications(
+                        Employee employee, Pageable pageable) {
+                return notificationRepo
+                                .findByRecipient(employee, pageable)
+                                .map(this::toResponse);
+        }
 
-    private NotificationDTOs.Response toResponse(Notification n) {
-        NotificationDTOs.Response r = new NotificationDTOs.Response();
-        r.setId(n.getId());
-        r.setTitle(n.getTitle());
-        r.setMessage(n.getMessage());
-        r.setType(n.getType());
-        r.setReferenceType(n.getReferenceType());
-        r.setReferenceId(n.getReferenceId());
-        r.setRead(n.isRead());
-        r.setCreatedAt(n.getCreatedAt());
-        return r;
-    }
+        @Transactional(readOnly = true)
+        public Page<NotificationDTOs.Response> getUnread(
+                        Employee employee, Pageable pageable) {
+                return notificationRepo
+                                .findByRecipientAndIsReadFalse(employee, pageable)
+                                .map(this::toResponse);
+        }
+
+        public long getUnreadCount(Employee employee) {
+                return notificationRepo
+                                .countByRecipientAndIsReadFalse(employee);
+        }
+
+        @Transactional
+        public void markAsRead(Long notificationId) {
+                notificationRepo.findById(notificationId)
+                                .ifPresent(n -> {
+                                        n.setRead(true);
+                                        notificationRepo.save(n);
+                                });
+        }
+
+        @Transactional
+        public void markAllAsRead(Employee employee) {
+                notificationRepo
+                                .findByRecipientAndIsReadFalse(employee,
+                                                Pageable.unpaged())
+                                .forEach(n -> {
+                                        n.setRead(true);
+                                        notificationRepo.save(n);
+                                });
+        }
+
+        private NotificationDTOs.Response toResponse(Notification n) {
+                NotificationDTOs.Response r = new NotificationDTOs.Response();
+                r.setId(n.getId());
+                r.setTitle(n.getTitle());
+                r.setMessage(n.getMessage());
+                r.setType(n.getType());
+                r.setReferenceType(n.getReferenceType());
+                r.setReferenceId(n.getReferenceId());
+                r.setRead(n.isRead());
+                r.setCreatedAt(n.getCreatedAt());
+                return r;
+        }
 }
