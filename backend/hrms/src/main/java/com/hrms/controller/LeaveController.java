@@ -70,7 +70,8 @@ public class LeaveController {
                                 leaveService.getPendingLeaves(PageRequest.of(page, size))));
         }
 
-        @PutMapping("/{id}/action")
+        // AFTER
+        @PutMapping({ "/{id}/action", "/{id}/manager-action" })
         @PreAuthorize("hasAnyRole('ADMIN','HR')")
         @Operation(summary = "Approve or reject a pending leave. Either Admin or HR can act — first one wins.")
         public ResponseEntity<ApiResponse<LeaveDTOs.Response>> action(
@@ -81,6 +82,13 @@ public class LeaveController {
                                 leaveService.action(id, reviewer.getId(), req)));
         }
 
+        @DeleteMapping("/{id}")
+        @PreAuthorize("hasAnyRole('ADMIN','HR')")
+        @Operation(summary = "Delete a leave request. Restores balance if it was already approved.")
+        public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+                leaveService.deleteLeave(id);
+                return ResponseEntity.ok(ApiResponse.success("Leave request deleted", null));
+        }
         // Cancellation workflow
 
         @PutMapping("/{id}/cancel")

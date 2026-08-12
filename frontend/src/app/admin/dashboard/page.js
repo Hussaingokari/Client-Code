@@ -80,8 +80,7 @@ export default function AdminDashboard() {
         setEmployees(empRes.value.data?.data?.content || []);
       }
       if (leaveRes.status === 'fulfilled') {
-        const allLeaves = leaveRes.value.data?.data?.content || [];
-        setPendingLeaves(allLeaves);
+        setPendingLeaves(leaveRes.value.data?.data?.content || []);
       }
       if (attRes.status === 'fulfilled') {
         setTodayAttendance(attRes.value.data?.data?.content || []);
@@ -98,33 +97,7 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    let active = true;
-    const loadInitial = async () => {
-      const today = new Date().toISOString().split('T')[0];
-      try {
-        const [empRes, leaveRes, attRes, unreadRes] = await Promise.allSettled([
-          getAllEmployees(0, 100),
-          getPendingLeaves(0, 5),
-          getAttendanceByDate(today),
-          getUnreadCount(),
-        ]);
-        if (active) {
-          if (empRes.status === 'fulfilled') setEmployees(empRes.value.data?.data?.content || []);
-          if (leaveRes.status === 'fulfilled') setPendingLeaves(leaveRes.value.data?.data?.content || []);
-          if (attRes.status === 'fulfilled') setTodayAttendance(attRes.value.data?.data?.content || []);
-          if (unreadRes.status === 'fulfilled') setUnreadCount(unreadRes.value.data?.data || 0);
-          setLoading(false);
-        }
-      } catch (err) {
-        if (active) {
-          toast.error('Failed to load dashboard');
-          console.error(err);
-          setLoading(false);
-        }
-      }
-    };
-    loadInitial();
-    return () => { active = false; };
+    fetchAll();
   }, []);
 
   const handleLeaveAction = async (id, action) => {
@@ -138,30 +111,27 @@ export default function AdminDashboard() {
       if (stage === 'MANAGER_PENDING' || stage === 'PENDING') {
         await managerAction(
           id, action,
-          action === 'APPROVED'
-            ? 'Approved by Manager'
-            : 'Rejected by Manager'
-        );
-        toast.success(
-          action === 'APPROVED'
-            ? '✅ Forwarded to HR for verification!'
-            : '❌ Leave rejected!'
+          action === 'APPROVED' ? 'Approved by Manager' : 'Rejected by Manager'
         );
       } else if (stage === 'HR_PENDING') {
         await hrAction(
           id, action,
-          action === 'APPROVED'
-            ? 'Approved by HR'
-            : 'Rejected by HR'
-        );
-        toast.success(
-          action === 'APPROVED'
-            ? '✅ Leave approved successfully!'
-            : '❌ Leave rejected!'
+          action === 'APPROVED' ? 'Approved by HR' : 'Rejected by HR'
         );
       } else {
-        toast.error('Invalid leave stage: ' + stage);
+        // Fallback to HR action for admin override
+        await hrAction(
+          id, action,
+          action === 'APPROVED' ? 'Approved by Admin' : 'Rejected by Admin'
+        );
       }
+
+      toast.success(
+        action === 'APPROVED'
+          ? '✅ Leave approved!'
+          : '❌ Leave rejected!'
+      );
+
       fetchAll();
     } catch (err) {
       toast.error(err.response?.data?.message || 'Action failed');
@@ -176,7 +146,7 @@ export default function AdminDashboard() {
   return (
     <div>
       {/* Header */}
-      <div style={{ marginBottom: '24px' }}>
+      <div style={{ marginBottom: '24px', position: 'relative' }}>
         <h1 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text-main)', marginBottom: '4px' }}>
           Dashboard
         </h1>
@@ -184,8 +154,8 @@ export default function AdminDashboard() {
           Welcome back, {user?.name}! Here&apos;s your system overview.
         </p>
         {/* Decorative Mountain Graphic Top Right */}
-        <div style={{ 
-          position: 'absolute', top: 22, right: 0, height: '140px', 
+        <div style={{
+          position: 'absolute', top: -10, right: 0, height: '140px',
           pointerEvents: 'none', display: 'flex',
           WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
           maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)'
@@ -286,11 +256,7 @@ export default function AdminDashboard() {
                           cursor: 'pointer',
                         }}
                       >
-                        {actioning === l.id + 'APPROVED' ? '⏳' :
-                          (l.approvalStage === 'MANAGER_PENDING')
-                            ? '✓ Forward to HR'
-                            : '✓ Approve'
-                        }
+                        {actioning === l.id + 'APPROVED' ? '⏳' : '✓ Approve'}
                       </button>
                       <button
                         onClick={() => handleLeaveAction(l.id, 'REJECTED')}
@@ -404,7 +370,7 @@ export default function AdminDashboard() {
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontSize: '11px', fontWeight: '700', color: 'white', flexShrink: 0,
                       }}>
-                        {e.firstName?.[0]}{e.lastName?.[0]}
+                        {(e.firstName?.[0] || '') + (e.lastName?.[0] || e.firstName?.[1] || '')}
                       </div>
                       <div>
                         <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-main)' }}>

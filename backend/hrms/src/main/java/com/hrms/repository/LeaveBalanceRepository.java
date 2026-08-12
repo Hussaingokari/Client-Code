@@ -10,6 +10,17 @@ import java.util.Optional;
 
 @Repository
 public interface LeaveBalanceRepository extends JpaRepository<LeaveBalance, Long> {
+
+    /**
+     * Finds a single leave balance record for a specific employee, leave type, and
+     * year.
+     */
     Optional<LeaveBalance> findByEmployeeAndLeaveTypeAndYear(Employee employee, String leaveType, int year);
-    List<LeaveBalance> findByEmployeeAndYear(Employee employee, int year);
+
+    /**
+     * Finds all leave balance records across all employees for a given leave type
+     * and year.
+     * Required by resyncQuotasForCurrentYear() in LeaveBalanceService.
+     */
+    List<LeaveBalance> findByLeaveTypeAndYear(String leaveType, int year);
 }
