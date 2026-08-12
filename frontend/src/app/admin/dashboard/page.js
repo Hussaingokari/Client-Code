@@ -185,7 +185,7 @@ export default function AdminDashboard() {
         </p>
         {/* Decorative Mountain Graphic Top Right */}
         <div style={{ 
-          position: 'absolute', top: -30, right: 0, height: '140px', 
+          position: 'absolute', top: 22, right: 0, height: '140px', 
           pointerEvents: 'none', display: 'flex',
           WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
           maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)'
