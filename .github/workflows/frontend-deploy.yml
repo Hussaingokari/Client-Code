@@ -32,7 +32,7 @@ jobs:
 
       - name: Build Next.js Production App
         env:
-          NEXT_PUBLIC_API_BASE_URL: "https://paxsat.com"
+          NEXT_PUBLIC_API_BASE_URL: ""
         run: npm run build
 
       - name: Configure AWS Credentials
@@ -43,7 +43,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Deploy to S3
-        run: aws s3 sync ./out s3://hr-management-system-frontend-bhl74xnc/ --delete
+        run: aws s3 sync ./out s3://hr-management-system-frontend-bg6xhea6/ --delete
 
       - name: Invalidate CloudFront Cache
-        run: aws cloudfront create-invalidation --distribution-id E2SX5QZBJA7ZH --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id E21RX89AXAN6FG --paths "/*"
