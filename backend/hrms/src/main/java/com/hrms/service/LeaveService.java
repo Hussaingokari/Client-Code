@@ -103,6 +103,20 @@ public class LeaveService {
                 return toResponse(saved);
         }
 
+        @Transactional
+        @CacheEvict(value = "dashboardData", allEntries = true)
+        public void deleteLeave(Long leaveId) {
+                LeaveRequest leave = findById(leaveId);
+
+                // If it was already approved, give the days back before deleting
+                if (leave.getStatus() == LeaveStatus.APPROVED) {
+                        leaveBalanceService.restoreBalance(
+                                        leave.getEmployee(), leave.getLeaveType(), leave.getTotalDays());
+                }
+
+                leaveRepo.delete(leave);
+        }
+
         /**
          * Any Admin or HR user can approve/reject a pending leave.
          * First action wins — if someone else already actioned it, this throws.

@@ -4,14 +4,14 @@ import { getAttendanceSummaryByDate, exportAttendanceRange } from '@/lib/adminAp
 import { downloadBlob } from '@/lib/downloadFile';
 import EmployeeAttendanceModal from './EmployeeAttendanceModal';
 import toast from 'react-hot-toast';
- 
+
 const STATUS_COLORS = {
     PRESENT: { bg: '#dcfce7', color: '#16a34a' },
     HALF_DAY: { bg: '#fff7ed', color: '#f59e0b' },
     ON_LEAVE: { bg: '#eff6ff', color: '#3b82f6' },
     ABSENT: { bg: '#fee2e2', color: '#dc2626' },
 };
- 
+
 function StatusBadge({ status }) {
     const s = STATUS_COLORS[status] || { bg: '#f1f5f9', color: 'var(--text-light)' };
     return (
@@ -24,23 +24,16 @@ function StatusBadge({ status }) {
         </span>
     );
 }
- 
-function formatDuration(mins) {
-    if (!mins) return '--';
-    const h = Math.floor(mins / 60);
-    const m = mins % 60;
-    return h > 0 ? `${h}h ${m}m` : `${m}m`;
-}
- 
+
 function todayIST() {
     const now = new Date();
     const ist = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
     return ist.toISOString().split('T')[0];
 }
- 
+
 export default function AttendanceReport() {
     const maxDate = useMemo(() => todayIST(), []);
- 
+
     const [fromDate, setFromDate] = useState(todayIST());
     const [toDate, setToDate] = useState(todayIST());
     const [search, setSearch] = useState('');
@@ -51,7 +44,7 @@ export default function AttendanceReport() {
     const [totalPages, setTotalPages] = useState(1);
     const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
     const [exporting, setExporting] = useState(false);
- 
+
     useEffect(() => {
         let active = true;
         setLoading(true);
@@ -70,7 +63,7 @@ export default function AttendanceReport() {
             });
         return () => { active = false; };
     }, [toDate, page]);
- 
+
     const filteredRows = useMemo(() => {
         return rows.filter((r) => {
             const matchesSearch = !search ||
@@ -80,7 +73,7 @@ export default function AttendanceReport() {
             return matchesSearch && matchesStatus;
         });
     }, [rows, search, statusFilter]);
- 
+
     const handleFromDateChange = (e) => {
         const val = e.target.value;
         if (val > maxDate) {
@@ -93,7 +86,7 @@ export default function AttendanceReport() {
         }
         setFromDate(val);
     };
- 
+
     const handleToDateChange = (e) => {
         const val = e.target.value;
         if (val > maxDate) {
@@ -107,7 +100,7 @@ export default function AttendanceReport() {
         setToDate(val);
         setPage(0);
     };
- 
+
     const handleExport = async () => {
         setExporting(true);
         try {
@@ -119,7 +112,7 @@ export default function AttendanceReport() {
             setExporting(false);
         }
     };
- 
+
     return (
         <div>
             <div style={{ marginBottom: '20px' }}>
@@ -130,7 +123,7 @@ export default function AttendanceReport() {
                     View attendance for all employees by date range.
                 </p>
             </div>
- 
+
             <div style={{
                 display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap',
                 background: 'var(--bg-card)', border: '1px solid var(--border-main)', borderRadius: '12px', padding: '14px 16px',
@@ -194,18 +187,19 @@ export default function AttendanceReport() {
                     {exporting ? 'Exporting...' : '⬇ Export'}
                 </button>
             </div>
- 
+
             <div style={{
                 background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border-main)',
                 boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden',
             }}>
                 <div className="table-responsive">
                     <div style={{ minWidth: '780px' }}>
+                        {/* Updated to 6-column grid layout */}
                         <div style={{
-                            display: 'grid', gridTemplateColumns: '1.8fr 1.1fr 0.9fr 0.9fr 0.9fr 0.9fr 0.8fr',
+                            display: 'grid', gridTemplateColumns: '1.8fr 1.2fr 1fr 1fr 1fr 0.8fr',
                             padding: '10px 20px', background: 'var(--bg-app)', borderBottom: '1px solid var(--border-main)',
                         }}>
-                            {['Name', 'Department', 'Status', 'Check in', 'Check out', 'Break', ''].map((h) => (
+                            {['Name', 'Department', 'Status', 'Check in', 'Check out', ''].map((h) => (
                                 <div key={h} style={{
                                     fontSize: '11px', fontWeight: '700', color: 'var(--text-light)',
                                     textTransform: 'uppercase', letterSpacing: '0.5px',
@@ -214,7 +208,7 @@ export default function AttendanceReport() {
                                 </div>
                             ))}
                         </div>
- 
+
                         {loading ? (
                             <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-lighter)' }}>Loading...</div>
                         ) : filteredRows.length === 0 ? (
@@ -224,7 +218,7 @@ export default function AttendanceReport() {
                         ) : (
                             filteredRows.map((r) => (
                                 <div key={r.employeeId} style={{
-                                    display: 'grid', gridTemplateColumns: '1.8fr 1.1fr 0.9fr 0.9fr 0.9fr 0.9fr 0.8fr',
+                                    display: 'grid', gridTemplateColumns: '1.8fr 1.2fr 1fr 1fr 1fr 0.8fr',
                                     padding: '12px 20px', borderBottom: '1px solid var(--border-main)', alignItems: 'center',
                                 }}>
                                     <div>
@@ -240,9 +234,6 @@ export default function AttendanceReport() {
                                     </div>
                                     <div style={{ fontSize: '13px', color: 'var(--text-light)' }}>
                                         {r.checkOut ? String(r.checkOut).slice(0, 5) : '--'}
-                                    </div>
-                                    <div style={{ fontSize: '13px', color: r.onBreak ? '#f59e0b' : 'var(--text-light)', fontWeight: r.onBreak ? '700' : '400' }}>
-                                        {r.onBreak ? 'On break' : formatDuration(r.totalBreakMinutes)}
                                     </div>
                                     <div>
                                         <button
@@ -261,7 +252,7 @@ export default function AttendanceReport() {
                         )}
                     </div>
                 </div>
- 
+
                 {totalPages > 1 && (
                     <div style={{
                         display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px',
@@ -287,7 +278,7 @@ export default function AttendanceReport() {
                     </div>
                 )}
             </div>
- 
+
             {selectedEmployeeId && (
                 <EmployeeAttendanceModal
                     employeeId={selectedEmployeeId}

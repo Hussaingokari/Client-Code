@@ -74,7 +74,7 @@ export default function AdminLogin() {
   const isFormFilled = form.email && form.password;
 
   return (
-    <div className="h-screen overflow-hidden flex w-full bg-[var(--bg-card)] dark:bg-slate-900 transition-colors duration-500">
+    <div className="min-h-screen flex w-full bg-[var(--bg-card)] dark:bg-slate-900 transition-colors duration-500">
       {/* Left Panel - Hidden on mobile */}
       <div className="hidden lg:flex lg:w-[45%] flex-col bg-slate-900 relative">
         <div className="flex-1 relative overflow-hidden">
@@ -97,7 +97,7 @@ export default function AdminLogin() {
               height={64}
               className="w-16 h-16 object-contain"
             />
-            <span className="text-white font-bold text-[17px] tracking-tight">PAXSAT BUSINESS SOLUTIONS PVT LTD - ADMIN</span>
+            <span className="text-white font-bold text-[17px] tracking-tight">PAXSAT  BUSINESS SOLUTIONS PVT  LTD - Admin</span>
           </div>
           <h1 className="text-white text-4xl xl:text-5xl font-bold leading-[1.1] mb-4 tracking-tight">
             Manage your<br />workforce effectively.
@@ -109,18 +109,18 @@ export default function AdminLogin() {
       </div>
 
       {/* Right Panel */}
-      <div className="w-full lg:w-[55%] h-full overflow-y-auto flex flex-col items-center justify-center relative p-4 sm:p-8">
+      <div className="w-full lg:w-[55%] flex flex-col items-center justify-center relative p-8">
 
         {/* Back Button */}
         <button
           onClick={() => router.push('/')}
-          className="absolute top-4 sm:top-8 left-4 sm:left-8 text-slate-400 hover:text-slate-700 dark:hover:text-white flex items-center gap-2 text-sm font-medium transition-colors z-10"
+          className="absolute top-8 left-8 text-slate-400 hover:text-slate-700 dark:hover:text-white flex items-center gap-2 text-sm font-medium transition-colors"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
           Back
         </button>
 
-        <div className="w-full max-w-sm xl:max-w-md flex flex-col pt-8 sm:pt-12 pb-24 sm:pb-20">
+        <div className="w-full max-w-sm xl:max-w-md flex flex-col pt-12">
 
           {/* Arrow Graphic */}
           <div className="w-full flex justify-start mb-4 opacity-70">
@@ -130,7 +130,7 @@ export default function AdminLogin() {
             </svg>
           </div>
 
-          <h2 className="text-[22px] font-bold text-slate-900 dark:text-white mb-4 sm:mb-8 text-center">
+          <h2 className="text-[22px] font-bold text-slate-900 dark:text-white mb-8 text-center">
             Admin Secure Login
           </h2>
 
@@ -146,7 +146,7 @@ export default function AdminLogin() {
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4 sm:gap-5">
+          <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5">
 
             <div>
               <label htmlFor="admin-email" className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">
@@ -212,42 +212,24 @@ export default function AdminLogin() {
               )}
             </button>
 
-            <div className="flex items-center gap-3 my-2">
-              <div className="h-px bg-slate-100 dark:bg-[var(--bg-card)]/10 flex-1"></div>
-              <span className="text-[10px] text-slate-400 font-medium">Or login with</span>
-              <div className="h-px bg-slate-100 dark:bg-[var(--bg-card)]/10 flex-1"></div>
-            </div>
 
-            <div className="flex gap-4">
-              <button type="button" className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-slate-200 dark:border-white/10 rounded-lg hover:bg-slate-50 dark:hover:bg-[var(--bg-card)]/5 transition-colors text-[12px] font-bold text-slate-700 dark:text-slate-300">
-                <Image src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width={16} height={16} />
-                Google
-              </button>
-              <button type="button" className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-slate-200 dark:border-white/10 rounded-lg hover:bg-slate-50 dark:hover:bg-[var(--bg-card)]/5 transition-colors text-[12px] font-bold text-slate-700 dark:text-slate-300">
-                <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.19 2.31-.88 3.5-.8 1.48.06 2.58.55 3.33 1.5-3.08 1.83-2.6 5.86.35 7.15-.55 1.4-1.39 2.82-2.26 4.32zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" /></svg>
-                Apple
-              </button>
-            </div>
 
           </form>
 
         </div>
 
         {/* Footer */}
-        <div className="absolute bottom-4 sm:bottom-6 left-0 w-full px-6 xl:px-12 flex flex-col xl:flex-row justify-between items-center gap-2 sm:gap-4 text-[10px] text-slate-400 dark:text-slate-500 bg-[var(--bg-card)]/80 dark:bg-slate-900/80 backdrop-blur-sm py-2 z-10">
+        <div className="absolute bottom-6 left-0 w-full px-6 xl:px-12 flex flex-col xl:flex-row justify-between items-center gap-4 text-[10px] text-slate-400 dark:text-slate-500">
           <div className="flex flex-col text-center xl:text-left">
             <span className="font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">© 2021 Paxsat Business Solution Private Limited.</span>
             <span className="text-[9px] text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">All rights reserved.</span>
           </div>
-          <div className="flex gap-6 items-center">
-            <Link href="/terms" className="hover:text-slate-600 dark:hover:text-slate-300 font-bold uppercase tracking-wider">Terms & Conditions</Link>
-            <Link href="/privacy" className="hover:text-slate-600 dark:hover:text-slate-300 font-bold uppercase tracking-wider">Privacy Policy</Link>
-          </div>
+
         </div>
 
         {/* Theme Toggle */}
-        <div className="absolute top-4 right-4 sm:top-6 sm:right-6 xl:top-8 xl:right-12 z-50">
-          <ThemeToggle variant="icon" />
+        <div className="absolute top-6 right-6 xl:top-8 xl:right-12 z-50">
+          <ThemeToggle />
         </div>
       </div>
     </div>

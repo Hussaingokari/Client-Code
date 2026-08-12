@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import api from '@/lib/axios';
 import toast from 'react-hot-toast';
-import { CheckCircle, Clock, XCircle, Undo2, Coffee, HeartPulse, Sun, Baby, PersonStanding, ClipboardList, PartyPopper, Loader2 } from 'lucide-react';
+import { CheckCircle, Clock, XCircle, Undo2, Coffee, HeartPulse, Sun, Baby, PersonStanding, ClipboardList, PartyPopper, Loader2, Star } from 'lucide-react';
 
 function StatusPill({ status }) {
   const map = {
@@ -23,13 +23,15 @@ function StatusPill({ status }) {
   );
 }
 
+// EARNED added so it doesn't silently fall back to the UNPAID icon/color
 const typeMeta = {
   ANNUAL: { icon: <Coffee size={16} />, color: '#4F46E5' },
   SICK: { icon: <HeartPulse size={16} />, color: '#0D9488' },
   CASUAL: { icon: <Sun size={16} />, color: '#D97706' },
   PATERNITY: { icon: <Baby size={16} />, color: '#8B5CF6' },
   MATERNITY: { icon: <PersonStanding size={16} />, color: '#DB2777' },
-  UNPAID: { icon: <ClipboardList size={16} />, color: 'var(--text-secondary)' },
+  EARNED: { icon: <Star size={16} />, color: '#0891B2' },
+  UNPAID: { icon: <ClipboardList size={16} />, color: 'blue' },
 };
 
 export default function AdminLeavePage() {

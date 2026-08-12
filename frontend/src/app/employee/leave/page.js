@@ -26,12 +26,11 @@ function Badge({ status }) {
   );
 }
 
-const LEAVE_TYPES = ['ANNUAL', 'SICK', 'CASUAL', 'PATERNITY', 'MATERNITY', 'UNPAID'];
+const LEAVE_TYPES = ['ANNUAL', 'SICK', 'CASUAL', 'PATERNITY', 'MATERNITY', 'EARNED', 'UNPAID'];
 
 export default function LeavePage() {
   const [leaves, setLeaves] = useState([]);
   const [balance, setBalance] = useState([]);
-  const [managers, setManagers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -39,7 +38,6 @@ export default function LeavePage() {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
-  // Today's date in yyyy-mm-dd, used as the min bound for both date pickers
   const today = new Date().toISOString().split('T')[0];
 
   const [form, setForm] = useState({
@@ -47,7 +45,6 @@ export default function LeavePage() {
     startDate: '',
     endDate: '',
     reason: '',
-    managerId: '',
   });
 
   const fetchAll = useCallback(async () => {
@@ -73,46 +70,20 @@ export default function LeavePage() {
     }
   }, [page]);
 
-  const fetchManagers = useCallback(async () => {
-    try {
-      const res = await api.get('/api/employees/managers');
-      console.log('Full response:', res);
-      console.log('Response data:', res.data);
-      console.log('Response data.data:', res.data?.data);
-
-      const all =
-        res.data?.data?.content ||   // paginated
-        res.data?.data ||            // list directly
-        res.data?.content ||         // another format
-        res.data ||                  // raw data
-        [];
-
-      console.log('Managers list:', all);
-      console.log('Managers count:', all.length);
-
-      if (Array.isArray(all) && all.length > 0) {
-        setManagers(all);
-        setForm(prev => ({ ...prev, managerId: all[0].id }));
-      } else {
-        console.warn('No managers found in response');
-      }
-    } catch (err) {
-      console.error('fetchManagers status:', err.response?.status);
-      console.error('fetchManagers data:', err.response?.data);
-      console.error('fetchManagers message:', err.message);
-    }
-  }, []);
-
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchAll();
-      fetchManagers();
     }, 0);
     return () => clearTimeout(timer);
-  }, [fetchAll, fetchManagers]);
+  }, [fetchAll]);
 
   const handleApply = async (e) => {
     e.preventDefault();
+
+    // 1. Double-click execution guard
+    if (submitting) return;
+
+    // 2. Standard field validations
     if (!form.leaveType) {
       toast.error('Please select a leave type');
       return;
@@ -129,14 +100,23 @@ export default function LeavePage() {
       toast.error('End date must be after start date');
       return;
     }
-    if (!form.managerId) {
-      toast.error('Please select a manager');
-      return;
-    }
     if (!form.reason || form.reason.trim() === '') {
       toast.error('Please enter a reason for the leave');
       return;
     }
+
+    // 3. Client-side overlap validation
+    const activeStatuses = ['PENDING', 'APPROVED', 'HR_PENDING', 'MANAGER_PENDING', 'CANCELLATION_PENDING'];
+    const hasOverlap = leaves.some(l => {
+      if (!activeStatuses.includes(l.status)) return false;
+      return form.startDate <= l.endDate && form.endDate >= l.startDate;
+    });
+
+    if (hasOverlap) {
+      toast.error('You already have a pending or approved leave request for these dates.');
+      return;
+    }
+
     setSubmitting(true);
     try {
       await api.post('/api/leaves/apply', {
@@ -144,7 +124,6 @@ export default function LeavePage() {
         startDate: form.startDate,
         endDate: form.endDate,
         reason: form.reason,
-        managerId: parseInt(form.managerId),
       });
       toast.success('Leave applied successfully!');
       setShowForm(false);
@@ -153,11 +132,11 @@ export default function LeavePage() {
         startDate: '',
         endDate: '',
         reason: '',
-        managerId: managers.length > 0 ? managers[0].id : '',
       });
       fetchAll();
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to apply leave');
+      const errorMsg = err.response?.data?.message || err.response?.data || 'Failed to apply leave';
+      toast.error(typeof errorMsg === 'string' ? errorMsg : 'Failed to apply leave');
     } finally {
       setSubmitting(false);
     }
@@ -182,40 +161,46 @@ export default function LeavePage() {
     CASUAL: { color: '#f59e0b', bg: '#fff7ed', icon: '☀️' },
     PATERNITY: { color: '#8b5cf6', bg: '#fdf4ff', icon: '👶' },
     MATERNITY: { color: '#ec4899', bg: '#fdf2f8', icon: '🤱' },
+    EARNED: { color: '#0891b2', bg: '#ecfeff', icon: '⭐' },
     UNPAID: { color: 'var(--text-light)', bg: '#f1f5f9', icon: '📋' },
   };
 
   return (
     <div>
       <style jsx global>{`
+        /* Date Inputs Fix for Dark Mode */
+        .leave-date-input {
+          color-scheme: dark light;
+          color: var(--text-main) !important;
+          background-color: var(--bg-card) !important;
+        }
+
+        .leave-date-input::-webkit-datetime-edit,
         .leave-date-input::-webkit-datetime-edit-fields-wrapper,
         .leave-date-input::-webkit-datetime-edit-text,
         .leave-date-input::-webkit-datetime-edit-day-field,
         .leave-date-input::-webkit-datetime-edit-month-field,
         .leave-date-input::-webkit-datetime-edit-year-field {
-          color: #475569;
+          color: var(--text-main) !important;
         }
+
         .leave-date-input::-webkit-calendar-picker-indicator {
-          opacity: 0.7;
+          opacity: 0.9;
+          cursor: pointer;
+          filter: var(--calendar-icon-filter, invert(0.8));
         }
-        .leave-date-input:focus::-webkit-datetime-edit-fields-wrapper,
-        .leave-date-input:focus::-webkit-datetime-edit-text,
-        .leave-date-input:focus::-webkit-datetime-edit-day-field,
-        .leave-date-input:focus::-webkit-datetime-edit-month-field,
-        .leave-date-input:focus::-webkit-datetime-edit-year-field {
-          color: #1e293b;
+
+        /* Textarea Dark/Light Mode Styling */
+        .leave-reason-textarea {
+          color: var(--text-main) !important;
+          background: var(--bg-card) !important;
         }
-        .leave-reason-textarea,
+
         .leave-reason-textarea::placeholder {
-          color: #1e293b !important;
-          background: #ffffff !important;
-          -webkit-text-fill-color: #1e293b !important;
-        }
-        .leave-reason-textarea::placeholder {
-          color: #94a3b8 !important;
-          -webkit-text-fill-color: #94a3b8 !important;
+          color: var(--text-lighter) !important;
         }
       `}</style>
+
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
@@ -316,10 +301,9 @@ export default function LeavePage() {
             </div>
 
             <form onSubmit={handleApply}>
-
               {/* Leave Type */}
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ fontSize: '13px', fontWeight: '600', color: '#374151', display: 'block', marginBottom: '6px' }}>
+                <label style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-main)', display: 'block', marginBottom: '6px' }}>
                   Leave Type <span style={{ color: '#ef4444' }}>*</span>
                 </label>
                 <select
@@ -343,7 +327,7 @@ export default function LeavePage() {
               {/* Dates */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
                 <div>
-                  <label style={{ fontSize: '13px', fontWeight: '600', color: '#374151', display: 'block', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-main)', display: 'block', marginBottom: '6px' }}>
                     Start Date <span style={{ color: '#ef4444' }}>*</span>
                   </label>
                   <input
@@ -356,7 +340,6 @@ export default function LeavePage() {
                       setForm(prev => ({
                         ...prev,
                         startDate: newStart,
-                        // clear end date if it's now earlier than the new start date
                         endDate: prev.endDate && prev.endDate < newStart ? '' : prev.endDate,
                       }));
                     }}
@@ -364,12 +347,11 @@ export default function LeavePage() {
                       width: '100%', padding: '10px 12px',
                       border: '1.5px solid var(--border-main)', borderRadius: '10px',
                       fontSize: '13px', outline: 'none', boxSizing: 'border-box',
-                      color: 'var(--text-main)',
                     }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: '13px', fontWeight: '600', color: '#374151', display: 'block', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-main)', display: 'block', marginBottom: '6px' }}>
                     End Date <span style={{ color: '#ef4444' }}>*</span>
                   </label>
                   <input
@@ -382,49 +364,14 @@ export default function LeavePage() {
                       width: '100%', padding: '10px 12px',
                       border: '1.5px solid var(--border-main)', borderRadius: '10px',
                       fontSize: '13px', outline: 'none', boxSizing: 'border-box',
-                      color: 'var(--text-main)',
                     }}
                   />
                 </div>
               </div>
 
-              {/* Manager Dropdown */}
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{ fontSize: '13px', fontWeight: '600', color: '#374151', display: 'block', marginBottom: '6px' }}>
-                  Send To (Manager) <span style={{ color: '#ef4444' }}>*</span>
-                </label>
-                <select
-                  value={form.managerId}
-                  onChange={e => setForm(prev => ({ ...prev, managerId: e.target.value }))}
-                  style={{
-                    width: '100%', padding: '10px 12px',
-                    border: '1.5px solid var(--border-main)', borderRadius: '10px',
-                    fontSize: '13px', outline: 'none',
-                    background: 'var(--bg-card)', color: 'var(--text-main)',
-                  }}
-                  onFocus={e => e.target.style.borderColor = '#1e3a5f'}
-                  onBlur={e => e.target.style.borderColor = 'var(--border-main)'}
-                >
-                  <option value="" style={{ color: 'var(--text-main)', background: 'var(--bg-card)' }}>
-                    Select Manager / HR...
-                  </option>
-                  {managers.map(m => (
-                    <option key={m.id} value={m.id} style={{ color: 'var(--text-main)', background: 'var(--bg-card)' }}>
-                      {m.firstName} {m.lastName} — {m.role}
-                      {m.department ? ` (${m.department})` : ''}
-                    </option>
-                  ))}
-                </select>
-                {managers.length === 0 && (
-                  <div style={{ fontSize: '11px', color: '#ef4444', marginTop: '4px' }}>
-                    No managers found. Contact admin.
-                  </div>
-                )}
-              </div>
-
               {/* Reason */}
               <div style={{ marginBottom: '24px' }}>
-                <label style={{ fontSize: '13px', fontWeight: '600', color: '#374151', display: 'block', marginBottom: '6px' }}>
+                <label style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-main)', display: 'block', marginBottom: '6px' }}>
                   Reason <span style={{ color: '#ef4444' }}>*</span>
                 </label>
                 <textarea
@@ -439,8 +386,6 @@ export default function LeavePage() {
                     border: '1.5px solid var(--border-main)', borderRadius: '10px',
                     fontSize: '13px', outline: 'none', resize: 'vertical',
                     boxSizing: 'border-box', fontFamily: 'inherit',
-                    color: 'var(--text-main)', background: 'var(--bg-card)',
-                    colorScheme: 'light',
                   }}
                   onFocus={e => e.target.style.borderColor = '#1e3a5f'}
                   onBlur={e => e.target.style.borderColor = 'var(--border-main)'}
@@ -452,7 +397,7 @@ export default function LeavePage() {
                 <button type="button" onClick={() => setShowForm(false)}
                   style={{
                     flex: 1, padding: '12px',
-                    background: 'var(--bg-card)', color: '#374151',
+                    background: 'var(--bg-card)', color: 'var(--text-main)',
                     border: '1.5px solid var(--border-main)', borderRadius: '10px',
                     fontSize: '14px', fontWeight: '600', cursor: 'pointer',
                   }}>
@@ -589,7 +534,7 @@ export default function LeavePage() {
                 <button
                   onClick={() => setPage(p => Math.max(0, p - 1))}
                   disabled={page === 0}
-                  style={{ padding: '6px 14px', border: '1px solid var(--border-main)', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: page === 0 ? 'var(--border-dark)' : '#374151', background: 'var(--bg-card)', cursor: page === 0 ? 'not-allowed' : 'pointer' }}>
+                  style={{ padding: '6px 14px', border: '1px solid var(--border-main)', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: page === 0 ? 'var(--border-dark)' : 'var(--text-main)', background: 'var(--bg-card)', cursor: page === 0 ? 'not-allowed' : 'pointer' }}>
                   ← Prev
                 </button>
                 <span style={{ padding: '6px 14px', fontSize: '12px', color: 'var(--text-light)' }}>
@@ -598,13 +543,14 @@ export default function LeavePage() {
                 <button
                   onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                   disabled={page >= totalPages - 1}
-                  style={{ padding: '6px 14px', border: '1px solid var(--border-main)', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: page >= totalPages - 1 ? 'var(--border-dark)' : '#374151', background: 'var(--bg-card)', cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer' }}>
+                  style={{ padding: '6px 14px', border: '1px solid var(--border-main)', borderRadius: '6px', fontSize: '12px', fontWeight: '600', color: page >= totalPages - 1 ? 'var(--border-dark)' : 'var(--text-main)', background: 'var(--bg-card)', cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer' }}>
                   Next →
                 </button>
               </div>
             )}
           </>
-        )}      </div> 
+        )}
+      </div>
     </div>
   );
 }
