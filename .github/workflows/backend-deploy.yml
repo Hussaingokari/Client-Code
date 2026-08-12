@@ -6,53 +6,36 @@ on:
       - main
     paths:
       - 'backend/**'
+      - 'nginx/**'
+      - 'docker-compose.prod.yml'
       - '.github/workflows/backend-deploy.yml'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Deploy to EC2 via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ec2-user
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            echo "Starting Backend Deployment..."
-            
-            # Navigate to application directory
-            cd /opt/hrms
-            
-            # Clone repo if it doesn't exist, otherwise pull latest changes
-            if [ ! -d "Client-Code" ]; then
-              git clone https://github.com/xyushman/Client-Code.git
+      - name: Deploy to EC2 Instance
+        env:
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          # Save the SSH key to a file and fix Windows line endings
+          mkdir -p ~/.ssh
+          echo "$EC2_SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          
+          # Run the deployment commands via native SSH
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@$EC2_HOST "
+            if [ ! -d \"Client-Code\" ]; then
+              git clone https://github.com/xyushman/Client-Code.git || echo \"Make sure your repo is public, or clone it manually once!\"
             fi
-            
             cd Client-Code
-            git checkout main
-            git pull origin main
-            
-            # Go to backend folder
-            cd backend/hrms
-            
-            # Build the new Docker image
-            echo "Building Docker image..."
-            docker build -t hrms-backend:latest .
-            
-            # Stop and remove the old container if it exists
-            echo "Stopping old container..."
-            docker stop hrms-backend-container || true
-            docker rm hrms-backend-container || true
-            
-            # Run the new container on port 80, injecting environment variables
-            echo "Starting new container..."
-            docker run -d \
-              --name hrms-backend-container \
-              -p 80:8080 \
-              --env-file /opt/hrms/.env \
-              --restart unless-stopped \
-              hrms-backend:latest
-              
-            echo "Deployment successful!"
+            git fetch origin
+            git checkout \$BRANCH
+            git pull origin \$BRANCH
+            sudo cp /opt/hrms/.env ./.env
+            sudo docker rm -f hrms-backend hrms-nginx || true
+            sudo docker compose -f docker-compose.prod.yml up -d --build
+          "
