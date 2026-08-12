@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 
 function StatusPill({ status }) {
     const map = {
-        PENDING: { bg: '#f1f5f9', color: 'var(--text-light)', label: 'Pending' },
+        PENDING: { bg: 'var(--bg-muted)', color: 'var(--text-light)', label: 'Pending' },
         IN_PROGRESS: { bg: '#eff6ff', color: '#3b82f6', label: 'In Progress' },
         COMPLETED: { bg: '#dcfce7', color: '#16a34a', label: 'Completed' },
     };
