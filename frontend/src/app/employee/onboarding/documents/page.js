@@ -19,7 +19,7 @@ function StatusPill({ status }) {
         APPROVED: { bg: '#dcfce7', color: '#16a34a', label: 'Approved' },
         REJECTED: { bg: '#fee2e2', color: '#dc2626', label: 'Rejected' },
     };
-    const s = map[status] || { bg: '#f1f5f9', color: 'var(--text-light)', label: 'Not Submitted' };
+    const s = map[status] || { bg: 'var(--bg-muted)', color: 'var(--text-light)', label: 'Not Submitted' };
     return (
         <span style={{
             background: s.bg, color: s.color, padding: '6px 16px', borderRadius: '20px',

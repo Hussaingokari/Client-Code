@@ -30,7 +30,7 @@ function DocStatusBadge({ status }) {
         APPROVED: { bg: '#dcfce7', color: '#16a34a', label: 'Approved' },
         REJECTED: { bg: '#fee2e2', color: '#dc2626', label: 'Rejected' },
     };
-    const s = map[status] || { bg: '#f1f5f9', color: 'var(--text-light)', label: 'Not submitted' };
+    const s = map[status] || { bg: 'var(--bg-muted)', color: 'var(--text-light)', label: 'Not submitted' };
     return (
         <span style={{ background: s.bg, color: s.color, padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '700' }}>
             {s.label}
@@ -40,7 +40,7 @@ function DocStatusBadge({ status }) {
 
 function StatusPill({ status }) {
     const map = {
-        PENDING: { bg: '#f1f5f9', color: 'var(--text-light)', label: 'Pending' },
+        PENDING: { bg: 'var(--bg-muted)', color: 'var(--text-light)', label: 'Pending' },
         IN_PROGRESS: { bg: '#eff6ff', color: '#3b82f6', label: 'In Progress' },
         COMPLETED: { bg: '#dcfce7', color: '#16a34a', label: 'Completed' },
     };

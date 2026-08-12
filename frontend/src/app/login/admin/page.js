@@ -228,8 +228,8 @@ export default function AdminLogin() {
         </div>
 
         {/* Theme Toggle */}
-        <div className="absolute top-6 right-6 xl:top-8 xl:right-12 z-50">
-          <ThemeToggle />
+        <div className="absolute top-6 right-6 z-50">
+          <ThemeToggle variant="icon" />
         </div>
       </div>
     </div>
