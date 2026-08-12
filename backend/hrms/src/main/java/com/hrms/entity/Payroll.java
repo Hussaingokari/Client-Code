@@ -1,3 +1,4 @@
+
 package com.hrms.entity;
 
 import jakarta.persistence.*;
@@ -48,6 +49,12 @@ public class Payroll {
 
     @Column(precision = 12, scale = 2)
     private BigDecimal tds; // Tax Deducted at Source
+
+    @Column(precision = 12, scale = 2)
+    private BigDecimal pf; // Provident Fund (12% of gross salary)
+    
+    @Column(precision = 12, scale = 2)
+    private BigDecimal professionalTax; // Flat professional tax deduction
 
     @Column(precision = 12, scale = 2)
     private BigDecimal totalDeductions;

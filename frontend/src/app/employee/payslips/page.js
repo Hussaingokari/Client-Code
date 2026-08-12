@@ -178,13 +178,13 @@ function PayslipDetailView({ selected, loadingDetail, formatCurrency }) {
     { label: 'DA (10%)', value: selected.da },
     { label: 'Special Allowance', value: selected.specialAllowance },
   ];
-
-  const deductionsList = [
-    { label: 'ESI ', value: selected.esi },
-    { label: 'TDS', value: selected.tds },
-    { label: 'PF', value: 0 },
-    { label: 'Professional Tax', value: 0 },
-  ];
+  
+const deductionsList = [
+  { label: 'ESI', value: selected.esi },
+  { label: 'TDS', value: selected.tds },
+  { label: 'PF', value: selected.pf },
+  { label: 'Professional Tax', value: selected.professionalTax },
+];
 
   return (
     <div style={{
@@ -263,8 +263,9 @@ function PayslipDetailView({ selected, loadingDetail, formatCurrency }) {
                 fontSize: '13px',
               }}>
                 <span style={{ color: 'var(--text-light)' }}>{item.label}</span>
-                <span style={{ fontWeight: '600', color: 'var(--text-main)' }}>{formatCurrency(item.value)}</span>
-              </div>
+<span style={{ fontWeight: '600', color: '#dc2626' }}>
+  {item.isText ? item.value : formatCurrency(item.value)}
+</span>              </div>
             ))}
             <div style={{
               display: 'flex', justifyContent: 'space-between',
@@ -288,8 +289,9 @@ function PayslipDetailView({ selected, loadingDetail, formatCurrency }) {
                 fontSize: '13px',
               }}>
                 <span style={{ color: 'var(--text-light)' }}>{item.label}</span>
-                <span style={{ fontWeight: '600', color: '#dc2626' }}>{formatCurrency(item.value)}</span>
-              </div>
+<span style={{ fontWeight: '600', color: '#dc2626' }}>
+  {item.isText ? item.value : formatCurrency(item.value)}
+</span>              </div>
             ))}
             <div style={{
               display: 'flex', justifyContent: 'space-between',

@@ -1,3 +1,4 @@
+
 package com.hrms.dto;
 
 import jakarta.validation.constraints.*;
@@ -34,6 +35,8 @@ public class PayrollDTOs {
         private BigDecimal grossSalary;
         private BigDecimal esi;
         private BigDecimal tds;
+        private BigDecimal pf;
+        private BigDecimal professionalTax;
         private BigDecimal totalDeductions;
         private BigDecimal netSalary;
         private int presentDays;
