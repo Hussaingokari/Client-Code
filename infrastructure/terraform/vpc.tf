@@ -24,7 +24,8 @@ module "vpc" {
   # single_nat_gateway     = false
   # one_nat_gateway_per_az = true
 
-  create_database_subnet_group = true
+  # We are using TiDB Cloud (external), so we do not need AWS RDS subnet groups
+  create_database_subnet_group = false
   enable_dns_hostnames         = true
   enable_dns_support           = true
 

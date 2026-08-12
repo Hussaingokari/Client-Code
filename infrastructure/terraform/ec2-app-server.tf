@@ -43,7 +43,7 @@ resource "aws_security_group" "app_server_sg" {
   }
 
   egress {
-    description = "Allow all outbound traffic (pulling Docker images, connecting to Neon DB)"
+    description = "Allow all outbound traffic (pulling Docker images, connecting to TiDB Cloud)"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -58,7 +58,7 @@ resource "aws_security_group" "app_server_sg" {
 
 resource "aws_instance" "app_server" {
   ami                    = data.aws_ami.amazon_linux_2023.id
-  instance_type          = var.app_server_instance_type # t3.micro (2 vCPU, 1 GB RAM - Free Tier eligible or $8.06/mo)
+  instance_type          = var.app_server_instance_type # t3.small (2 vCPU, 2 GB RAM)
   subnet_id              = module.vpc.public_subnets[0]
   vpc_security_group_ids = [aws_security_group.app_server_sg.id]
   key_name               = var.key_pair_name

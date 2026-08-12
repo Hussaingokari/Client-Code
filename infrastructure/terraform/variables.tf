@@ -1,7 +1,7 @@
 variable "aws_region" {
-  description = "AWS region to deploy into (us-east-1 matches TiDB Cloud Serverless for ultra-low ~1.5ms DB latency)"
+  description = "AWS region to deploy into (Singapore ap-southeast-1)"
   type        = string
-  default     = "us-east-1"
+  default     = "ap-southeast-1"
 }
 
 variable "project_name" {
@@ -22,13 +22,13 @@ variable "key_pair_name" {
 }
 
 variable "app_server_instance_type" {
-  description = "EC2 instance type for Spring Boot + Nginx Docker host (t3.small is AWS Free Tier eligible with 2 vCPU and 1 GB RAM)"
+  description = "EC2 instance type for Spring Boot + Nginx Docker host (t3.small with 2 vCPU and 2 GB RAM)"
   type        = string
   default     = "t3.small"
 }
 
 variable "db_url" {
-  description = "JDBC connection string for TiDB Cloud Serverless MySQL or Neon DB (e.g. jdbc:mysql://xxx.root:pass@gateway01.prod.aws.tidbcloud.com:4000/hrms_db?sslMode=VERIFY_IDENTITY)"
+  description = "JDBC connection string for TiDB Cloud Serverless MySQL (e.g. jdbc:mysql://xxx.root:pass@gateway01.prod.aws.tidbcloud.com:4000/hrms_db?sslMode=VERIFY_IDENTITY)"
   type        = string
   default     = ""
 }
@@ -47,7 +47,7 @@ variable "db_password" {
 }
 
 variable "db_platform" {
-  description = "Hibernate database platform dialect (org.hibernate.dialect.MySQLDialect for TiDB / org.hibernate.dialect.PostgreSQLDialect for Neon)"
+  description = "Hibernate database platform dialect (org.hibernate.dialect.MySQLDialect for TiDB)"
   type        = string
   default     = "org.hibernate.dialect.MySQLDialect"
 }
