@@ -52,16 +52,15 @@ export default function EmployeeLogin() {
       const data = res.data.data;
       dispatch(loginSuccess({ token: data.accessToken, user: data }));
 
-      // ✅ Fixed Toast Dark Theme Style
       toast.success(`Welcome ${data.name}!`, {
         style: {
-          background: '#1e293b', // Dark Slate background
-          color: '#ffffff',       // White text
+          background: '#1e293b',
+          color: '#ffffff',
           borderRadius: '10px',
           border: '1px solid rgba(255, 255, 255, 0.1)',
         },
         iconTheme: {
-          primary: '#10b981',     // Green checkmark
+          primary: '#10b981',
           secondary: '#1e293b',
         },
       });
@@ -78,17 +77,14 @@ export default function EmployeeLogin() {
 
   return (
     <div className="min-h-screen flex w-full bg-[var(--bg-card)] dark:bg-slate-900 transition-colors duration-500">
-      {/* Left Panel - Hidden on mobile */}
       <div className="hidden lg:flex lg:w-[45%] flex-col bg-slate-900 relative">
         <div className="flex-1 relative overflow-hidden">
-          {/* Unsplash Image matching the vibe */}
           <Image
             src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1200&q=80"
             alt="Team Working"
             fill
             className="object-cover opacity-90"
           />
-          {/* Green separator line */}
           <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[#10b981] dark:bg-[#DBFF00] z-10 transition-colors"></div>
         </div>
         <div className="h-auto p-12 lg:px-16 lg:py-14 flex flex-col justify-center bg-[#111827]">
@@ -100,7 +96,7 @@ export default function EmployeeLogin() {
               height={80}
               className="w-20 h-20 object-contain"
             />
-            <span className="text-white font-bold text-[17px] tracking-tight">PAXSAT  BUSINESS SOLUTIONS PVT  LTD - Employee</span>
+            <span className="text-white font-bold text-[17px] tracking-tight">PAXSAT BUSINESS SOLUTIONS PVT LTD - Employee</span>
           </div>
           <h1 className="text-white text-4xl xl:text-5xl font-bold leading-[1.1] mb-4 tracking-tight">
             Let's empower your<br />employees today.
@@ -111,10 +107,7 @@ export default function EmployeeLogin() {
         </div>
       </div>
 
-      {/* Right Panel */}
       <div className="w-full lg:w-[55%] flex flex-col items-center justify-center relative p-8">
-
-        {/* Back Button */}
         <button
           onClick={() => router.push('/')}
           className="absolute top-8 left-8 text-slate-400 hover:text-slate-700 dark:hover:text-white flex items-center gap-2 text-sm font-medium transition-colors"
@@ -124,8 +117,6 @@ export default function EmployeeLogin() {
         </button>
 
         <div className="w-full max-w-sm xl:max-w-md flex flex-col pt-12">
-
-          {/* Arrow Graphic */}
           <div className="w-full flex justify-start mb-4 opacity-70">
             <svg width="48" height="48" viewBox="0 0 100 100" className="text-slate-300 dark:text-slate-600 transform -rotate-12 translate-x-4">
               <path d="M20,60 Q50,20 80,40" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -148,9 +139,7 @@ export default function EmployeeLogin() {
             </div>
           )}
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5">
-
             <div>
               <label htmlFor="emp-email" className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                 Email Address <span className="text-red-500">*</span>
@@ -188,7 +177,7 @@ export default function EmployeeLogin() {
 
             <div className="flex items-center justify-between mt-1 mb-2">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="w-3.5 h-3.5 rounded border-slate-300 text-[#10b981] dark:text-[#DBFF00] focus:ring-[#10b981] dark:focus:ring-[#DBFF00] dark:bg-slate-800" />
+                <input type="checkbox" className="w-3.5 h-3.5 rounded border-slate-300 text-[#10b981] focus:ring-[#10b981] dark:text-[#DBFF00] dark:focus:ring-[#DBFF00] dark:bg-slate-800" />
                 <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">Remember Me</span>
               </label>
               <button type="button" onClick={() => router.push('/forgot-password')} className="text-[11px] font-medium text-slate-500 dark:text-slate-400 hover:text-[#10b981] dark:hover:text-[#DBFF00] transition-colors">
@@ -214,26 +203,16 @@ export default function EmployeeLogin() {
                 'Login'
               )}
             </button>
-
-
-
-
-
-
           </form>
-
         </div>
 
-        {/* Footer */}
         <div className="absolute bottom-6 left-0 w-full px-6 xl:px-12 flex flex-col xl:flex-row justify-between items-center gap-4 text-[10px] text-slate-400 dark:text-slate-500">
           <div className="flex flex-col text-center xl:text-left">
             <span className="font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">© 2021 PAXSAT BUSINESS SOLUTIONS PVT. LTD.</span>
             <span className="text-[9px] text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">All rights reserved.</span>
           </div>
-
         </div>
 
-        {/* Theme Toggle */}
         <div className="absolute top-6 right-6 z-50">
           <ThemeToggle variant="icon" />
         </div>

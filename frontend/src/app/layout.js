@@ -1,4 +1,3 @@
-
 'use client';
 import { Geist } from 'next/font/google';
 import './globals.css';
@@ -6,13 +5,18 @@ import { Provider } from 'react-redux';
 import { store } from '@/store/store';
 import { Toaster } from 'react-hot-toast';
 import { loadUser } from '@/store/authSlice';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 const geist = Geist({ subsets: ['latin'] });
 
 export default function RootLayout({ children }) {
+  const hasLoadedRef = useRef(false);
+
   useEffect(() => {
-    store.dispatch(loadUser());
+    if (!hasLoadedRef.current) {
+      hasLoadedRef.current = true;
+      store.dispatch(loadUser());
+    }
   }, []);
 
   return (

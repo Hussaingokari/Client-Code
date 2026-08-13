@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { getMyOnboarding, getMyDocuments } from '@/lib/employeeApi';
 import toast from 'react-hot-toast';
@@ -43,6 +43,7 @@ export default function EmployeeOnboardingDashboardPage() {
     const [onboarding, setOnboarding] = useState(null);
     const [documents, setDocuments] = useState([]);
     const [loading, setLoading] = useState(true);
+    const hasLoadedRef = useRef(false);
 
     const fetchData = useCallback(async () => {
         setLoading(true);
@@ -61,7 +62,12 @@ export default function EmployeeOnboardingDashboardPage() {
         }
     }, []);
 
-    useEffect(() => { fetchData(); }, [fetchData]);
+    useEffect(() => {
+        if (!hasLoadedRef.current) {
+            hasLoadedRef.current = true;
+            fetchData();
+        }
+    }, [fetchData]);
 
     if (loading) {
         return <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-lighter)' }}>Loading...</div>;
