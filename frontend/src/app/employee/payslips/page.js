@@ -97,7 +97,6 @@ function PayslipListView({ loading, payslips, selected, onSelect, page, totalPag
           />
         ))}
 
-        {/* Pagination */}
         {totalPages > 1 && (
           <div style={{ padding: '14px 20px', display: 'flex', justifyContent: 'center', gap: '8px', borderTop: '1px solid var(--border-main)' }}>
             <button
@@ -178,12 +177,12 @@ function PayslipDetailView({ selected, loadingDetail, formatCurrency }) {
     { label: 'DA (10%)', value: selected.da },
     { label: 'Special Allowance', value: selected.specialAllowance },
   ];
-
+  
   const deductionsList = [
-    { label: 'ESI ', value: selected.esi },
+    { label: 'ESI', value: selected.esi },
     { label: 'TDS', value: selected.tds },
-    { label: 'PF', value: 0 },
-    { label: 'Professional Tax', value: 0 },
+    { label: 'PF', value: selected.pf },
+    { label: 'Professional Tax', value: selected.professionalTax },
   ];
 
   return (
@@ -193,7 +192,6 @@ function PayslipDetailView({ selected, loadingDetail, formatCurrency }) {
       boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
       overflow: 'hidden',
     }}>
-      {/* Payslip Header */}
       <div style={{
         background: 'linear-gradient(135deg, #1e3a5f, #2563eb)',
         padding: '20px 24px', color: 'white',
@@ -221,7 +219,6 @@ function PayslipDetailView({ selected, loadingDetail, formatCurrency }) {
           </div>
         </div>
 
-        {/* Employee info */}
         <div style={{
           marginTop: '16px', paddingTop: '16px',
           borderTop: '1px solid rgba(255,255,255,0.2)',
@@ -247,11 +244,8 @@ function PayslipDetailView({ selected, loadingDetail, formatCurrency }) {
         </div>
       </div>
 
-      {/* Earnings & Deductions */}
       <div style={{ padding: '20px 24px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
-
-          {/* Earnings */}
           <div>
             <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
               Earnings
@@ -263,7 +257,9 @@ function PayslipDetailView({ selected, loadingDetail, formatCurrency }) {
                 fontSize: '13px',
               }}>
                 <span style={{ color: 'var(--text-light)' }}>{item.label}</span>
-                <span style={{ fontWeight: '600', color: 'var(--text-main)' }}>{formatCurrency(item.value)}</span>
+                <span style={{ fontWeight: '600', color: '#dc2626' }}>
+                  {formatCurrency(item.value)}
+                </span>
               </div>
             ))}
             <div style={{
@@ -276,7 +272,6 @@ function PayslipDetailView({ selected, loadingDetail, formatCurrency }) {
             </div>
           </div>
 
-          {/* Deductions */}
           <div>
             <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
               Deductions
@@ -288,7 +283,9 @@ function PayslipDetailView({ selected, loadingDetail, formatCurrency }) {
                 fontSize: '13px',
               }}>
                 <span style={{ color: 'var(--text-light)' }}>{item.label}</span>
-                <span style={{ fontWeight: '600', color: '#dc2626' }}>{formatCurrency(item.value)}</span>
+                <span style={{ fontWeight: '600', color: '#dc2626' }}>
+                  {formatCurrency(item.value)}
+                </span>
               </div>
             ))}
             <div style={{
@@ -302,7 +299,6 @@ function PayslipDetailView({ selected, loadingDetail, formatCurrency }) {
           </div>
         </div>
 
-        {/* Net Salary */}
         <div style={{
           background: 'linear-gradient(135deg, #f0fdf4, #dcfce7)',
           border: '1px solid #bbf7d0',
@@ -319,7 +315,6 @@ function PayslipDetailView({ selected, loadingDetail, formatCurrency }) {
           </div>
         </div>
 
-        {/* Download Button */}
         <button
           onClick={handleDownload}
           disabled={downloading}
@@ -396,7 +391,6 @@ export default function PayslipsPage() {
 
   return (
     <div>
-      {/* Header */}
       <div style={{ marginBottom: '24px' }}>
         <h1 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text-main)', marginBottom: '4px' }}>
           My Payslips

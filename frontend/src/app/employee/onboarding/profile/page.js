@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { getMyOnboarding } from '@/lib/employeeApi';
 import toast from 'react-hot-toast';
 
@@ -33,6 +33,7 @@ function InfoField({ icon, label, value }) {
 export default function EmployeeOnboardingProfilePage() {
     const [onboarding, setOnboarding] = useState(null);
     const [loading, setLoading] = useState(true);
+    const hasLoadedRef = useRef(false);
 
     const fetchData = useCallback(async () => {
         setLoading(true);
@@ -46,7 +47,12 @@ export default function EmployeeOnboardingProfilePage() {
         }
     }, []);
 
-    useEffect(() => { fetchData(); }, [fetchData]);
+    useEffect(() => {
+        if (!hasLoadedRef.current) {
+            hasLoadedRef.current = true;
+            fetchData();
+        }
+    }, [fetchData]);
 
     if (loading) {
         return <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-lighter)' }}>Loading...</div>;

@@ -1,3 +1,5 @@
+
+
 package com.hrms.service;
 
 import com.hrms.dto.PayrollDTOs;
@@ -30,6 +32,9 @@ public class PayrollService {
     private static final BigDecimal DA_RATE = new BigDecimal("0.10");
     private static final BigDecimal ESI_RATE = new BigDecimal("0.0075");
     private static final BigDecimal ESI_GROSS_LIMIT = new BigDecimal("21000");
+
+    private static final BigDecimal PF_RATE = new BigDecimal("0.12");
+    private static final BigDecimal PROFESSIONAL_TAX = new BigDecimal("200.00");
 
     @Transactional
     public PayrollDTOs.Response generatePayroll(PayrollDTOs.GenerateRequest request) {
@@ -65,13 +70,27 @@ public class PayrollService {
         basic = actualBasic;
         BigDecimal grossSalary = basic.add(hra).add(da).add(specialAllowance);
 
-        BigDecimal esi = grossSalary.compareTo(ESI_GROSS_LIMIT) <= 0
-                ? round(grossSalary.multiply(ESI_RATE))
-                : BigDecimal.ZERO;
-        BigDecimal tds = BigDecimal.ZERO; // no tax slab logic yet
+       BigDecimal esi = grossSalary.compareTo(ESI_GROSS_LIMIT) <= 0
+        ? round(grossSalary.multiply(ESI_RATE))
+        : BigDecimal.ZERO;
 
-        BigDecimal totalDeductions = esi.add(tds);
-        BigDecimal netSalary = grossSalary.subtract(totalDeductions);
+BigDecimal tds = BigDecimal.ZERO;
+
+
+// PF = 12% of Basic Salary
+BigDecimal pf = round(basic.multiply(PF_RATE));
+
+// Professional Tax = ₹200
+BigDecimal professionalTax = PROFESSIONAL_TAX;
+
+// Total deductions
+BigDecimal totalDeductions = esi
+        .add(tds)
+        .add(pf)
+        .add(professionalTax);
+
+// Net salary
+BigDecimal netSalary = grossSalary.subtract(totalDeductions);
 
         Payroll payroll = Payroll.builder()
                 .employee(employee)
@@ -84,6 +103,8 @@ public class PayrollService {
                 .grossSalary(grossSalary)
                 .esi(esi)
                 .tds(tds)
+                .pf(pf)
+                .professionalTax(professionalTax)
                 .totalDeductions(totalDeductions)
                 .netSalary(netSalary)
                 .presentDays(presentDays)
@@ -136,6 +157,8 @@ public class PayrollService {
         r.setGrossSalary(p.getGrossSalary());
         r.setEsi(p.getEsi());
         r.setTds(p.getTds());
+        r.setPf(p.getPf());
+        r.setProfessionalTax(p.getProfessionalTax());
         r.setTotalDeductions(p.getTotalDeductions());
         r.setNetSalary(p.getNetSalary());
         r.setPresentDays(p.getPresentDays());

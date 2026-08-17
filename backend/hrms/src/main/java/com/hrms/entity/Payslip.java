@@ -60,6 +60,12 @@ public class Payslip {
     @Column(precision = 12, scale = 2)
     private BigDecimal netSalary;
 
+    @Column(precision = 12, scale = 2)
+private BigDecimal pf;
+
+@Column(precision = 12, scale = 2)
+private BigDecimal professionalTax;
+
     private int presentDays;
     private int lopDays;
 
