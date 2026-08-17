@@ -5,12 +5,12 @@ import api from '@/lib/axios';
 import toast from 'react-hot-toast';
 
 const TYPE_META = {
-    DOCUMENT_UPLOADED: { icon: '📄', color: '#3b82f6', bg: '#eff6ff' },
-    DOCUMENT_REJECTED: { icon: '⚠️', color: '#dc2626', bg: '#fee2e2' },
-    DOCUMENT_APPROVED: { icon: '✅', color: '#16a34a', bg: '#dcfce7' },
-    CHECKLIST_COMPLETED: { icon: '🎉', color: '#16a34a', bg: '#dcfce7' },
-    ONBOARDING_INITIATED: { icon: '👋', color: '#4f46e5', bg: '#eef2ff' },
-    DEFAULT: { icon: '🔔', color: 'var(--text-light)', bg: '#f1f5f9' },
+    DOCUMENT_UPLOADED: { icon: '📄', color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.15)' },
+    DOCUMENT_REJECTED: { icon: '⚠️', color: '#dc2626', bg: 'rgba(220, 38, 38, 0.15)' },
+    DOCUMENT_APPROVED: { icon: '✅', color: '#16a34a', bg: 'rgba(22, 163, 74, 0.15)' },
+    CHECKLIST_COMPLETED: { icon: '🎉', color: '#16a34a', bg: 'rgba(22, 163, 74, 0.15)' },
+    ONBOARDING_INITIATED: { icon: '👋', color: '#4f46e5', bg: 'rgba(79, 70, 229, 0.15)' },
+    DEFAULT: { icon: '🔔', color: 'var(--text-light)', bg: 'var(--bg-app)' },
 };
 
 function timeAgo(dateStr) {
@@ -102,8 +102,8 @@ export default function NotificationsPage() {
                     disabled={unreadCount === 0 || markingAll}
                     style={{
                         padding: '10px 16px', borderRadius: '10px', border: '1.5px solid var(--border-main)',
-                        background: 'var(--bg-card)', color: '#374151', fontSize: '13px', fontWeight: '700',
-                        cursor: unreadCount === 0 ? 'not-allowed' : 'pointer', opacity: unreadCount === 0 ? 0.5 : 1,
+                        background: 'var(--bg-card)', color: 'var(--text-main)', fontSize: '13px', fontWeight: '700',
+                        cursor: unreadCount === 0 ? 'not-allowed' : 'pointer', opacity: unreadCount === 0 ? 0.4 : 1,
                     }}>
                     {markingAll ? 'Marking...' : 'Mark all as read'}
                 </button>
@@ -120,7 +120,7 @@ export default function NotificationsPage() {
                         style={{
                             padding: '8px 16px', borderRadius: '20px', border: 'none', cursor: 'pointer',
                             fontSize: '12px', fontWeight: '700',
-                            background: tab === t.key ? '#1e3a5f' : '#f1f5f9',
+                            background: tab === t.key ? '#3b82f6' : 'var(--bg-card)',
                             color: tab === t.key ? 'white' : 'var(--text-light)',
                         }}>
                         {t.label}
@@ -144,17 +144,21 @@ export default function NotificationsPage() {
                 ) : (
                     visible.map((n, i) => {
                         const meta = TYPE_META[n.type] || TYPE_META.DEFAULT;
+                        const defaultBg = n.read ? 'transparent' : 'rgba(59, 130, 246, 0.05)';
+                        const hoverBg = 'rgba(255, 255, 255, 0.05)';
+
                         return (
                             <div
                                 key={n.id}
                                 onClick={() => handleOpen(n)}
                                 style={{
                                     display: 'flex', alignItems: 'flex-start', gap: '14px', padding: '16px 20px',
-                                    borderTop: i === 0 ? 'none' : '1px solid #f1f5f9', cursor: 'pointer',
-                                    background: n.read ? 'white' : '#f8faff',
+                                    borderTop: i === 0 ? 'none' : '1px solid var(--border-main)', cursor: 'pointer',
+                                    background: defaultBg,
+                                    transition: 'background 0.2s ease',
                                 }}
-                                onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-app)'}
-                                onMouseLeave={e => e.currentTarget.style.background = n.read ? 'white' : '#f8faff'}
+                                onMouseEnter={e => e.currentTarget.style.background = hoverBg}
+                                onMouseLeave={e => e.currentTarget.style.background = defaultBg}
                             >
                                 <div style={{
                                     width: '36px', height: '36px', borderRadius: '10px', flexShrink: 0,
@@ -178,7 +182,7 @@ export default function NotificationsPage() {
                                         {timeAgo(n.createdAt)}
                                     </div>
                                     {!n.read && (
-                                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#4f46e5' }} />
+                                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#3b82f6' }} />
                                     )}
                                 </div>
                             </div>
